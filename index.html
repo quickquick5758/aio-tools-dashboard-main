@@ -215,6 +215,9 @@
 
         /* Area form dinamis diperluas minimum tingginya agar kotak sugesti (dropdown) kode tidak terpotong */
         .scrollable-form-container { min-height: 260px; overflow: visible; }
+        .barang-row-item, .bs-row-item, .bbk-row-item { position: relative; }
+        .barang-row-item:focus-within, .bs-row-item:focus-within, .bbk-row-item:focus-within { z-index: 50; }
+        .barang-suggestions, .bs-barang-suggestions, .bbk-barang-suggestions { z-index: 9999 !important; }
 
         /* Login & Footer */
         .login-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #2b3674 0%, #4318ff 100%); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(8px); }
@@ -572,6 +575,14 @@
                     <p id="login-error" style="color: #ee5d50; font-size: 13px; font-weight: 700; display: none; margin-bottom: 15px;"></p>
                     <button type="submit" class="login-btn">Masuk</button>
                 </form>
+
+                <!-- Icon Tiket Aduan / Bantuan Login -->
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #e0e5f2; display: flex; justify-content: center; align-items: center;">
+                    <button type="button" onclick="bukaTiketAduan()" style="background: none; border: none; color: #4318ff; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 4px; transition: 0.2s;" onmouseover="this.style.background='#f4f7fe'" onmouseout="this.style.background='none'">
+                        <svg style="width: 18px; height: 18px; color: #4318ff;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        Kendala Login / Tiket Aduan
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1587,6 +1598,45 @@
                                     </div>
                                 </div>
                         
+                                <!-- 8.55 VIEW GANTI PASSWORD -->
+                                <div id="view-ganti-password" class="view-section">
+                                    <div class="input-wrapper" style="max-width: 520px; margin: 20px auto; padding: 32px;">
+                                        <div style="text-align: center; margin-bottom: 24px;">
+                                            <div style="width: 56px; height: 56px; background: #e0e5ff; color: #4318ff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                                                <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                            </div>
+                                            <h3 class="text-secondary font-bold" style="font-size: 22px;">Ganti Password Akun</h3>
+                                            <p style="font-size: 13px; color: #8f9bba; margin-top: 6px; line-height: 1.5;">
+                                                Ganti password dibatasi <b>maksimal 2 kali dalam sebulan</b> (jeda minimal 15 hari). Default Pass digunakan Admin saat reset akun.
+                                            </p>
+                                        </div>
+
+                                        <form onsubmit="submitGantiPassword(event); return false;">
+                                            <div class="form-group">
+                                                <label>ID Akun</label>
+                                                <input type="text" id="gp-userid" class="form-control" disabled style="background:#f8fafc; font-weight:700; color:#2b3674;">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Password Lama <span class="text-danger">*</span></label>
+                                                <input type="password" id="gp-old-pass" class="form-control" placeholder="Masukkan password saat ini" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Password Baru <span class="text-danger">*</span></label>
+                                                <input type="password" id="gp-new-pass" class="form-control" placeholder="Minimal 5 karakter" minlength="5" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Konfirmasi Password Baru <span class="text-danger">*</span></label>
+                                                <input type="password" id="gp-confirm-pass" class="form-control" placeholder="Ketik ulang password baru" minlength="5" required>
+                                            </div>
+
+                                            <div class="button-center" style="margin-top: 25px;">
+                                                <button type="button" class="btn-modern" style="background:#f3f4f6; color:#374151;" onclick="switchView('dashboard')">Batal</button>
+                                                <button type="submit" id="btn-submit-gp" class="btn-modern" style="background:#4318ff; padding: 10px 24px;">Simpan Password Baru</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
                                 <!-- 8.6 VIEW SUMMARY (RAPOR OPERATOR) -->
                                 <div id="view-summary" class="view-section">
                                     <div class="card" style="margin-bottom: 24px; min-height: 85vh; border-radius: 4px;">
@@ -1715,7 +1765,7 @@
                                         <div class="print-no" style="display:flex; justify-content:space-between; align-items:center; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0;">
                                             <div style="display:flex; align-items:center; gap:12px;">
                                                 <h3 class="text-secondary font-bold" style="font-size:20px; margin:0; display:flex; align-items:center;">Tinjauan Dokumen <span id="doc-open-badge"></span></h3>
-                                                <span id="doc-state-status" style="display:none; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; color:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); letter-spacing: 0.5px;">-</span>
+                                                <span id="doc-state-status" style="display:none; padding:4px 8px; border-radius:2px; font-size:12px; font-weight:600; color:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1); letter-spacing: 0.5px;">-</span>
                                             </div>
                                             <div style="display:flex; gap:8px;" id="doc-header-action-wrapper">
                                                 <button class="btn-modern" style="background:#ee5d50;" onclick="goBackFromDocument()">&times; Tutup</button>
@@ -1883,29 +1933,33 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbw2V5sjY3eDIK02edky-VXqsY5DSKjcky5-zXKlsraR0ht_ClJVscZiz25l74IxNwbpBw/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzEPwZieOvCX1f9mFW-YQWrzKyJs-56Ba8fqb8fXGdVV88j6k-fL67HKuc5SvihXhte2A/exec"; 
         
         // 2. Mesin Panggil Backend Tahan Banting (Anti-CORS & Anti-Crash)
         async function panggilBackend(actionName, payloadData) {
           try {
-            console.log(`📡 Sedang menghubungi server untuk: ${actionName}...`);
+            console.log(`📡 Menghubungi server: ${actionName}...`);
             
             const response = await fetch(GAS_URL, {
               method: "POST",
-              // Kita lepas headers sepenuhnya. Biarkan browser otomatis memakai default 
-              // agar Google Script tidak salah paham dan memblokir dengan CORS "Preflight"
+              redirect: "follow",
+              cache: "no-cache",
               body: JSON.stringify({ 
                 action: actionName, 
                 payload: payloadData 
               })
             });
+
+            if (!response.ok) {
+              throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
+            }
             
             const responseText = await response.text();
             
-            // Tangkap jika yang dikembalikan adalah error peringatan HTML dari Google
+            // Jika Google mengembalikan HTML halaman login / error
             if (responseText.trim().startsWith("<")) {
-               console.error("🛑 Server memblokir! Mengembalikan kode HTML:", responseText.substring(0, 50) + "...");
-               throw new Error("Izin ditolak server. Pastikan Akses diubah menjadi 'Anyone' (Siapa saja).");
+              console.error("🛑 Server memblokir! Response HTML:", responseText.substring(0, 100));
+              throw new Error("Akses ditolak server Google. Pastikan setelan Deploy adalah 'Anyone'.");
             }
             
             const result = JSON.parse(responseText);
@@ -1950,6 +2004,9 @@
             if(modalAnim) modalAnim.style.display = 'none';
             if(btnOk) btnOk.style.display = 'none';
             
+            // Pastikan modal dokumen selalu tertutup bersih
+            goBackFromDocument();
+
             // Logika pindah halaman sesuai fungsi terakhir
             if (window.nextViewAfterSuccess === 'buku-pengecekan') {
                 clearBbkForm();
@@ -2090,13 +2147,22 @@
                 }
             });
             
+            // AUTO OPEN SUGESTI: Tutup sugesti lain dan buka langsung sugesti baris yang di-klik/tap
             document.body.addEventListener('click', function(e) {
-                if (e.target.classList.contains('input-barang-search')) {
-                    handleBarangInput(e.target, true);
-                } else if (e.target.classList.contains('bs-barang-search')) {
-                    handleBsInput(e.target, true);
-                } else if (e.target.classList.contains('bbk-barang-search')) {
-                    handleBbkInput(e.target, true);
+                if (e.target.matches('.input-barang-search, .bs-barang-search, .bbk-barang-search')) {
+                    // Tutup dropdown baris lain
+                    document.querySelectorAll('.barang-suggestions, .bs-barang-suggestions, .bbk-barang-suggestions').forEach(el => {
+                        if (el !== e.target.nextElementSibling) el.style.display = 'none';
+                    });
+                    
+                    // Buka dropdown baris aktif
+                    if (e.target.classList.contains('input-barang-search')) {
+                        handleBarangInput(e.target, true);
+                    } else if (e.target.classList.contains('bs-barang-search')) {
+                        handleBsInput(e.target, true);
+                    } else if (e.target.classList.contains('bbk-barang-search')) {
+                        handleBbkInput(e.target, true);
+                    }
                 }
             });
 
@@ -3464,10 +3530,12 @@
                     window.currentUserRole = response.role || "Operator";
                     window.currentUserUnit = response.unit || "";
                     window.currentUserName = response.name || user;
+                    window.currentUserId = response.userId || user; // Rekam User ID akun
 
                     // STAY TO LOGIN (Simpan di memory browser)
                     sessionStorage.setItem('authSession', JSON.stringify({
                         user: window.currentUserName,
+                        userId: window.currentUserId,
                         role: window.currentUserRole,
                         unit: window.currentUserUnit
                     }));
@@ -3545,9 +3613,79 @@
         }
 
         function changePassword() {
-            alert("Fitur Ganti Password sedang dalam tahap pengembangan.");
             const dropdown = document.getElementById('profileDropdown');
             if(dropdown) dropdown.classList.remove('show');
+            
+            const userIdEl = document.getElementById('gp-userid');
+            if(userIdEl) userIdEl.value = window.currentUserId || window.currentUserName;
+            
+            document.getElementById('gp-old-pass').value = '';
+            document.getElementById('gp-new-pass').value = '';
+            document.getElementById('gp-confirm-pass').value = '';
+            
+            switchView('ganti-password');
+        }
+
+        async function submitGantiPassword(e) {
+            if(e) e.preventDefault();
+            const userId = document.getElementById('gp-userid').value.trim();
+            const oldPass = document.getElementById('gp-old-pass').value.trim();
+            const newPass = document.getElementById('gp-new-pass').value.trim();
+            const confirmPass = document.getElementById('gp-confirm-pass').value.trim();
+            const btnSubmit = document.getElementById('btn-submit-gp');
+
+            if(!oldPass || !newPass || !confirmPass) {
+                return showDialog("Mohon lengkapi seluruh kolom password!", "warning");
+            }
+            if(newPass !== confirmPass) {
+                return showDialog("Konfirmasi password baru tidak cocok!", "warning");
+            }
+            if(newPass === oldPass) {
+                return showDialog("Password baru tidak boleh sama dengan password lama!", "warning");
+            }
+
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = "Memproses...";
+
+            try {
+                const res = await panggilBackend('gantiPassword', {
+                    userId: userId,
+                    oldPassword: oldPass,
+                    newPassword: newPass
+                });
+
+                if(res && res.success) {
+                    showDialog(res.message, "warning", () => {
+                        switchView('dashboard');
+                    });
+                } else {
+                    showDialog(res.message || "Gagal mengubah password.", "warning");
+                }
+            } catch (err) {
+                showDialog("Gagal terhubung ke server: " + err.message, "warning");
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = "Simpan Password Baru";
+            }
+        }
+
+        function bukaTiketAduan() {
+            showDialog(`
+                <div style="text-align: left; font-size: 13px; line-height: 1.6;">
+                    <b style="color:#2b3674; display:block; margin-bottom:8px; font-size:14px;">Pusat Bantuan & Tiket Aduan</b>
+                    Mengalami kendala login atau akses akun?
+                    <ul style="margin: 8px 0 12px 18px; color:#555;">
+                        <li><b>Lupa Password:</b> Hubungi Admin untuk reset ke <i>Default Pass</i>.</li>
+                        <li><b>Akun Non-Aktif:</b> Hubungi Supervisor / Admin Unit Anda.</li>
+                        <li><b>Jeda Password:</b> Ganti password dibatasi jeda 15 hari.</li>
+                    </ul>
+                    Silakan hubungi PIC IT / Admin melalui kontak helpdesk di bawah ini:
+                    <div style="margin-top: 10px; background:#f4f7fe; padding:10px; border-radius:6px; border:1px dashed #4318ff; text-align:center;">
+                        <span style="font-size:11px; color:#8f9bba;">KONTAK ADMIN PRODUKSI / IT</span><br>
+                        <b style="font-size:15px; color:#4318ff;">+62 812-XXXX-XXXX</b>
+                    </div>
+                </div>
+            `, "warning");
         }
 
         function applyRoleAccess(roleStr) {
@@ -3690,8 +3828,12 @@
                 modalIntip.style.display = 'none';
             }
 
-            if (!event.target.closest('.barang-row-item') && !event.target.closest('.bs-row-item')) {
-                document.querySelectorAll('.barang-suggestions, .bs-barang-suggestions').forEach(el => {
+            // AUTO CLOSE SUGESTI: Jika klik di luar input pencarian dan di luar kotak sugesti, tutup semua dropdown
+            const isClickOnSearchInput = event.target.matches('.input-barang-search, .bs-barang-search, .bbk-barang-search');
+            const isClickInsideSuggestions = event.target.closest('.barang-suggestions, .bs-barang-suggestions, .bbk-barang-suggestions');
+            
+            if (!isClickOnSearchInput && !isClickInsideSuggestions) {
+                document.querySelectorAll('.barang-suggestions, .bs-barang-suggestions, .bbk-barang-suggestions').forEach(el => {
                     el.style.display = 'none';
                 });
             }
@@ -3839,7 +3981,9 @@
                 idLaporan: existingId,
                 status: existingStatus,
                 tipe: "PRD", unit, tanggal, karu, shift, pekerjaan,
-                operators: operators.join(', '), items
+                operators: operators.join(', '), items,
+                userId: window.currentUserId || "",
+                userName: window.currentUserName || ""
             };
             
             // Langsung eksekusi submit ke server tanpa harus membuka halaman Preview
@@ -3901,7 +4045,9 @@
             globalPayloadToSubmit = {
                 idLaporan: existingId,
                 status: existingStatus,
-                tipe: "BS", unit, tanggal, karu, shift, pekerjaan: "-", operators: "-", items
+                tipe: "BS", unit, tanggal, karu, shift, pekerjaan: "-", operators: "-", items,
+                userId: window.currentUserId || "",
+                userName: window.currentUserName || ""
             };
             
             // Langsung eksekusi submit ke server tanpa harus membuka halaman Preview
@@ -3922,6 +4068,9 @@
                 alert("Data dokumen tidak ditemukan.");
                 return;
             }
+
+            // Tutup modal tinjauan dokumen secara otomatis agar form edit langsung terlihat
+            goBackFromDocument();
 
             const roleLower = (window.currentUserRole || "").toLowerCase();
             const privilegedRoles = ['author', 'supervisor', 'ppic']; 
@@ -4018,15 +4167,14 @@
                 updateOperatorList(); 
                 
                 const operatorString = report[7] || '';
-                const karuName = report[4] || '';
-                
-                const opListForKaru = allOperators.filter(o => o.karu === karuName).map(o => o.nama);
+                const opListAll = allOperators.map(o => o.nama);
                 const opArray = operatorString.split(',').map(s => s.trim()).filter(s => s);
                 
                 let isManual = false;
                 if (opArray.length > 0) {
                     for (let op of opArray) {
-                        if (!opListForKaru.includes(op)) {
+                        // Cek ke seluruh database operator aktif, bukan hanya di bawah Karu terkait
+                        if (!opListAll.includes(op)) {
                             isManual = true; 
                             break;
                         }
@@ -4423,7 +4571,11 @@
                 return showDialog("Ada baris bahan baku yang belum lengkap. Silakan lengkapi atau hapus baris kosong!", "warning");
             }
 
-            const payload = { unit, tanggal, pekerjaan, operator, shift, supplier, refDokumen, refOm, ketHeader, items };
+            const payload = { 
+                unit, tanggal, pekerjaan, operator, shift, supplier, refDokumen, refOm, ketHeader, items,
+                userId: window.currentUserId || "",
+                userName: window.currentUserName || ""
+            };
 
             const modalAnim = document.getElementById('modal-success-anim');
             const loaderContainer = document.getElementById('loader-icon-container');
@@ -4498,20 +4650,29 @@
         }
 
         function updateOperatorList() {
-            const selectKaru = document.getElementById('select-karu');
             const container = document.getElementById('operator-container');
-            if(!selectKaru || !container) return;
-            const karu = selectKaru.value;
+            if(!container) return;
             container.innerHTML = '';
             
-            const filtered = allOperators.filter(item => 
-                (karu === "" || item.karu === karu)
-            );
+            // Tampilkan semua operator aktif tanpa dibatasi Karu (memungkinkan pinjam operator)
+            const seen = new Set();
+            const uniqueOperators = [];
+            allOperators.forEach(item => {
+                const name = String(item.nama || '').trim();
+                if(name && !seen.has(name)) {
+                    seen.add(name);
+                    uniqueOperators.push(item);
+                }
+            });
             
-            filtered.forEach(item => {
+            // Urutkan nama operator secara alfabetis A-Z
+            uniqueOperators.sort((a, b) => a.nama.localeCompare(b.nama));
+            
+            uniqueOperators.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'operator-tile';
                 div.textContent = item.nama;
+                div.title = `Karu Asal: ${item.karu || '-'}`; // Info tooltip karu asal
                 div.onclick = function() { this.classList.toggle('selected'); };
                 container.appendChild(div);
             });
@@ -5545,7 +5706,11 @@
                     actionsContainer.innerHTML = '<span style="color:#2b3674; font-weight:bold;">Memproses pembatalan...</span>';
                 }
 
-                panggilBackend('updateStatusBatal', { idLaporan: idLaporan })
+                panggilBackend('updateStatusBatal', { 
+                    idLaporan: idLaporan,
+                    userId: window.currentUserId || "",
+                    userName: window.currentUserName || ""
+                })
                     .then(res => {
                         if (res && res.success) {
                             document.getElementById('doc-open-badge').innerHTML = '<span style="background:#fce8e8; color:#ee5d50; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold; vertical-align:middle; margin-left:10px;">BATAL</span>';
@@ -5553,6 +5718,9 @@
                             
                             if (window.currentEditingReport) window.currentEditingReport[9] = 'Batal';
                             loadLaporanData(); 
+
+                            // Tutup modal dokumen otomatis setelah dibatalkan
+                            goBackFromDocument();
                             showDialog("Dokumen berhasil dibatalkan. Saldo telah dikembalikan.", "warning");
                         } else {
                             showDialog("Gagal membatalkan dokumen: " + (res ? res.message : "Kesalahan internal"), "warning");
@@ -5579,7 +5747,11 @@
 
                 try {
                     // Nembak ke Backend pakai fetch (pengganti google.script.run)
-                    const res = await panggilBackend('updateStatusApprove', { idLaporan: idLaporan });
+                    const res = await panggilBackend('updateStatusApprove', { 
+                        idLaporan: idLaporan,
+                        userId: window.currentUserId || "",
+                        userName: window.currentUserName || ""
+                    });
                     
                     if (res && res.success) {
                         // Munculkan Modal Animasi Sukses
@@ -5628,8 +5800,11 @@
 
                         if (window.currentEditingReport) window.currentEditingReport[9] = 'Approved';
                         loadLaporanData(); 
+
+                        // Tutup modal tinjauan dokumen secara otomatis
+                        goBackFromDocument();
                         
-                        // Menangani Bug nomor 4: Pastikan Modal Tampil beserta tombol penutupnya ("OK")
+                        // Menampilkan modal sukses approve
                         const btnOk = document.getElementById('btn-success-ok');
                         if(btnOk) {
                             btnOk.style.display = 'block';
@@ -6089,8 +6264,17 @@
                 container.style.display = 'none';
                 return;
             }
-            if (!window.allMasterBarang) {
-                container.style.display = 'none';
+            
+            // Jika data master belum siap, tampilkan pesan memuat dan fetch kembali
+            if (!window.allMasterBarang || window.allMasterBarang.length === 0) {
+                container.innerHTML = '<div style="padding:10px; font-size:12px; color:#8f9bba; text-align:center;">Memuat master barang...</div>';
+                container.style.display = 'block';
+                panggilBackend('getMasterBarangData', {}).then(res => {
+                    if (res && res.success) {
+                        window.allMasterBarang = res.data;
+                        handleBarangInput(input, showAll);
+                    }
+                }).catch(() => {});
                 return;
             }
             
