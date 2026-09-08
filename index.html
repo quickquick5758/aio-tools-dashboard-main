@@ -1961,26 +1961,24 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwJuwb4VtmuTBpIiJV38toVH7INftYgBrq78GO5mI0NoS1neMGFpWdtA0-1d3xtsgcCgQ/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyoMyxbxfqknzeTMCYcaLWPBa4G5qHns_7PfiR61LFEDxfnL7n1kOzC9byvvGOzrBsJuQ/exec"; 
         
         // 2. Mesin Panggil Backend Tahan Banting (Anti-CORS & Anti-Crash)
         async function panggilBackend(actionName, payloadData) {
           try {
             console.log(`📡 Menghubungi server: ${actionName}...`);
             
+            // Format text/plain murni tanpa cache/custom-header agar browser TIDAK memicu blokir CORS
             const response = await fetch(GAS_URL, {
               method: "POST",
-              redirect: "follow",
-              cache: "no-cache",
+              headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+              },
               body: JSON.stringify({ 
                 action: actionName, 
                 payload: payloadData 
               })
             });
-
-            if (!response.ok) {
-              throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
-            }
             
             const responseText = await response.text();
             
