@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         /* CSS Reset & Global Styles */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Asta Sans', sans-serif; }
         body { background-color: #f4f7fe; color: #2b3674; display: flex; height: 100vh; overflow: hidden; position: relative; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -40,25 +40,30 @@
         .sidebar-menu { padding: 24px; }
         .menu-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: block; color: #a3aed1; }
         
-        /* Layout Item Menu Utama - Dibuat Lebih Ringkas & Compact */
-        .menu-item { display: flex; align-items: center; padding: 8px 12px; border-radius: 6px; text-decoration: none; color: #8f9bba; margin-bottom: 4px; transition: all 0.3s ease; cursor: pointer; font-size: 14px; position: relative; }
+        /* Layout Item Menu Utama - Garis Halus Modern Sesuai Gambar 1 */
+        .sidebar-menu nav > .menu-item, 
+        .sidebar-menu nav > .menu-group {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+        .menu-item { display: flex; align-items: center; padding: 9px 12px; border-radius: 6px; text-decoration: none; color: #8f9bba; transition: all 0.25s ease; cursor: pointer; font-size: 13.5px; position: relative; }
         .menu-item svg { width: 18px; height: 18px; margin-right: 12px; }
-        .menu-item:hover { color: #4318ff; background-color: #f4f7fe; }
-        .menu-item.active { background-color: #4318ff; color: #ffffff; box-shadow: 0 2px 10px rgba(67,24,255,0.3); border-left: 4px solid #2b3674; }
+        .menu-item:hover { color: #4318ff; background-color: #f8fafc; }
+        .menu-item.active { background-color: #4318ff; color: #ffffff; box-shadow: 0 4px 12px rgba(67,24,255,0.25); border-left: 4px solid #1e1b4b; }
 
         .has-submenu { cursor: pointer; justify-content: space-between; }
         .menu-item-content { display: flex; align-items: center; }
         .chevron { width: 14px; height: 14px; transition: transform 0.3s ease; }
         
-        /* Tree Line Styling untuk Container Submenu */
-        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding-left: 32px; position: relative; }
-        .submenu::before { content: ''; position: absolute; left: 18px; top: 0; bottom: 18px; width: 1px; background-color: #d1d5db; }
-        .submenu.open { max-height: 600px; }
+        /* Tree Line Styling & Garis Halus Submenu */
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding-left: 28px; position: relative; }
+        .submenu::before { content: ''; position: absolute; left: 16px; top: 0; bottom: 12px; width: 1px; background-color: #e2e8f0; }
+        .submenu.open { max-height: 600px; padding-bottom: 4px; }
         
-        /* Submenu Item dengan Garis Horizontal Tree Line */
-        .submenu-item { display: block; padding: 8px 12px !important; color: #8f9bba; text-decoration: none; font-size: 13.5px; margin-bottom: 2px; border-radius: 6px; transition: all 0.3s ease; position: relative; }
-        .submenu-item::before { content: ''; position: absolute; left: -14px; top: 17px; width: 10px; height: 1px; background-color: #d1d5db; }
-        .submenu-item:hover { color: #4318ff; background-color: #f4f7fe; }
+        .submenu-item { display: block; padding: 7px 12px !important; color: #8f9bba; text-decoration: none; font-size: 13px; margin-bottom: 2px; border-radius: 4px; transition: all 0.25s ease; position: relative; border-bottom: 1px dashed #f1f5f9; }
+        .submenu-item::before { content: ''; position: absolute; left: -12px; top: 15px; width: 8px; height: 1px; background-color: #cbd5e1; }
+        .submenu-item:hover { color: #4318ff; background-color: #f8fafc; }
 
         /* Override style inline untuk sub-submenu / nested menu */
         .submenu .menu-item { padding-left: 12px !important; margin-bottom: 2px; }
@@ -329,6 +334,24 @@
             }
             #view-document-open .table-thin {
                 min-width: 800px !important; /* Paksa agar table horizontal scrolling rapi di HP */
+            }
+
+            /* Responsive Box Grade & Rapor Summary di Layar HP */
+            .summary-stats-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+            }
+            .summary-stats-grid > div:first-child {
+                grid-column: span 2 !important;
+            }
+            .summary-stats-grid .sum-grade-box {
+                aspect-ratio: auto !important;
+                min-height: 80px !important;
+                padding: 10px !important;
+            }
+            #report-content {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
             }
         }
         
@@ -656,6 +679,20 @@
             break-inside: avoid !important;
         }
     }
+
+    /* Animasi Centang Hijau Cepat 0.5s */
+    @keyframes quickPopIn {
+        0% { transform: scale(0.6); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .check-path-anim {
+        stroke-dasharray: 28;
+        stroke-dashoffset: 28;
+        animation: drawCheckAnim 0.45s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+    @keyframes drawCheckAnim {
+        to { stroke-dashoffset: 0; }
+    }
     </style>
 </head>
 <body>
@@ -814,6 +851,20 @@
                       <a href="#" class="submenu-item" onclick="switchView('summary', this)">Summary</a>
                   </div>
               </div>
+
+              <!-- KHUSUS MENU OPERATOR PRODUKSI -->
+              <a class="menu-item font-bold" id="menu-op-dashboard" style="display:none;" onclick="switchView('dashboard-operator', this)">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg>
+                  Dashboard Pribadi
+              </a>
+              <a class="menu-item font-bold" id="menu-op-input-baru" style="display:none; color:#10b981;" onclick="clearForm(); switchView('input-baru', this)">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                  + Input Baru
+              </a>
+              <a class="menu-item font-bold" id="menu-op-summary" style="display:none;" onclick="switchView('summary', this)">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                  Summary Rapor
+              </a>
             </nav>
         </div>
     </aside>
@@ -850,6 +901,7 @@
                         <option value="Staff Produksi">Staff Produksi</option>
                         <option value="Admin Produksi">Admin Produksi</option>
                         <option value="Karu">Karu</option>
+                        <option value="Operator Produksi">Operator Produksi</option>
                         <option value="Helper">Helper</option>
                     </select>
                 </div>
@@ -933,18 +985,18 @@
                         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                             <h3 class="text-secondary font-bold" style="margin-bottom:0;">Tren Produksi</h3>
                             <div id="chart-period-container" style="display: flex; gap: 4px; background: #f8fafc; padding: 4px; border-radius: 6px; border: 1px solid #e0e5f2;">
-                                <button class="btn-period" data-period="3days" onclick="setChartPeriod('3days', this)" style="border:none; background:transparent; color:#8f9bba; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:700; cursor:pointer; transition:0.3s;">3 Hari</button>
-                                <button class="btn-period active" data-period="1week" onclick="setChartPeriod('1week', this)" style="border:none; background:#4318ff; color:#fff; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:700; cursor:pointer; transition:0.3s;">1 Minggu</button>
-                                <button class="btn-period" data-period="1month" onclick="setChartPeriod('1month', this)" style="border:none; background:transparent; color:#8f9bba; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:700; cursor:pointer; transition:0.3s;">1 Bulan</button>
-                                <button class="btn-period" data-period="1year" onclick="setChartPeriod('1year', this)" style="border:none; background:transparent; color:#8f9bba; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:700; cursor:pointer; transition:0.3s;">1 Tahun</button>
+                                <button class="btn-period" data-period="3days" onclick="setChartPeriod('3days', this)" style="border:none; background:transparent; color:#8f9bba; padding:6px 12px; border-radius:2px; font-size:12px; font-weight:700; cursor:pointer; transition:0.3s;">3 Hari</button>
+                                <button class="btn-period active" data-period="1week" onclick="setChartPeriod('1week', this)" style="border:none; background:#4318ff; color:#fff; padding:6px 12px; border-radius:2px; font-size:12px; font-weight:700; cursor:pointer; transition:0.3s;">1 Minggu</button>
+                                <button class="btn-period" data-period="1month" onclick="setChartPeriod('1month', this)" style="border:none; background:transparent; color:#8f9bba; padding:6px 12px; border-radius:2px; font-size:12px; font-weight:700; cursor:pointer; transition:0.3s;">1 Bulan</button>
+                                <button class="btn-period" data-period="1year" onclick="setChartPeriod('1year', this)" style="border:none; background:transparent; color:#8f9bba; padding:6px 12px; border-radius:2px; font-size:12px; font-weight:700; cursor:pointer; transition:0.3s;">1 Tahun</button>
                             </div>
                         </div>
                         <div class="chart-container" style="position: relative; height: 260px; width: 100%; margin-top: 16px;">
-                            <!-- SVG Render Modern Minimalis (Gaya Line Chart Finance) -->
-                            <svg class="chart-svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="position:absolute; inset:0; width:100%; height:calc(100% - 24px); overflow:visible;">
+                            <!-- SVG Render Pixel-Exact (Termasuk Sumbu Y 0 - 10.000 & Garis Grid) -->
+                            <svg class="chart-svg" style="position:absolute; inset:0; width:100%; height:calc(100% - 28px); overflow:visible; display:block;">
                             </svg>
-                            <!-- Baris Penanda Tanggal Sumbu X di Bawah Chart -->
-                            <div id="dashboard-chart-x-labels" style="position: absolute; bottom: 0; left: 0; right: 0; height: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #8f9bba; font-weight: 700;">
+                            <!-- Baris Penanda Sumbu X Presisi di Bawah Titik Grafik -->
+                            <div id="dashboard-chart-x-labels" style="position: absolute; bottom: 0; left: 52px; right: 18px; height: 22px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #8f9bba; font-weight: 700;">
                             </div>
                         </div>
                     </div>
@@ -952,7 +1004,7 @@
                     <div class="card" style="display: flex; flex-direction: column; max-height: 400px; padding: 18px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap:wrap; gap: 8px;">
                             <h3 class="text-secondary font-bold" style="margin-bottom: 0; font-size: 16px;">Antrean Approval</h3>
-                            <span class="badge" style="background:#ffedd5; color:#f97316; font-size:11px; padding:4px 8px; border-radius:4px; font-weight:800; display:none;" id="count-pending-dash">0 Laporan</span>
+                            <span class="badge" style="background:#ffedd5; color:#f97316; font-size:11px; padding:4px 8px; border-radius:2px; font-weight:800; display:none;" id="count-pending-dash">0 Laporan</span>
                         </div>
                         <p style="font-size: 11px; color:#8f9bba; margin-bottom: 12px;">Berikut adalah daftar dokumen yang telah di-submit ke pusat, namun masih menunggu approve.</p>
                         
@@ -972,6 +1024,120 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.5 DASHBOARD KHUSUS OPERATOR PRODUKSI (SESUAI GAMBAR 2) -->
+            <div id="view-dashboard-operator" class="view-section">
+                <!-- Baris Atas: 4 Stat Output & Jam Digital Realtime -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                    <div class="card" style="padding: 16px; border-radius: 2px; display: flex; flex-direction: column; justify-content: center;">
+                        <span style="font-size: 11.5px; color: #8f9bba; font-weight: 700; text-transform: uppercase;">Output Hari Ini</span>
+                        <h3 id="op-stat-today" style="font-size: 24px; color: #05cd99; font-weight: 800; margin-top: 4px;">0 <span style="font-size: 13px; font-weight: 500; color: #8f9bba;">Pcs</span></h3>
+                        <span id="op-stat-today-rp" style="font-size: 11px; color: #8f9bba; font-weight: 700;">Rp 0</span>
+                    </div>
+                    <div class="card" style="padding: 16px; border-radius: 2px; display: flex; flex-direction: column; justify-content: center;">
+                        <span style="font-size: 11.5px; color: #8f9bba; font-weight: 700; text-transform: uppercase;">Output Minggu Ini</span>
+                        <h3 id="op-stat-week" style="font-size: 24px; color: #4318ff; font-weight: 800; margin-top: 4px;">0 <span style="font-size: 13px; font-weight: 500; color: #8f9bba;">Pcs</span></h3>
+                        <span id="op-stat-week-rp" style="font-size: 11px; color: #8f9bba; font-weight: 700;">Rp 0</span>
+                    </div>
+                    <div class="card" style="padding: 16px; border-radius: 2px; display: flex; flex-direction: column; justify-content: center;">
+                        <span style="font-size: 11.5px; color: #8f9bba; font-weight: 700; text-transform: uppercase;">Output Bulan Ini</span>
+                        <h3 id="op-stat-month" style="font-size: 24px; color: #2b3674; font-weight: 800; margin-top: 4px;">0 <span style="font-size: 13px; font-weight: 500; color: #8f9bba;">Pcs</span></h3>
+                        <span id="op-stat-month-rp" style="font-size: 11px; color: #05cd99; font-weight: 800;">Rp 0</span>
+                    </div>
+                    <div class="card" style="padding: 16px; border-radius: 2px; background: linear-gradient(135deg, #4318ff 0%, #7b61ff 100%); color: #fff; display: flex; flex-direction: column; justify-content: center; text-align: center;">                        
+                        <h2 id="op-live-clock" style="font-size: 24px; font-weight: 700; margin: 4px 0;">--:--:--</h2>
+                        <span id="op-live-date" style="font-size: 11.5px; color: #e0e5ff; font-weight: 600;">--</span>
+                    </div>
+                </div>
+
+                <!-- Baris Tengah: Grafik Statistik Kerja & Target Donut Meter -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <!-- Grafik Batang Output 7 Hari Terakhir -->
+                    <div class="card" style="padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <div>
+                                <h3 class="text-secondary font-bold" style="font-size: 16px; margin-bottom: 2px;">Statistik Output Kerja (7 Hari Terakhir)</h3>
+                                <span style="font-size: 11.5px; color: #8f9bba;">Satuan dalam Pcs</span>
+                            </div>
+                            <span class="badge" style="background:#e0e5ff; color:#4318ff; font-weight:800; font-size:11px; padding:4px 10px;">Produksi Saya</span>
+                        </div>
+                        <div id="op-bar-chart-container" style="position: relative; height: 230px; width: 100%;">
+                            <svg id="op-bar-chart-svg" style="width: 100%; height: 200px; overflow: visible;"></svg>
+                            <div id="op-bar-chart-x" style="display: flex; justify-content: space-between; font-size: 10px; color: #8f9bba; font-weight: 700; margin-top: 6px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- 2 Circular Progress Donut Meters (Target Harian & Kehadiran Bulan Ini) -->
+                    <div class="card" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                        <h3 class="text-secondary font-bold" style="font-size: 16px; margin-bottom: 12px;">Pencapaian & Kehadiran</h3>
+                        <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                            <!-- Meter 1: Target UMR Harian -->
+                            <div>
+                                <div style="position: relative; width: 95px; height: 95px; margin: 0 auto 8px;">
+                                    <svg viewBox="0 0 36 36" style="width: 100%; height: 100%;">
+                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f4f7fe" stroke-width="3.8"/>
+                                        <path id="op-meter-target" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#4318ff" stroke-width="3.8" stroke-dasharray="0, 100" stroke-linecap="round"/>
+                                    </svg>
+                                    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #2b3674;" id="op-pct-target">0%</div>
+                                </div>
+                                <span style="font-size: 11px; font-weight: 700; color: #2b3674; display: block;">Target Harian</span>
+                                <span style="font-size: 9.5px; color: #8f9bba;">vs Rp 110.960</span>
+                            </div>
+                            <!-- Meter 2: Kehadiran HK -->
+                            <div>
+                                <div style="position: relative; width: 95px; height: 95px; margin: 0 auto 8px;">
+                                    <svg viewBox="0 0 36 36" style="width: 100%; height: 100%;">
+                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f4f7fe" stroke-width="3.8"/>
+                                        <path id="op-meter-absen" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#05cd99" stroke-width="3.8" stroke-dasharray="0, 100" stroke-linecap="round"/>
+                                    </svg>
+                                    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #2b3674;" id="op-pct-absen">0%</div>
+                                </div>
+                                <span style="font-size: 11px; font-weight: 700; color: #2b3674; display: block;">Kehadiran HK</span>
+                                <span style="font-size: 9.5px; color: #8f9bba;" id="op-stat-hk-label">0 Hari Kerja</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 14px; background: #ebfcf6; border: 1px dashed #05cd99; padding: 8px 12px; border-radius: 4px; text-align: center;">
+                            <span style="font-size: 11px; color: #065f46; font-weight: 700;">Grade Produktivitas: </span>
+                            <b id="op-dashboard-grade" style="font-size: 15px; color: #05cd99;">-</b>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Baris Bawah: Riwayat Kerja Terakhir & Kalender Absensi Pribadi -->
+                <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px;">
+                    <!-- Tabel Riwayat Kerja (Tanpa Insentif & Dilengkapi Filter Tanggal) -->
+                    <div class="card" style="padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                            <h3 class="text-secondary font-bold" style="font-size: 16px; margin: 0;">Riwayat Input Produksi Terkini</h3>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <input type="date" id="op-history-filter-date" class="search-input" style="height: 30px; padding: 2px 8px; font-size: 11.5px; width: 130px; border-radius: 4px;" onchange="filterOperatorRecentHistory()">
+                                <button class="btn-modern" style="height: 30px; padding: 0 10px; font-size: 11px; background: #f4f7fe; color: #4318ff; border: 1px solid #4318ff;" onclick="resetOperatorHistoryFilter()">Semua</button>
+                            </div>
+                        </div>
+                        <div class="table-container" style="box-shadow: none; border: 1px solid #f0f0f0; max-height: 220px; overflow-y: auto;">
+                            <table class="table-thin" style="width: 100%; font-size: 11.5px;">
+                                <thead>
+                                    <tr>
+                                        <th>Tgl</th>
+                                        <th>Pekerjaan</th>
+                                        <th>Barang</th>
+                                        <th style="text-align: right;">Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="op-dashboard-history-tbody">
+                                    <tr><td colspan="4" style="text-align: center; color: #8f9bba; padding: 20px;">Memuat data riwayat...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Kalender Kehadiran Bulan Berjalan -->
+                    <div class="card" style="padding: 20px; display: flex; flex-direction: column;">
+                        <h3 class="text-secondary font-bold" style="font-size: 16px; margin-bottom: 12px;">Absensi Bulan Ini</h3>
+                        <div id="op-calendar-container" style="flex: 1;"></div>
                     </div>
                 </div>
             </div>
@@ -1186,11 +1352,17 @@
                         </div>
                         
                         <div class="form-group" style="margin-bottom:0;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                                 <label style="font-weight: 700; color: #2b3674; margin-bottom:0;">Pengaturan Operator <span class="text-danger">*</span></label>
-                                <label style="cursor:pointer; font-weight:700; color:#4318ff; font-size:12px;">
-                                    <input type="checkbox" id="check-perbantuan" onchange="toggleManualOp()"> Form Perbantuan
-                                </label>
+                                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                    <div id="wrapper-filter-op-input" style="position: relative;">
+                                        <input type="text" id="filter-input-operator" placeholder="Cari nama operator..." class="search-input" style="width: 170px; height: 32px; padding: 4px 10px 4px 28px; font-size: 12px; border-radius: 4px;" oninput="filterInputBaruOperators()">
+                                        <svg style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #8f9bba;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                    </div>
+                                    <label style="cursor:pointer; font-weight:700; color:#4318ff; font-size:12px; display:flex; align-items:center; gap:4px;">
+                                        <input type="checkbox" id="check-perbantuan" onchange="toggleManualOp()"> Form Perbantuan
+                                    </label>
+                                </div>
                             </div>
                             <div id="operator-manual" style="display:none;"><input type="text" id="manual-op" class="form-control" placeholder="Ketik Nama Operator..."></div>
                             <div id="operator-container" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
@@ -1317,7 +1489,7 @@
                         <button class="btn-modern" onclick="editPreviewData()" style="background:#f3f4f6; color:#374151; border: 1px solid #d1d5db; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">Kembali</button>
                     </div>
                     <p style="color:#8f9bba; font-size:13px; margin-bottom:20px;">Periksa kembali data di bawah ini sebelum dikirim ke server!</p>
-                    <div id="preview-page-content" style="border:1px solid #e0e5f2; border-radius:8px; padding:20px; margin-bottom:25px; font-size:14px; background:#f4f7fe;"></div>
+                    <div id="preview-page-content" style="border:1px solid #e0e5f2; border-radius:2px; padding:20px; margin-bottom:25px; font-size:14px; background:#f4f7fe;"></div>
                     <div style="display:flex; justify-content:center; gap:20px;">
                         <button type="button" class="btn-modern" style="background:#f59e0b; color:#ffffff; padding:8px 24px; font-weight:600; font-size:13px; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);" onclick="editPreviewData()">Edit</button>
                         <button type="button" class="btn-modern" style="background:#10b981; color:#ffffff; padding:8px 24px; font-weight:600; font-size:13px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);" onclick="executeFinalSubmit()">Submit</button>
@@ -1642,10 +1814,10 @@
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <!-- Legend -->
+                                                <!-- Legend Pastel -->
                                                 <div style="display: flex; gap: 16px; margin-bottom: 12px; font-size: 11px; font-weight: 700; color: #8f9bba;">
-                                                    <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #4318ff; border-radius: 2px;"></span> Qty (Pcs)</div>
-                                                    <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #05cd99; border-radius: 2px;"></span> Rupiah (Rp)</div>
+                                                    <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #7e92f5; border-radius: 3px;"></span> Qty (Pcs)</div>
+                                                    <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #52cbb3; border-radius: 3px;"></span> Rupiah (Rp)</div>
                                                 </div>
                                                 <div id="perf-bar-container" style="position: relative; height: 220px; width: 100%;">
                                                     <!-- Grid Lines Injected by JS -->
@@ -1815,8 +1987,8 @@
                                             </div>
                                         </div>
 
-                                        <!-- 3. BARIS KEDUA: 4 BOX STAT (BORDER-RADIUS 4px) -->
-                                        <div style="display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 130px; gap: 16px; margin-bottom: 24px;">
+                                        <!-- 3. BARIS KEDUA: 4 BOX STAT (RESPONSIF MOBILE DENGAN CLASS) -->
+                                        <div class="summary-stats-grid" style="display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 130px; gap: 16px; margin-bottom: 24px;">
                                             <!-- a. Profil Operator (Ukuran 2 Box jadi 1) -->
                                             <div style="background: #fff; border: 1px solid #f0f0f0; border-radius: 4px; padding: 16px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; gap: 16px;">
                                                 <div id="sum-op-initial" style="width: 48px; height: 48px; background: #f3e8ff; color: #a855f7; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">-</div>
@@ -1841,8 +2013,8 @@
                                                 <span style="font-size: 10px; color: #8f9bba; font-weight: 600; margin-top: 4px;">vs Target UMR Harian</span>
                                             </div>
 
-                                            <!-- d. Grade (Persegi Teks Tebal) -->
-                                            <div style="background: #fff; border: 1px solid #f0f0f0; border-radius: 4px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; aspect-ratio: 1 / 1;">
+                                            <!-- d. Grade (Anti Menabrak Layar di HP) -->
+                                            <div class="sum-grade-box" style="background: #fff; border: 1px solid #f0f0f0; border-radius: 4px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
                                                 <span style="font-size: 11px; color: #8f9bba; font-weight: 700; text-transform: uppercase;">Grade</span>
                                                 <h1 id="sum-grade" style="font-size: 38px; font-weight: 900; margin: 2px 0; line-height: 1; color: #ee5d50;">-</h1>
                                             </div>
@@ -2032,7 +2204,7 @@
                         <!-- FOOTER WITH TICKER -->
     <footer class="footer-ticker">
         <div class="ticker-text">
-            Sistem Informasi Produksi AiO Tools &bull; Pembaruan Data Terakhir: Otomatis &bull; Pengumuman: Rapat evaluasi produksi hari Jumat pkl 09:00 WIB.
+            Sistem Informasi Produksi AiO Tools &bull; Pembaruan Data Terakhir: Otomatis &bull; Pengumuman: Rapat evaluasi produksi setiap hari Sabtu, jam 13:00 WIB.
         </div>
     </footer>
 
@@ -2056,13 +2228,25 @@
             </div>
             <h3 id="modal-title-text" style="color:#2b3674; font-size:22px; font-weight:800; margin-bottom:8px;">Menyimpan Data...</h3>
             <p id="modal-desc-text" style="color:#8f9bba; font-size:14px; margin-bottom:15px;">Mohon tunggu, sistem sedang memproses nomor dokumen.</p>
-            <div style="background:#f4f7fe; border:1px dashed #4318ff; padding:10px; border-radius:8px; display:inline-block;">
+            <div style="background:#f4f7fe; border:1px dashed #4318ff; padding:10px; border-radius:2px; display:inline-block;">
                 <span style="font-size:11px; color:#8f9bba; display:block; margin-bottom:4px; font-weight:700;">NOMOR DOKUMEN</span>
                 <span id="success-doc-number" style="font-size:16px; color:#4318ff; font-weight:800;">Memproses...</span>
             </div>
             <button id="btn-success-ok" class="btn-modern" style="display:none; width:100%; margin-top: 20px;" onclick="closeSuccessModal()">OK</button>
         </div>
     </div>
+    <!-- POPUP ANIMASI CENTANG HIJAU (0.5 DETIK) -->
+    <div id="quick-success-modal" style="display:none; position:fixed; inset:0; background:rgba(43,54,116,0.2); z-index:99999; align-items:center; justify-content:center; backdrop-filter:blur(2px);">
+        <div style="background:#ffffff; border-radius: 2px; padding:22px 30px; box-shadow:0 15px 40px rgba(0,0,0,0.15); display:flex; flex-direction:column; align-items:center; animation:quickPopIn 0.25s ease-out forwards; text-align:center; min-width:180px;">
+            <div style="width: 58px; height: 58px; border-radius: 50%; background: #ebfcf6; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                <svg style="width: 34px; height: 34px; stroke: #05cd99; stroke-width: 3.5; fill: none; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24">
+                    <path d="M5 13l4 4L19 7" class="check-path-anim"></path>
+                </svg>
+            </div>
+            <h4 id="quick-success-title" style="margin:0; font-size:16px; font-weight:800; color:#2b3674;">Berhasil!</h4>
+        </div>
+    </div>
+
     <!-- BOX NOTIF / KONFIRMASI CUSTOM -->
     <div id="custom-dialog" class="custom-dialog-overlay">
         <div class="custom-dialog-box">
@@ -2075,17 +2259,21 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbz1jAx1Uxk3f4gJFoTxb53sKvREs_aYpKk2PaiLa_ka_UUVxLOjATw8-tTNV1v8xju1FQ/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxjNBFuzHC8XdNvCGMMDQc2-mglvoIg1ETwPnAY6WwrwCcnRH2U6i9YxzhqlQidBi2Tjg/exec"; 
         
-        // 2. Mesin Panggil Backend Tahan Banting (Anti-CORS & Anti-Crash)
-        async function panggilBackend(actionName, payloadData) {
+        // 2. Mesin Panggil Backend Tahan Banting (Dengan Auto-Retry & Anti-Throttling)
+        async function panggilBackend(actionName, payloadData, attempt = 1) {
+          const maxAttempts = 3; // Otomatis mencoba ulang sampai 3 kali jika server Google sibuk
           try {
-            console.log(`📡 Menghubungi server: ${actionName}...`);
+            console.log(`📡 [Percobaan ${attempt}] Menghubungi server: ${actionName}...`);
             
             const response = await fetch(GAS_URL, {
               method: "POST",
               redirect: "follow",
               cache: "no-cache",
+              headers: {
+                "Content-Type": "text/plain;charset=utf-8" // Menghindari preflight CORS yang memicu 404
+              },
               body: JSON.stringify({ 
                 action: actionName, 
                 payload: payloadData 
@@ -2098,10 +2286,9 @@
             
             const responseText = await response.text();
             
-            // Jika Google mengembalikan HTML halaman login / error
+            // Tangani jika Google mengembalikan halaman HTML login / throttling
             if (responseText.trim().startsWith("<")) {
-              console.error("🛑 Server memblokir! Response HTML:", responseText.substring(0, 100));
-              throw new Error("Akses ditolak server Google. Pastikan setelan Deploy adalah 'Anyone'.");
+              throw new Error("Server Google sedang sibuk atau URL deployment tidak aktif.");
             }
             
             const result = JSON.parse(responseText);
@@ -2109,10 +2296,16 @@
             if (result.status === 'success') {
               return result.data; 
             } else {
-              throw new Error(result.message || "Terdapat masalah internal pada server Google.");
+              throw new Error(result.message || "Terdapat kendala pada server Google.");
             }
           } catch (error) {
-            console.error(`💥 Gagal di ${actionName}:`, error);
+            // Jika gagal dan masih ada jatah retry, tunggu sebentar lalu coba lagi
+            if (attempt < maxAttempts) {
+              console.warn(`⚠️ Koneksi ${actionName} gagal. Mencoba ulang dalam 1 detik... (${attempt}/${maxAttempts})`);
+              await new Promise(res => setTimeout(res, 1200 * attempt));
+              return panggilBackend(actionName, payloadData, attempt + 1);
+            }
+            console.error(`💥 Gagal permanen di ${actionName}:`, error);
             throw error;
           }
         }
@@ -2495,44 +2688,122 @@
         function updateDashboardChart() {
             if (!window.dashboardChartData) return;
             const period = window.currentChartPeriod || '1week';
-            let days = 7; // Default 1 Minggu
-            if (period === '3days') days = 3;
-            else if (period === '1week') days = 7;
-            else if (period === '1month') days = 30;
-            else if (period === '1year') days = 365;
 
             const today = new Date();
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
             let chartData = [];
-            let maxVal = 0;
-            let peakIndex = 0;
 
-            // Kumpulkan Data Terbalik (Dari hari kebelakang -> Maju ke hari ini)
-            for (let i = days - 1; i >= 0; i--) {
-                let d = new Date(today);
-                d.setDate(d.getDate() - i);
-                
-                const yyyy = d.getFullYear();
-                const mm = String(d.getMonth() + 1).padStart(2, '0');
-                const dd = String(d.getDate()).padStart(2, '0');
-                const ds = `${yyyy}-${mm}-${dd}`;
-                
-                let val = window.dashboardChartData[ds] || 0;
-                chartData.push({ dateStr: ds, dd: dd, val: val });
-
-                if (val > maxVal) {
-                    maxVal = val;
-                    peakIndex = chartData.length - 1;
+            if (period === '1year') {
+                // 1. OPSI 1 TAHUN: 12 Bulan ke Belakang dari Bulan Saat Ini
+                for (let i = 11; i >= 0; i--) {
+                    let d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+                    let yyyy = d.getFullYear();
+                    let mm = String(d.getMonth() + 1).padStart(2, '0');
+                    let prefix = `${yyyy}-${mm}`;
+                    
+                    let totalMonthQty = 0;
+                    for (let dStr in window.dashboardChartData) {
+                        if (dStr.startsWith(prefix)) {
+                            totalMonthQty += (window.dashboardChartData[dStr] || 0);
+                        }
+                    }
+                    chartData.push({
+                        label: monthNames[d.getMonth()],
+                        val: totalMonthQty
+                    });
+                }
+            } 
+            else if (period === '1month') {
+                // 2. OPSI 1 BULAN: 30 atau 31 Hari ke Belakang Tanpa Diloncati
+                const totalDaysBack = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                for (let i = totalDaysBack - 1; i >= 0; i--) {
+                    let d = new Date(today);
+                    d.setDate(today.getDate() - i);
+                    let yyyy = d.getFullYear();
+                    let mm = String(d.getMonth() + 1).padStart(2, '0');
+                    let dd = String(d.getDate()).padStart(2, '0');
+                    let ds = `${yyyy}-${mm}-${dd}`;
+                    chartData.push({
+                        label: String(parseInt(dd, 10)),
+                        val: window.dashboardChartData[ds] || 0
+                    });
+                }
+            } 
+            else if (period === '3days') {
+                // 3. OPSI 3 HARI: 3 Hari ke Belakang
+                for (let i = 2; i >= 0; i--) {
+                    let d = new Date(today);
+                    d.setDate(today.getDate() - i);
+                    let yyyy = d.getFullYear();
+                    let mm = String(d.getMonth() + 1).padStart(2, '0');
+                    let dd = String(d.getDate()).padStart(2, '0');
+                    let ds = `${yyyy}-${mm}-${dd}`;
+                    chartData.push({
+                        label: `${dd}/${mm}`,
+                        val: window.dashboardChartData[ds] || 0
+                    });
+                }
+            } 
+            else { 
+                // 4. OPSI 1 MINGGU: 7 Hari ke Belakang
+                for (let i = 6; i >= 0; i--) {
+                    let d = new Date(today);
+                    d.setDate(today.getDate() - i);
+                    let yyyy = d.getFullYear();
+                    let mm = String(d.getMonth() + 1).padStart(2, '0');
+                    let dd = String(d.getDate()).padStart(2, '0');
+                    let ds = `${yyyy}-${mm}-${dd}`;
+                    chartData.push({
+                        label: `${dd}/${mm}`,
+                        val: window.dashboardChartData[ds] || 0
+                    });
                 }
             }
 
-            // Cegah pembagian 0 jika database masih kosong
-            if (maxVal === 0) maxVal = 100;
+            const svgContainer = document.querySelector('.chart-svg');
+            if (!svgContainer) return;
 
+            const rect = svgContainer.getBoundingClientRect();
+            const width = Math.max(320, Math.round(rect.width || svgContainer.clientWidth || 800));
+            const height = Math.max(160, Math.round(rect.height || 220));
+            svgContainer.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+            // Sumbu Y Tetap di Rentang 0 - 10.000 Pcs
+            let peakVal = 0;
+            let peakIndex = 0;
+            chartData.forEach((pt, idx) => {
+                if (pt.val > peakVal) {
+                    peakVal = pt.val;
+                    peakIndex = idx;
+                }
+            });
+
+            const maxVal = Math.max(10000, Math.ceil(peakVal / 2500) * 2500);
+
+            // Area Plot Sumbu X & Sumbu Y
+            const yAxisWidth = 52; // Lebar khusus untuk angka Sumbu Y di sisi kiri
+            const rightPadding = 18;
+            const effectiveWidth = width - yAxisWidth - rightPadding;
             const totalPoints = chartData.length;
-            const xStep = 100 / (totalPoints <= 1 ? 1 : totalPoints - 1);
-            const baselineY = 92; // Garis dasar terbawah grafik
-            const topMarginY = 22; // Menyisakan ruang untuk badge melayang di atas titik tertinggi
+            const xStep = totalPoints <= 1 ? 0 : (effectiveWidth / (totalPoints - 1));
 
+            const baselineY = height - 12; // Garis dasar 0
+            const topMarginY = 28; // Batas atas 10.000
+
+            // 1. RENDER LANGSUNG SUMBU Y (GRID & TEXT 0 - 10.000) DI DALAM SVG
+            let yGridSvg = '';
+            const ySteps = [10000, 7500, 5000, 2500, 0];
+            ySteps.forEach(val => {
+                const yPos = baselineY - ((val / maxVal) * (baselineY - topMarginY));
+                const labelText = val === 10000 ? '10.000' : (val === 0 ? '0' : Number(val).toLocaleString('id-ID'));
+                
+                // Teks Angka Sumbu Y di Kiri
+                yGridSvg += `<text x="${yAxisWidth - 10}" y="${yPos + 3.5}" font-size="9.5" font-family="'Asta Sans', sans-serif" font-weight="700" fill="#8f9bba" text-anchor="end">${labelText}</text>`;
+                // Garis Horizontal Grid Tipis
+                yGridSvg += `<line x1="${yAxisWidth}" y1="${yPos}" x2="${width - rightPadding}" y2="${yPos}" stroke="#edf2f7" stroke-width="1" />`;
+            });
+
+            // 2. RENDER LINE & NODE DATA
             let points = [];
             let pathD = "";
             let pathFillD = "";
@@ -2540,10 +2811,9 @@
             let circlesSvg = "";
 
             chartData.forEach((pt, i) => {
-                let x = i * xStep;
-                // Skala tinggi kurva: nilai tertinggi berada di topMarginY, terendah di baselineY
+                let x = yAxisWidth + (i * xStep);
                 let y = baselineY - ((pt.val / maxVal) * (baselineY - topMarginY));
-                points.push({ x, y, val: pt.val, dd: pt.dd });
+                points.push({ x, y, val: pt.val, label: pt.label });
 
                 if (i === 0) {
                     pathD += `M ${x} ${y} `;
@@ -2553,82 +2823,70 @@
                     pathFillD += `L ${x} ${y} `;
                 }
 
-                // 1. Garis Dotted Vertikal (Drop-Lines) seperti di gambar acuan
-                dottedLinesSvg += `<line x1="${x}" y1="${y}" x2="${x}" y2="${baselineY}" stroke="#94a3b8" stroke-width="0.7" stroke-dasharray="1.5,2" opacity="0.45" />`;
-
-                // 2. Lingkaran Node Putih dengan Ring Biru Lembut
-                circlesSvg += `<circle cx="${x}" cy="${y}" r="1.5" fill="#ffffff" stroke="#0284c7" stroke-width="0.9" />`;
+                dottedLinesSvg += `<line x1="${x}" y1="${y}" x2="${x}" y2="${baselineY}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2" opacity="0.3" />`;
+                circlesSvg += `<circle cx="${x}" cy="${y}" r="${period === '1month' ? '2.5' : '3.5'}" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" />`;
             });
 
-            // Tutup area arsiran bawah
-            pathFillD += `L 100 ${baselineY} Z`;
+            pathFillD += `L ${points[points.length - 1].x} ${baselineY} Z`;
 
-            // 3. Floating Peak Badge (Kapsul Nilai Melayang seperti 405.00 pada contoh gambar)
+            // Floating Peak Badge
             let peakBadgeSvg = "";
-            if (points.length > 0) {
+            if (points.length > 0 && peakVal > 0) {
                 const peakPt = points[peakIndex];
                 const badgeText = Number(peakPt.val).toLocaleString('id-ID');
-                const badgeWidth = Math.max(14, badgeText.length * 2.6);
-                const badgeHeight = 7.5;
-                const badgeX = Math.max(badgeWidth / 2 + 1, Math.min(100 - badgeWidth / 2 - 1, peakPt.x));
-                const badgeY = peakPt.y - 12;
+                const badgeWidth = Math.max(50, badgeText.length * 8 + 16);
+                const badgeHeight = 22;
+                const badgeX = Math.max(yAxisWidth + badgeWidth / 2, Math.min(width - rightPadding - badgeWidth / 2, peakPt.x));
+                const badgeY = Math.max(6, peakPt.y - 30);
 
                 peakBadgeSvg = `
-                    <g style="filter: drop-shadow(0 2px 4px rgba(43,54,116,0.18));">
-                        <!-- Kotak Kapsul Badge -->
-                        <rect x="${badgeX - (badgeWidth / 2)}" y="${badgeY}" width="${badgeWidth}" height="${badgeHeight}" rx="3.5" fill="#ffffff" stroke="#e0e5f2" stroke-width="0.6"/>
-                        <!-- Segitiga Panah Menunjuk ke Node -->
-                        <polygon points="${badgeX - 1.8},${badgeY + badgeHeight} ${badgeX + 1.8},${badgeY + badgeHeight} ${badgeX},${badgeY + badgeHeight + 2}" fill="#ffffff"/>
-                        <!-- Nilai Text Badge -->
-                        <text x="${badgeX}" y="${badgeY + 5.2}" font-size="3.5" font-family="'Arial', sans-serif" font-weight="800" fill="#2b3674" text-anchor="middle">${badgeText}</text>
+                    <g style="filter: drop-shadow(0 2px 4px rgba(43,54,116,0.15));">
+                        <rect x="${badgeX - (badgeWidth / 2)}" y="${badgeY}" width="${badgeWidth}" height="${badgeHeight}" rx="11" fill="#ffffff" stroke="#e0e5f2" stroke-width="1"/>
+                        <polygon points="${badgeX - 4},${badgeY + badgeHeight} ${badgeX + 4},${badgeY + badgeHeight} ${badgeX},${badgeY + badgeHeight + 4}" fill="#ffffff"/>
+                        <text x="${badgeX}" y="${badgeY + 15}" font-size="10.5" font-family="'Asta Sans', sans-serif" font-weight="800" fill="#2b3674" text-anchor="middle">${badgeText}</text>
                     </g>
                 `;
             }
 
-            // Render ke Elemen SVG
-            const svgContainer = document.querySelector('.chart-svg');
-            if (svgContainer) {
-                svgContainer.innerHTML = `
-                    <defs>
-                        <!-- Gradien Halus dan Tipis Menyesuaikan Gambar -->
-                        <linearGradient id="thinFinanceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.32" />
-                            <stop offset="60%" stop-color="#38bdf8" stop-opacity="0.08" />
-                            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
-                        </linearGradient>
-                    </defs>
+            // Injeksi Elemen ke SVG
+            svgContainer.innerHTML = `
+                <defs>
+                    <linearGradient id="thinFinanceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25" />
+                        <stop offset="70%" stop-color="#38bdf8" stop-opacity="0.04" />
+                        <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+                    </linearGradient>
+                </defs>
+                ${yGridSvg}
+                ${dottedLinesSvg}
+                <path d="${pathFillD}" fill="url(#thinFinanceGradient)" />
+                <path d="${pathD}" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                ${circlesSvg}
+                ${peakBadgeSvg}
+            `;
 
-                    <!-- Garis Dotted Drop-Lines -->
-                    ${dottedLinesSvg}
-
-                    <!-- Area Gradien Tipis -->
-                    <path d="${pathFillD}" fill="url(#thinFinanceGradient)" />
-
-                    <!-- Garis Utama (Line Stroke Bersih) -->
-                    <path d="${pathD}" fill="none" stroke="#0284c7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-
-                    <!-- Titik Koordinat Bulat (Nodes) -->
-                    ${circlesSvg}
-
-                    <!-- Badge Nilai Puncak (Finance Badge) -->
-                    ${peakBadgeSvg}
-                `;
-            }
-
-            // Render Label Sumbu X (Tanggal / Hari di Bawah Grafik)
+            // 3. RENDER SUMBU X SEJAJAR DENGAN TITIK GRAFIK
             const xLabelsContainer = document.getElementById('dashboard-chart-x-labels');
             if (xLabelsContainer) {
-                let xLabelsHtml = '';
-                let stepLabel = days > 14 ? (days > 30 ? 30 : 5) : 1;
+                xLabelsContainer.style.left = `${yAxisWidth}px`;
+                xLabelsContainer.style.right = `${rightPadding}px`;
                 
-                chartData.forEach((pt, idx) => {
-                    if (idx % stepLabel === 0 || idx === totalPoints - 1) {
-                        xLabelsHtml += `<span>${pt.dd}</span>`;
-                    }
+                let xLabelsHtml = '';
+                const fontSize = period === '1month' ? '8.5px' : '10px';
+                chartData.forEach(pt => {
+                    xLabelsHtml += `<span style="flex: 1; text-align: center; font-size: ${fontSize}; color: #8f9bba; font-weight: 700;">${pt.label}</span>`;
                 });
                 xLabelsContainer.innerHTML = xLabelsHtml;
             }
         }
+
+        // Listener responsif agar saat ukuran layar/jendela berubah grafik otomatis disesuaikan tanpa distorsi
+        window.addEventListener('resize', () => {
+            const dashView = document.getElementById('view-dashboard');
+            if (dashView && dashView.classList.contains('active')) {
+                updateDashboardChart();
+            }
+        });
 
         async function switchView(viewName, element) {
             // Tutup sidebar otomatis di mobile setelah klik menu
@@ -2691,6 +2949,7 @@
                 targetView.classList.add('active');
                 
                 if(viewName === 'dashboard') loadDashboardStats();
+                if(viewName === 'dashboard-operator') loadOperatorDashboard();
                 if(viewName === 'input-baru') clearForm();
                 if(viewName === 'input-bs') clearBsForm();
                 
@@ -2833,16 +3092,18 @@
                     const td = document.createElement('td');
                     let cellVal = row[i] !== undefined && row[i] !== null ? row[i] : '-';
                     
-                    // Format Rata Kanan untuk QTY / Gramasi (Index 6 sampai 9)
+                    // Format Rata Kanan untuk Gramasi (Index 6 sampai 9)
                     if (i >= 6 && i <= 9) {
                         td.style.textAlign = 'right';
                     }
 
-                    // Format otomatis ke Rupiah untuk SEMUA Kolom Harga (Index 10 ke atas)
-                    if (i >= 10 && cellVal !== '-' && !isNaN(cellVal) && cellVal !== '') {
-                        cellVal = 'Rp ' + Number(cellVal).toLocaleString('id-ID');
-                        td.style.fontWeight = 'bold';
+                    // Format Rata Kanan & Nominal Rupiah untuk SEMUA Kolom Harga (Index 10 ke atas)
+                    if (i >= 10) {
                         td.style.textAlign = 'right';
+                        if (cellVal !== '-' && !isNaN(cellVal) && cellVal !== '') {
+                            cellVal = 'Rp ' + Number(cellVal).toLocaleString('id-ID');
+                            td.style.fontWeight = 'bold';
+                        }
                     }                        
                         td.textContent = cellVal;
                         tr.appendChild(td);
@@ -3255,9 +3516,9 @@
 
                         let infoMode = '';
                         if (canEdit && (statusVal === 'approve' || statusVal === 'approved')) {
-                            infoMode = `<div class="print-no" style="margin-top:15px; padding:10px; background:#e0e5ff; color:#4318ff; border-radius:4px; font-weight:bold; text-align:center; font-size:12px;">Mode Author: Mengedit dokumen yang sudah di-Approve.</div>`;
+                            infoMode = `<div class="print-no" style="margin-top:15px; padding:10px; background:#e0e5ff; color:#4318ff; border-radius:2px; font-weight:bold; text-align:center; font-size:12px;">Mode Author: Mengedit dokumen yang sudah di-Approve.</div>`;
                         } else if (!canEdit) {
-                            infoMode = `<div class="print-no" style="margin-top:15px; padding:10px; background:#d1fae5; color:#065f46; border-radius:4px; font-weight:bold; text-align:center; font-size:12px;">Hanya Lihat.</div>`;
+                            infoMode = `<div class="print-no" style="margin-top:15px; padding:10px; background:#d1fae5; color:#065f46; border-radius:2px; font-weight:bold; text-align:center; font-size:12px;">Hanya Lihat.</div>`;
                         }
 
                         let docPrintTitle = isBS ? "LAPORAN DATA BARANG BS / REJECT" : "LAPORAN DATA HASIL PRODUKSI";
@@ -3321,7 +3582,7 @@
                                     <div style="border-top:1px solid #000; width:90%; margin:0 auto;"></div>
                                 </div>
                                 <div class="sig-box">
-                                    Disetujui,<br><br><br><br>
+                                    Diterima,<br><br><br><br>
                                     <div style="border-top:1px solid #000; width:90%; margin:0 auto;"></div>
                                 </div>
                             </div>
@@ -3590,23 +3851,23 @@
                                 <p>Nomor Dokumen: <b>${row[3] || '-'}</b></p>
                             </div>
                             <div class="info-box-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px;">
-                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:2px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
                                     <div style="font-size:10px; color:#8f9bba; font-weight:700; text-transform:uppercase;">Unit Penerima</div>
                                     <div style="font-size:14px; color:#2b3674; font-weight:800; margin-top:4px;">${row[0] || '-'}</div>
                                 </div>
-                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:2px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
                                     <div style="font-size:10px; color:#8f9bba; font-weight:700; text-transform:uppercase;">Nomor Dokumen</div>
                                     <div style="font-size:14px; color:#4318ff; font-weight:800; margin-top:4px;">${row[3] || '-'}</div>
                                 </div>
-                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:2px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
                                     <div style="font-size:10px; color:#8f9bba; font-weight:700; text-transform:uppercase;">Tanggal / Waktu</div>
                                     <div style="font-size:14px; color:#2b3674; font-weight:800; margin-top:4px;">${row[1] || '-'} <span style="font-size:11px; font-weight:normal;">(${row[5] || '-'})</span></div>
                                 </div>
-                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:2px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
                                     <div style="font-size:10px; color:#8f9bba; font-weight:700; text-transform:uppercase;">Pekerjaan Area</div>
                                     <div style="font-size:14px; color:#2b3674; font-weight:800; margin-top:4px;">${row[2] || '-'}</div>
                                 </div>
-                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.02); grid-column: span 2;">
+                                <div class="info-box" style="background:#fff; border:1px solid #e0e5f2; padding:12px; border-radius:2px; box-shadow:0 2px 8px rgba(0,0,0,0.02); grid-column: span 2;">
                                     <div style="font-size:10px; color:#8f9bba; font-weight:700; text-transform:uppercase;">Supplier & Ekspedisi</div>
                                     <div style="font-size:14px; color:#2b3674; font-weight:800; margin-top:4px; overflow:hidden; text-overflow:ellipsis;">${row[6] || '-'} <span style="font-weight:normal; font-size:12px; color:#8f9bba;">| Surat Jalan: ${row[7] || '-'}</span></div>
                                 </div>
@@ -3614,7 +3875,7 @@
                             <div class="print-section-title" style="display:none;">Data Rincian Fisik Aktual</div>
                             <h4 style="margin-bottom:12px; color:#2b3674;">Rincian Pemeriksaan Bahan Baku</h4>
                             <div>
-                                <div id="scroll-wrapper" style="background:#fff; border-radius:4px; border:1px solid #e0e5f2; overflow-x:auto; width:100%;">
+                                <div id="scroll-wrapper" style="background:#fff; border-radius:2px; border:1px solid #e0e5f2; overflow-x:auto; width:100%;">
                                     <table class="table-thin" style="width:100%; border-collapse: collapse; min-width: 800px;">
                                         <thead>
                                             <tr style="background:#f8fafc;">
@@ -3632,7 +3893,7 @@
                                     </table>
                                 </div>
                             </div>                            
-                            <div style="margin-top:15px; padding:10px; background:#d1fae5; color:#065f46; border-radius:4px; font-weight:bold; text-align:center; font-size:12px;">Hanya Lihat. Dokumen BBK saat ini tidak dapat diubah setelah di-submit.</div>
+                            <div style="margin-top:15px; padding:10px; background:#d1fae5; color:#065f46; border-radius:2px; font-weight:bold; text-align:center; font-size:12px;">Hanya Lihat. Dokumen BBK saat ini tidak dapat diubah setelah di-submit.</div>
                         `;
                         
                         // Sembunyikan Action Buttons untuk BBK (karena read-only untuk saat ini)
@@ -3893,7 +4154,7 @@
                         <li><b>Jeda Password:</b> Ganti password dibatasi jeda 15 hari.</li>
                     </ul>
                     Silakan hubungi PIC IT / Admin melalui kontak helpdesk di bawah ini:
-                    <div style="margin-top: 10px; background:#f4f7fe; padding:10px; border-radius:6px; border:1px dashed #4318ff; text-align:center;">
+                    <div style="margin-top: 10px; background:#f4f7fe; padding:10px; border-radius:2px; border:1px dashed #4318ff; text-align:center;">
                         <span style="font-size:11px; color:#8f9bba;">KONTAK ADMIN PRODUKSI / IT</span><br>
                         <b style="font-size:15px; color:#4318ff;">+62 812-XXXX-XXXX</b>
                     </div>
@@ -3905,6 +4166,7 @@
             const role = roleStr.toLowerCase();
             
             // Definisikan DOM Elements
+            const menuDashboard = document.getElementById('menu-dashboard');
             const menuMaster = document.getElementById('menu-master');
             const menuPlanning = document.getElementById('menu-group-planning');
             const menuProduksi = document.getElementById('menu-group-produksi');
@@ -4002,6 +4264,38 @@
                 if(menuProduksi) menuProduksi.style.display = 'block';
                 if(subInputBbk) subInputBbk.style.display = 'block';
             }
+            else if (role === 'operator produksi' || role === 'operator') {
+                // LOGIKA KHUSUS LEVEL OPERATOR PRODUKSI:
+                // HANYA MUNCULKAN 3 MENU: DASHBOARD PRIBADI, + INPUT BARU, SUMMARY
+                const menuOpDash = document.getElementById('menu-op-dashboard');
+                const menuOpInput = document.getElementById('menu-op-input-baru');
+                const menuOpSumm = document.getElementById('menu-op-summary');
+                
+                if(menuOpDash) menuOpDash.style.display = 'flex';
+                if(menuOpInput) menuOpInput.style.display = 'flex';
+                if(menuOpSumm) menuOpSumm.style.display = 'flex';
+
+                // SEMBUNYIKAN SEMUA MENU STANDAR LAINNYA
+                if(menuDashboard) menuDashboard.style.display = 'none';
+                if(menuMaster) menuMaster.style.display = 'none';
+                if(menuPlanning) menuPlanning.style.display = 'none';
+                if(menuProduksi) menuProduksi.style.display = 'none';
+                if(menuTrackingSj) menuTrackingSj.style.display = 'none';
+                if(menuInventories) menuInventories.style.display = 'none';
+                if(menuOperator) menuOperator.style.display = 'none';
+
+                // Otomatis Buka Dashboard Operator
+                switchView('dashboard-operator', menuOpDash);
+                return;
+            }
+
+            // Reset menu operator bila role bukan operator
+            const menuOpDash = document.getElementById('menu-op-dashboard');
+            const menuOpInput = document.getElementById('menu-op-input-baru');
+            const menuOpSumm = document.getElementById('menu-op-summary');
+            if(menuOpDash) menuOpDash.style.display = 'none';
+            if(menuOpInput) menuOpInput.style.display = 'none';
+            if(menuOpSumm) menuOpSumm.style.display = 'none';
             
             // Hak akses Input BBK untuk Author, Supervisor, Admin Produksi, Staff Produksi
             if (['author', 'supervisor', 'admin produksi', 'staff produksi'].includes(role)) {
@@ -4157,7 +4451,7 @@
                         partialRow = true; // Baris diisi setengah, atau Qty 0
                     } else {
                         if (seenBarang.has(barang.toUpperCase()) && !duplicateMsg) {
-                            duplicateMsg = `Terdapat input ganda untuk item dengan motif yang sama persis:<br><b style="color:#2b3674;">${barang}</b><br>Sistem melarang input duplikat. Silakan gabungkan Qty pada baris yang sama. (Diizinkan menambah baris jika motifnya berbeda).`;
+                            duplicateMsg = `Terdapat input ganda untuk item dengan motif yang sama persis:<br><b style="color:#2b3674;">${barang}</b><br>Silakan gabungkan Qty pada baris yang sama.`;
                         }
                         seenBarang.add(barang.toUpperCase());
 
@@ -4519,10 +4813,12 @@
                 }
             }
 
+            const isOperatorRole = (roleLower === 'operator produksi' || roleLower === 'operator');
+
             const checkPerbantuan = document.getElementById('check-perbantuan');
             if(checkPerbantuan) {
                 checkPerbantuan.checked = false;
-                checkPerbantuan.disabled = false;
+                checkPerbantuan.disabled = isOperatorRole;
             }
             toggleManualOp();
             updateOperatorList();
@@ -4800,41 +5096,25 @@
                 userName: window.currentUserName || ""
             };
 
-            const modalAnim = document.getElementById('modal-success-anim');
-            const loaderContainer = document.getElementById('loader-icon-container');
-            const checkContainer = document.getElementById('success-check-container');
-            const titleText = document.getElementById('modal-title-text');
-            const descText = document.getElementById('modal-desc-text');
-            const docNumEl = document.getElementById('success-doc-number');
-            const btnOk = document.getElementById('btn-success-ok');
-            
-            // 1. Tampilkan Status Loading Terlebih Dahulu
-            if(loaderContainer) loaderContainer.style.display = 'block';
-            if(checkContainer) checkContainer.style.display = 'none';
-            if(btnOk) btnOk.style.display = 'none';
-            if(titleText) titleText.textContent = "Menyimpan Data BBK...";
-            if(descText) descText.innerHTML = "Mohon tunggu, sistem sedang memproses dokumen.";
-            if(docNumEl) docNumEl.textContent = "Memproses...";
-            
-            if(modalAnim) modalAnim.style.display = 'flex';
-            window.nextViewAfterSuccess = 'buku-pengecekan'; // Set arah kembalian BBK
+            // 1. Langsung Munculkan Animasi Centang Hijau
+            showQuickSuccess("Data BBK Tersimpan!");
 
-              try {
-                  const res = await panggilBackend('saveBbkToSheet', payload);
-                  if(res && res.success) {
-                      if(loaderContainer) loaderContainer.style.display = 'none';
-                      if(checkContainer) checkContainer.style.display = 'flex';
-                      titleText.textContent = "Data BBK Disimpan!";
-                      docNumEl.textContent = res.idLaporan || "-";
-                      btnOk.style.display = 'block';
-                      loadBbkGlobalData();
-                  } else {
-                      throw new Error(res.message);
-                  }
-              } catch (err) {
-                  modalAnim.style.display = 'none';
-                  showDialog("Gagal: " + err.message, "warning");
-              }
+            // 2. Langsung Tutup & Pindah Halaman
+            clearBbkForm();
+            switchView('buku-pengecekan');
+
+            // 3. Simpan di Latar Belakang
+            panggilBackend('saveBbkToSheet', payload)
+                .then(res => {
+                    if(res && res.success) {
+                        loadBbkGlobalData();
+                    } else {
+                        showDialog("Gagal simpan BBK: " + (res ? res.message : 'Error server'), "warning");
+                    }
+                })
+                .catch(err => {
+                    showDialog("Koneksi gagal saat simpan BBK: " + err.message, "warning");
+                });
         }
 
         function toggleSubmenu(element) {
@@ -4872,12 +5152,64 @@
             renderMasterTable(filtered, 1);
         }
 
+        function filterInputBaruOperators() {
+            const val = (document.getElementById('filter-input-operator')?.value || '').toLowerCase().trim();
+            document.querySelectorAll('#operator-container .operator-tile').forEach(tile => {
+                const name = tile.textContent.toLowerCase();
+                if (val === '' || name.includes(val)) {
+                    tile.style.display = 'inline-block';
+                } else {
+                    tile.style.display = 'none';
+                }
+            });
+        }
+
         function updateOperatorList() {
+            const filterInp = document.getElementById('filter-input-operator');
+            if(filterInp) filterInp.value = '';
             const container = document.getElementById('operator-container');
             if(!container) return;
             container.innerHTML = '';
-            
-            // Tampilkan semua operator aktif tanpa dibatasi Karu (memungkinkan pinjam operator)
+
+            const roleLower = (window.currentUserRole || "").toLowerCase();
+            const isOperator = (roleLower === 'operator produksi' || roleLower === 'operator');
+
+            // JIKA LOGIN SEBAGAI OPERATOR PRODUKSI: KUNCI TOTAL KE DIRI SENDIRI
+            if (isOperator) {
+                const currentName = window.currentUserName;
+                const div = document.createElement('div');
+                div.className = 'operator-tile selected';
+                div.textContent = currentName;
+                div.style.pointerEvents = 'none'; // Tidak bisa diklik / batal
+                div.style.background = '#4318ff';
+                div.style.color = '#fff';
+                div.title = 'Operator terkunci ke akun Anda';
+                container.appendChild(div);
+
+                // Sembunyikan pencarian operator & form perbantuan
+                const searchWrap = document.getElementById('wrapper-filter-op-input');
+                const perbantuanWrap = document.getElementById('check-perbantuan')?.parentElement;
+                if (searchWrap) searchWrap.style.display = 'none';
+                if (perbantuanWrap) perbantuanWrap.style.display = 'none';
+
+                // Otomatis pilihkan Karu dari database master jika tersedia
+                const opData = allOperators.find(o => String(o.nama || '').trim().toLowerCase() === currentName.toLowerCase());
+                if (opData && opData.karu) {
+                    const kSelect = document.getElementById('select-karu');
+                    if (kSelect) {
+                        kSelect.value = opData.karu;
+                        kSelect.disabled = true; // Kunci Karu sesuai regu aslinya
+                    }
+                }
+                return;
+            }
+
+            // UNTUK LEVEL LAIN (Karu, Admin, Supervisor, Author): Tampilkan semua operator aktif
+            const searchWrap = document.getElementById('wrapper-filter-op-input');
+            const perbantuanWrap = document.getElementById('check-perbantuan')?.parentElement;
+            if (searchWrap) searchWrap.style.display = 'block';
+            if (perbantuanWrap) perbantuanWrap.style.display = 'flex';
+
             const seen = new Set();
             const uniqueOperators = [];
             allOperators.forEach(item => {
@@ -4888,14 +5220,13 @@
                 }
             });
             
-            // Urutkan nama operator secara alfabetis A-Z
             uniqueOperators.sort((a, b) => a.nama.localeCompare(b.nama));
             
             uniqueOperators.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'operator-tile';
                 div.textContent = item.nama;
-                div.title = `Karu Asal: ${item.karu || '-'}`; // Info tooltip karu asal
+                div.title = `Karu Asal: ${item.karu || '-'}`;
                 div.onclick = function() { this.classList.toggle('selected'); };
                 container.appendChild(div);
             });
@@ -5076,7 +5407,7 @@
                     Object.keys(tableDataByPekerjaan).forEach(pek => {
                         tablesHtml += `
                         <div style="min-width: 350px; background:#fff;">
-                            <table class="table-thin" style="width:100%; border-collapse:collapse; border: 1px solid #7ea3c8; font-family: Arial, sans-serif;">
+                            <table class="table-thin" style="width:100%; border-collapse:collapse; border: 1px solid #7ea3c8; font-family: Asta Sans, sans-serif;">
                                 <thead>
                                     <tr style="background:#9ebde3;">
                                         <th style="padding:6px 8px; border:1px solid #7ea3c8; color:#000; font-size:11px; text-transform:none; font-weight:bold; text-align:center;">Kategori</th>
@@ -5377,24 +5708,21 @@
 
             rawData.forEach(row => {
                 if (!row[1]) return;
+                
+                // HANYA OLAH DOKUMEN PRODUKSI (PRD), ABAIKAN BBK AGAR AKUN AUTHOR TIDAK TERBAWA
+                const tipeDok = String(row[3] || '').toUpperCase().trim();
+                if (tipeDok !== 'PRD') return;
+
                 const tgl = row[2];
                 if (startDate && tgl < startDate) return;
                 if (endDate && tgl > endDate) return;
 
                 const opNames = (row[7] || '').split(',').map(n => n.trim());
                 opNames.forEach(opName => {
-                    if (!opName || opName === '-') return;
+                    if (!opName || opName === '-' || opName.toLowerCase() === 'system') return;
 
-                    if (!ops[opName]) {
-                        ops[opName] = {
-                            unit: row[0] || 'CV JHB',
-                            pekerjaan: row[6] || '-',
-                            totalInsentif: 0,
-                            totalQty: 0,
-                            days: new Set(),
-                            dailyData: {}
-                        };
-                    }
+                    // FILTER KETAT: NAMA HARUS RESMI TERDAFTAR DI MASTER_OPERATOR
+                    if (!ops[opName]) return;
 
                     const qty = parseFloat(row[13]) || 0;
                     let insentif = row[16] || '0';
@@ -5445,8 +5773,23 @@
                 listContainer.appendChild(div);
             });
 
-            if (!window.selectedSummaryOperator || !ops[window.selectedSummaryOperator]) {
-                window.selectedSummaryOperator = opNamesList[0];
+            // JIKA LOGIN SEBAGAI OPERATOR PRODUKSI: SEMBUNYIKAN SEARCH & LIST, KUNCI LANGSUNG KE NAMANYA
+            const roleLower = (window.currentUserRole || "").toLowerCase();
+            const isOperatorRole = (roleLower === 'operator produksi' || roleLower === 'operator');
+            
+            const searchBox = document.getElementById('summary-operator-search');
+            const opListWrapper = listContainer.parentElement;
+
+            if (isOperatorRole) {
+                if(searchBox && searchBox.parentElement) searchBox.parentElement.style.display = 'none';
+                if(opListWrapper) opListWrapper.style.display = 'none';
+                window.selectedSummaryOperator = window.currentUserName;
+            } else {
+                if(searchBox && searchBox.parentElement) searchBox.parentElement.style.display = 'block';
+                if(opListWrapper) opListWrapper.style.display = 'block';
+                if (!window.selectedSummaryOperator || !ops[window.selectedSummaryOperator]) {
+                    window.selectedSummaryOperator = opNamesList[0];
+                }
             }
 
             document.querySelectorAll('.summary-op-chip').forEach(c => {
@@ -5454,6 +5797,252 @@
             });
 
             loadOperatorReport(window.selectedSummaryOperator);
+        }
+
+        // --- MESIN DASHBOARD KHUSUS OPERATOR PRODUKSI (GAMBAR 2) ---
+        function loadOperatorDashboard() {
+            const opName = window.currentUserName;
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
+
+            // Jam Digital Realtime
+            const clockEl = document.getElementById('op-live-clock');
+            const dateEl = document.getElementById('op-live-date');
+            if (clockEl) {
+                const timeStr = now.toLocaleTimeString('id-ID');
+                clockEl.textContent = timeStr;
+            }
+            if (dateEl) {
+                dateEl.textContent = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            }
+
+            if (!window.rawViewData || window.rawViewData.length === 0) {
+                panggilBackend('getDataProduksi', {}).then(data => {
+                    window.rawViewData = data || [];
+                    calculateOperatorMetrics(opName, todayStr, now);
+                }).catch(() => {});
+            } else {
+                calculateOperatorMetrics(opName, todayStr, now);
+            }
+        }
+
+        function calculateOperatorMetrics(opName, todayStr, now) {
+            let todayQty = 0, todayRp = 0;
+            let weekQty = 0, weekRp = 0;
+            let monthQty = 0, monthRp = 0;
+            let attendedDays = new Set();
+            let recentRows = [];
+            let last7Days = {};
+
+            // Inisialisasi 7 hari ke belakang
+            for (let i = 6; i >= 0; i--) {
+                let d = new Date(now);
+                d.setDate(d.getDate() - i);
+                let ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+                last7Days[ds] = { dd: String(d.getDate()).padStart(2,'0'), mm: String(d.getMonth()+1).padStart(2,'0'), qty: 0 };
+            }
+
+            const currentMonthPrefix = todayStr.slice(0, 7);
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1));
+            const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth()+1).padStart(2,'0')}-${String(startOfWeek.getDate()).padStart(2,'0')}`;
+
+            (window.rawViewData || []).forEach(row => {
+                if (!row[1] || String(row[3] || '').toUpperCase() !== 'PRD') return;
+                const tgl = String(row[2] || '');
+                const ops = (row[7] || '').split(',').map(n => n.trim().toLowerCase());
+                
+                if (ops.includes(opName.toLowerCase())) {
+                    const sharedCount = ops.length || 1;
+                    const qty = (parseFloat(row[13]) || 0) / sharedCount;
+                    let rawIns = String(row[16] || '0').split(',')[0].replace(/[^\d]/g, '');
+                    const rp = (parseFloat(rawIns) || 0) / sharedCount;
+
+                    // Hari Ini
+                    if (tgl === todayStr) {
+                        todayQty += qty;
+                        todayRp += rp;
+                    }
+                    // Minggu Ini
+                    if (tgl >= startOfWeekStr && tgl <= todayStr) {
+                        weekQty += qty;
+                        weekRp += rp;
+                    }
+                    // Bulan Ini
+                    if (tgl.startsWith(currentMonthPrefix)) {
+                        monthQty += qty;
+                        monthRp += rp;
+                        attendedDays.add(tgl);
+                    }
+                    // 7 Hari Terakhir
+                    if (last7Days[tgl]) {
+                        last7Days[tgl].qty += qty;
+                    }
+                    // Riwayat
+                    if (recentRows.length < 15) {
+                        recentRows.push({ tgl, pek: row[6], barang: `${row[8]} - ${row[9]}`, qty: Math.round(qty), rp: Math.round(rp) });
+                    }
+                }
+            });
+
+            // Update DOM Nilai
+            document.getElementById('op-stat-today').innerHTML = `${Math.round(todayQty).toLocaleString('id-ID')} <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span>`;
+            document.getElementById('op-stat-today-rp').textContent = `Rp ${Math.round(todayRp).toLocaleString('id-ID')}`;
+            document.getElementById('op-stat-week').innerHTML = `${Math.round(weekQty).toLocaleString('id-ID')} <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span>`;
+            document.getElementById('op-stat-week-rp').textContent = `Rp ${Math.round(weekRp).toLocaleString('id-ID')}`;
+            document.getElementById('op-stat-month').innerHTML = `${Math.round(monthQty).toLocaleString('id-ID')} <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span>`;
+            document.getElementById('op-stat-month-rp').textContent = `Rp ${Math.round(monthRp).toLocaleString('id-ID')}`;
+
+            // Meter Target UMR Harian (Rp 110.960)
+            const targetDailyPct = Math.min(100, Math.round((todayRp / 110960) * 100));
+            document.getElementById('op-meter-target').style.strokeDasharray = `${targetDailyPct}, 100`;
+            document.getElementById('op-pct-target').textContent = `${targetDailyPct}%`;
+
+            // Meter Kehadiran Hari Kerja
+            const totalHkMonth = 25;
+            const absenPct = Math.min(100, Math.round((attendedDays.size / totalHkMonth) * 100));
+            document.getElementById('op-meter-absen').style.strokeDasharray = `${absenPct}, 100`;
+            document.getElementById('op-pct-absen').textContent = `${absenPct}%`;
+            document.getElementById('op-stat-hk-label').textContent = `${attendedDays.size} / ${totalHkMonth} Hari Kerja`;
+
+            // Grade Produktivitas
+            const avgRpDaily = attendedDays.size > 0 ? (monthRp / attendedDays.size) : todayRp;
+            const scoreGrade = (absenPct * 0.7) + (Math.min(100, (avgRpDaily / 110960) * 100) * 0.3);
+            let gradeStr = 'C';
+            if (scoreGrade >= 90) gradeStr = 'A (Sangat Baik)';
+            else if (scoreGrade >= 80) gradeStr = 'B (Baik)';
+            else if (scoreGrade >= 70) gradeStr = 'C (Cukup)';
+            else gradeStr = 'D (Perlu Ditingkatkan)';
+            document.getElementById('op-dashboard-grade').textContent = gradeStr;
+
+            // Render SVG Grafik Batang 7 Hari Terakhir
+            renderOperatorBarChart(last7Days);
+
+            // Simpan riwayat lengkap untuk keperluan filter tanggal
+            window.opFullRecentRows = recentRows;
+            renderOperatorRecentHistoryTable(recentRows);
+
+            // Render Kalender Bulan Ini
+            renderOperatorCalendar(attendedDays, now);
+        }
+
+        // FUNGSI RENDER TABEL RIWAYAT (TANPA INSENTIF)
+        function renderOperatorRecentHistoryTable(rows) {
+            const tbody = document.getElementById('op-dashboard-history-tbody');
+            if (!tbody) return;
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#8f9bba; padding:15px;">Tidak ada riwayat inputan pada tanggal ini.</td></tr>`;
+            } else {
+                tbody.innerHTML = rows.slice(0, 8).map(r => `
+                    <tr>
+                        <td style="padding:6px 8px;">${r.tgl}</td>
+                        <td style="padding:6px 8px; font-weight:600;">${r.pek}</td>
+                        <td style="padding:6px 8px;">${r.barang}</td>
+                        <td style="padding:6px 8px; text-align:right; font-weight:800; color:#4318ff;">${r.qty}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // FILTER TANGGAL RIWAYAT OPERATOR
+        function filterOperatorRecentHistory() {
+            const filterDate = document.getElementById('op-history-filter-date')?.value;
+            if (!window.opFullRecentRows) return;
+            if (!filterDate) {
+                renderOperatorRecentHistoryTable(window.opFullRecentRows);
+                return;
+            }
+            const filtered = window.opFullRecentRows.filter(r => r.tgl === filterDate);
+            renderOperatorRecentHistoryTable(filtered);
+        }
+
+        function resetOperatorHistoryFilter() {
+            const dateInp = document.getElementById('op-history-filter-date');
+            if (dateInp) dateInp.value = '';
+            if (window.opFullRecentRows) renderOperatorRecentHistoryTable(window.opFullRecentRows);
+        }
+
+        function renderOperatorBarChart(last7Days) {
+            const svg = document.getElementById('op-bar-chart-svg');
+            const xContainer = document.getElementById('op-bar-chart-x');
+            if (!svg) return;
+
+            const dates = Object.keys(last7Days);
+            let maxVal = 0;
+            dates.forEach(d => { if (last7Days[d].qty > maxVal) maxVal = last7Days[d].qty; });
+            if (maxVal === 0) maxVal = 100;
+
+            const width = svg.clientWidth || 500;
+            const height = 180;
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+            const numBars = dates.length;
+            const step = width / numBars;
+            const barWidth = step * 0.45;
+            let svgHtml = '';
+            let xHtml = '';
+
+            dates.forEach((d, idx) => {
+                const val = last7Days[d].qty;
+                const h = (val / maxVal) * (height - 35);
+                const x = (idx * step) + (step / 2) - (barWidth / 2);
+                const y = height - h - 10;
+
+                // Garis Grid Tipis
+                svgHtml += `<line x1="0" y1="${height - 10}" x2="${width}" y2="${height - 10}" stroke="#e2e8f0" stroke-width="1.5" />`;
+
+                // Bar
+                svgHtml += `<rect x="${x}" y="${y}" width="${barWidth}" height="${h}" rx="4" fill="#4318ff" />`;
+                if (val > 0) {
+                    svgHtml += `<text x="${x + barWidth/2}" y="${y - 6}" font-size="11" font-weight="800" fill="#2b3674" text-anchor="middle">${val}</text>`;
+                }
+
+                xHtml += `<span style="flex:1; text-align:center;">${last7Days[d].dd}/${last7Days[d].mm}</span>`;
+            });
+
+            svg.innerHTML = svgHtml;
+            if (xContainer) xContainer.innerHTML = xHtml;
+        }
+
+        function renderOperatorCalendar(attendedSet, now) {
+            const container = document.getElementById('op-calendar-container');
+            if (!container) return;
+
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            let startDayIdx = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+            const totalDays = lastDay.getDate();
+
+            let calHtml = `
+                <div style="display:grid; grid-template-columns: repeat(7, 1fr); text-align:center; gap:2px; font-size:10px; font-weight:700; color:#8f9bba; margin-bottom:6px;">
+                    <div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div><div style="color:#ee5d50;">Min</div>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:4px; text-align:center; font-size:11px; font-weight:700;">
+            `;
+
+            for (let i = 0; i < startDayIdx; i++) calHtml += `<div></div>`;
+
+            for (let day = 1; day <= totalDays; day++) {
+                let dString = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                let isHadir = attendedSet.has(dString);
+                let isSunday = new Date(year, month, day).getDay() === 0;
+
+                if (isHadir) {
+                    calHtml += `<div style="background:#05cd99; color:#fff; border-radius:50%; width:22px; height:22px; margin:0 auto; display:flex; align-items:center; justify-content:center;">${day}</div>`;
+                } else if (isSunday) {
+                    calHtml += `<div style="color:#ee5d50; background:#fce8e8; border-radius:50%; width:22px; height:22px; margin:0 auto; display:flex; align-items:center; justify-content:center;">${day}</div>`;
+                } else {
+                    calHtml += `<div style="color:#2b3674; height:22px; display:flex; align-items:center; justify-content:center;">${day}</div>`;
+                }
+            }
+
+            calHtml += `</div>`;
+            container.innerHTML = calHtml;
         }
 
         function filterSummaryOperatorChips() {
@@ -5936,7 +6525,7 @@
                 })
                     .then(res => {
                         if (res && res.success) {
-                            document.getElementById('doc-open-badge').innerHTML = '<span style="background:#fce8e8; color:#ee5d50; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold; vertical-align:middle; margin-left:10px;">BATAL</span>';
+                            document.getElementById('doc-open-badge').innerHTML = '<span style="background:#fce8e8; color:#ee5d50; padding:4px 8px; border-radius:2px; font-size:12px; font-weight:bold; vertical-align:middle; margin-left:10px;">BATAL</span>';
                             if(actionsContainer) actionsContainer.style.display = 'none';
                             
                             if (window.currentEditingReport) window.currentEditingReport[9] = 'Batal';
@@ -5977,66 +6566,13 @@
                     });
                     
                     if (res && res.success) {
-                        // Munculkan Modal Animasi Sukses
-                        const modalAnim = document.getElementById('modal-success-anim');
-                        const loaderContainer = document.getElementById('loader-icon-container');
-                        const checkContainer = document.getElementById('success-check-container');
-                        const titleText = document.getElementById('modal-title-text');
-                        const descText = document.getElementById('modal-desc-text');
-                        
-                        if(loaderContainer) loaderContainer.style.display = 'none';
-                        if(checkContainer) checkContainer.style.display = 'flex';
-                        if(titleText) titleText.textContent = "Berhasil Disetujui!";
-                        if(descText) descText.innerHTML = `Dokumen <b>${idLaporan}</b> telah di-Approve.`;
-                        
-                        const docNumEl = document.getElementById('success-doc-number');
-                        if(docNumEl) docNumEl.textContent = idLaporan;
-                        
-                        if(modalAnim) modalAnim.style.display = 'flex';
-                        
-                        // Mengatur Warna dinamis Badge Status Pada Buka Dokumen Utama
-                        const elStatusState = document.getElementById('doc-state-status');
-                        let stateColorBg = '#10b981'; // Statik menjadi warna hijau karena proses sudah 100% SUKSES Approve
-                        
-                        if (elStatusState) {
-                            elStatusState.style.display = 'inline-block';
-                            elStatusState.style.background = stateColorBg;
-                            elStatusState.innerText = 'APPROVED';
-                        }
-                        
-                        const topActions = document.getElementById('doc-header-action-wrapper');
-                        if (topActions) {
-                            topActions.innerHTML = `
-                                <button class="btn-modern" style="background:#fff; color:#05cd99; border:1px solid #05cd99; padding:6px 12px; display:flex; align-items:center; gap:6px; box-shadow:0 2px 5px rgba(5, 205, 153, 0.1);" onclick="cetakDokumen('${idLaporan}')" title="Print / Simpan PDF">
-                                    <svg style="width:14px; height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 00-2-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> Cetak PDF
-                                </button>
-                                <button class="btn-modern" style="background:#fff; color:#10b981; border:1px solid #10b981; padding:6px 12px; display:flex; align-items:center; gap:6px; box-shadow:0 2px 5px rgba(16, 185, 129, 0.1);" onclick="exportDetailToExcel('${idLaporan}')" title="Export Excel">
-                                    <svg style="width:14px; height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Export Excel
-                                </button>
-                                <button class="btn-modern" style="background:#ee5d50;" onclick="goBackFromDocument()">&times; Tutup</button>
-                            `;
-                        }
-
-                        // Sembunyikan blok aksi Edit & Approve yang ada di Footer Form Dokumen Utama
-                        const actionBawah = document.getElementById('doc-open-actions');
-                        if (actionBawah) actionBawah.style.display = 'none';
+                        // Tampilkan Animasi Centang Hijau Cepat
+                        showQuickSuccess("Dokumen Disetujui!", () => {
+                            goBackFromDocument();
+                            loadLaporanData();
+                        });
 
                         if (window.currentEditingReport) window.currentEditingReport[9] = 'Approved';
-                        loadLaporanData(); 
-
-                        // Tutup modal tinjauan dokumen secara otomatis
-                        goBackFromDocument();
-                        
-                        // Menampilkan modal sukses approve
-                        const btnOk = document.getElementById('btn-success-ok');
-                        if(btnOk) {
-                            btnOk.style.display = 'block';
-                            window.nextViewAfterSuccess = 'data-laporan'; 
-                        } else {
-                            setTimeout(() => {
-                                if(modalAnim) modalAnim.style.display = 'none';
-                            }, 2000);
-                        }
                         } else {
                         throw new Error(res ? res.message : "Kesalahan server");
                     }
@@ -6312,7 +6848,7 @@
                 <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e5f2;">
                 <div>
                     <h4 style="margin-bottom:12px; color:#2b3674;">Rincian Barang Produksi</h4>
-                    <div style="background:#fff; border-radius:4px; border:1px solid #e0e5f2; overflow:hidden;">
+                    <div style="background:#fff; border-radius:2px; border:1px solid #e0e5f2; overflow:hidden;">
                         <table class="table-thin" style="width:100%; border-collapse: collapse;">
                             <thead>
                                 <tr style="background:#f8fafc;">
@@ -6351,58 +6887,56 @@
             }
         }
 
-        async function executeFinalSubmit() {
-          const modalAnim = document.getElementById('modal-success-anim');
-          const loaderContainer = document.getElementById('loader-icon-container');
-          const checkContainer = document.getElementById('success-check-container');
-          const titleText = document.getElementById('modal-title-text');
-          const descText = document.getElementById('modal-desc-text');
-          const docNumEl = document.getElementById('success-doc-number');
-          const btnOk = document.getElementById('btn-success-ok');
-          
-          // 1. Tampilkan Box Loading di Layar
-          if(loaderContainer) loaderContainer.style.display = 'block';
-          if(checkContainer) checkContainer.style.display = 'none';
-          if(btnOk) btnOk.style.display = 'none';
-          if(titleText) titleText.textContent = "Menyimpan Data...";
-          if(descText) descText.innerHTML = "Mohon tunggu, sistem sedang memproses dokumen...";
-          if(docNumEl) docNumEl.textContent = "Memproses...";
-          
-          if(modalAnim) modalAnim.style.display = 'flex';
-          window.nextViewAfterSuccess = 'data-laporan'; // Set arah kembalian PRD/BS
+        // Helper Animasi Centang Hijau (Durasi 1 Detik)
+        function showQuickSuccess(titleText = "Berhasil!", callback = null) {
+            const modal = document.getElementById('quick-success-modal');
+            const title = document.getElementById('quick-success-title');
+            if (title) title.textContent = titleText;
+            if (modal) {
+                const path = modal.querySelector('.check-path-anim');
+                if (path) {
+                    path.style.animation = 'none';
+                    path.offsetHeight; /* trigger reflow */
+                    path.style.animation = 'drawCheckAnim 1s cubic-bezier(0.65, 0, 0.45, 1) forwards';
+                }
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    if (callback) callback();
+                }, 1300); // Tampil selama 1.3 detik (1 detik animasi + 0.3 detik jeda sebelum tertutup)
+            } else if (callback) {
+                callback();
+            }
+        }
 
-          try {
-              // 2. Kirim data ke Google Sheets via Web App
-              const res = await panggilBackend('saveProduksiToSheet', globalPayloadToSubmit);
-              
-              if(res && res.success) {
-                  // 3. Jika Sukses, ubah tampilan modal jadi Ceklis Hijau
-                  if(loaderContainer) loaderContainer.style.display = 'none';
-                  if(checkContainer) checkContainer.style.display = 'flex';
-                  if(titleText) titleText.textContent = "Berhasil Dikirim!";
-                  if(descText) descText.innerHTML = "Data telah tersimpan di server.";
-                  if(docNumEl) docNumEl.textContent = res.idLaporan || "Tersimpan";
-                  if(btnOk) btnOk.style.display = 'block';
+        // SIMPAN DOKUMEN PRODUKSI INSTAN TANPA LOADING KUBUS (LATAR BELAKANG)
+        function executeFinalSubmit() {
+            const payload = Object.assign({}, globalPayloadToSubmit);
+            
+            // 1. Langsung Tampilkan Animasi Centang Hijau
+            showQuickSuccess(payload.tipe === "BS" ? "Data BS Tersimpan!" : "Dokumen Tersimpan!");
 
-                  // 4. Tarik data terbaru di belakang layar
-                  const data = await panggilBackend('getDataLaporanLatest', {});
-                  window.rawLaporanData = data || [];
-                  filterLaporanData();
-                  
-                  loadDashboardStats();
-                  
-                  const mutasiRes = await panggilBackend('getSaldoMutasiData', {});
-                  window.allMutasiData = (mutasiRes && mutasiRes.success) ? mutasiRes.data : [];
-                  
-              } else {
-                  throw new Error(res ? res.message : "Gagal menyimpan data");
-              }
-          } catch (error) {
-              // Kalau internet putus atau sheet gagal tulis
-              if(modalAnim) modalAnim.style.display = 'none';
-              showDialog("Gagal Kirim: " + error.message, "warning");
-          }
-      }
+            // 2. Langsung Bersihkan Form & Pindah View agar user bisa langsung lanjut kerja
+            clearForm();
+            clearBsForm();
+            switchView('data-laporan');
+
+            // 3. Simpan ke Google Sheets di LATAR BELAKANG secara tenang
+            panggilBackend('saveProduksiToSheet', payload)
+                .then(res => {
+                    if (res && res.success) {
+                        // Beri jeda 1 detik agar Google Spreadsheet selesai menulis sebelum membaca data baru
+                        setTimeout(() => {
+                            loadLaporanData();
+                        }, 1000);
+                    } else {
+                        showDialog("Peringatan: Gagal menyimpan data (" + (res ? res.message : 'Error') + "). Cek kembali data Anda.", "warning");
+                    }
+                })
+                .catch(err => {
+                    showDialog("Gagal menyimpan ke server: " + err.message + ". Silakan cek jaringan Anda.", "warning");
+                });
+        }
 
         // --- TAMBAHAN: Fungsi Navigasi Keyboard (Up/Down/Enter) ---
         function navigateSuggestions(event, inputEl) {
@@ -6473,7 +7007,7 @@
             
             // Regex case-insensitive untuk semua pecahan kata kunci
             const regex = new RegExp(`(${keywords.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
-            return fullText.replace(regex, '<span style="background:#e0e5ff; color:#4318ff; padding:1px 6px; border-radius:4px; font-weight:800; border:1px solid #c7d2fe; box-shadow:0 1px 3px rgba(67,24,255,0.15);">$1</span>');
+            return fullText.replace(regex, '<span style="background:#e0e5ff; color:#4318ff; padding:1px 6px; border-radius:2px; font-weight:800; border:1px solid #c7d2fe; box-shadow:0 1px 3px rgba(67,24,255,0.15);">$1</span>');
         }
 
         let debounceTimer;
@@ -7528,7 +8062,7 @@
           renderBox4_TabelInsentif(groupedByDate, TARGET_UMR);
       }
 
-      // BOX 1: Double 3D Bar Chart, Thin Value Labels, & Clean Linear Regression Line
+      // BOX 1: Double 3D Bar Chart - Pixel-Exact (Bebas Distorsi Gepeng, Nilai Pcs & Rupiah Tegak & Jelas)
       function renderBox1_Grafik(groupedByDate) {
           const svgEl = document.getElementById('perf-bar-svg');
           const xLabelEl = document.getElementById('perf-bar-x-axis');
@@ -7555,13 +8089,16 @@
               dates = Object.keys(groupedByDate).sort();
           }
 
+          if (!svgEl) return;
+
           if (dates.length === 0) {
-              if(svgEl) svgEl.innerHTML = '';
+              svgEl.innerHTML = '';
               if(xLabelEl) xLabelEl.innerHTML = '<span style="width:100%; text-align:center; color:#8f9bba;">Tidak ada data pada periode ini</span>';
               if(gridEl) gridEl.innerHTML = '';
               return;
           }
 
+          // Hitung nilai maksimum skala
           let maxPct = 0;
           let maxQty = 0;
           dates.forEach(d => {
@@ -7571,11 +8108,10 @@
               if (item.qty > maxQty) maxQty = item.qty;
           });
 
-          // Skala Y proporsional berbasis target 100%
           let chartMaxPct = Math.max(100, Math.ceil((maxPct || 1) / 25) * 25);
           maxQty = maxQty === 0 ? 100 : maxQty * 1.15;
 
-          // Render Grid Garis Tipis & Label Persentase
+          // Render Grid Garis Tipis & Label Persentase Sumbu Y
           let gridHtml = '';
           for (let i = chartMaxPct; i >= 0; i -= (chartMaxPct / 4)) {
               let roundedPct = Math.round(i);
@@ -7586,10 +8122,26 @@
           }
           if(gridEl) gridEl.innerHTML = gridHtml;
 
-          let numBars = dates.length;
-          let xStep = 100 / numBars;
-          let barWidth = Math.max(0.8, Math.min(xStep * 0.32, 5));
-          let depth = Math.min(1.5, barWidth * 0.4);
+          // Ambil dimensi piksel aktual kontainer agar teks TIDAK GEPENG
+          const rect = svgEl.getBoundingClientRect();
+          const width = Math.max(300, Math.round(rect.width || svgEl.clientWidth || 600));
+          const height = Math.max(160, Math.round(rect.height || 200));
+
+          svgEl.setAttribute('viewBox', `0 0 ${width} ${height}`);
+          svgEl.removeAttribute('preserveAspectRatio');
+
+          const numBars = dates.length;
+          const paddingLeftRight = 15;
+          const effectiveWidth = width - (paddingLeftRight * 2);
+          const xStep = effectiveWidth / numBars;
+          
+          // Lebar batang proporsional berbasis piksel
+          const barWidth = Math.max(10, Math.min(xStep * 0.28, 22));
+          const depth = Math.min(6, Math.round(barWidth * 0.45)); // Sudut 3D miring
+
+          const baselineY = height - 12; // Garis lantai bawah
+          const topMarginY = 32; // Ruang bebas atas untuk teks label
+          const plotHeight = baselineY - topMarginY;
 
           let svgHtml = '';
           let regressionPoints = [];
@@ -7598,44 +8150,56 @@
               const item = groupedByDate[d] || { qty: 0, rp: 0 };
               const realPct = (item.rp / TARGET_UMR) * 100;
 
-              let hRp = (realPct / chartMaxPct) * 100;
-              let hQty = (item.qty / maxQty) * 100;
+              const hRp = (realPct / chartMaxPct) * plotHeight;
+              const hQty = (item.qty / maxQty) * plotHeight;
 
-              let xCenter = (i * xStep) + (xStep / 2);
-              let xQty = xCenter - barWidth - 0.2;
-              let xRp = xCenter + 0.2;
+              const xCenter = paddingLeftRight + (i * xStep) + (xStep / 2);
+              const xQty = xCenter - barWidth - 1.5;
+              const xRp = xCenter + 1.5;
 
-              let yQty = 100 - hQty;
-              let yRp = 100 - hRp;
+              const yQty = baselineY - hQty;
+              const yRp = baselineY - hRp;
 
               if (item.rp > 0) {
                   regressionPoints.push({ x: xCenter, y: yRp });
               }
 
-              // --- 3D BAR QTY (BIRU) ---
+              // --- 1. BATANG 3D QTY (PASTEL PERIWINKLE / SOFT LAVENDER) ---
               if (hQty > 0) {
-                  svgHtml += `<rect x="${xQty}" y="${yQty}" width="${barWidth}" height="${hQty}" fill="#4318ff" />`;
-                  svgHtml += `<polygon points="${xQty},${yQty} ${xQty + depth},${yQty - depth} ${xQty + barWidth + depth},${yQty - depth} ${xQty + barWidth},${yQty}" fill="#7b61ff" />`;
-                  svgHtml += `<polygon points="${xQty + barWidth},${yQty} ${xQty + barWidth + depth},${yQty - depth} ${xQty + barWidth + depth},${100 - depth} ${xQty + barWidth},100" fill="#2d0db3" />`;
+                  // Muka Depan (Pastel Soft)
+                  svgHtml += `<rect x="${xQty}" y="${yQty}" width="${barWidth}" height="${hQty}" fill="#7e92f5" rx="1.5" />`;
+                  // Atap 3D (Highlight Halus)
+                  svgHtml += `<polygon points="${xQty},${yQty} ${xQty + depth},${yQty - depth} ${xQty + barWidth + depth},${yQty - depth} ${xQty + barWidth},${yQty}" fill="#b8c5fb" />`;
+                  // Sisi Kanan 3D (Bayangan Teduh)
+                  svgHtml += `<polygon points="${xQty + barWidth},${yQty} ${xQty + barWidth + depth},${yQty - depth} ${xQty + barWidth + depth},${baselineY - depth} ${xQty + barWidth},${baselineY}" fill="#586fcb" />`;
 
+                  // NILAI PCS (Label Biru Lembut namun Jelas)
                   if (showValue) {
-                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 1.5}" font-size="2.6" font-weight="500" font-family="'Arial', sans-serif" fill="#4318ff" text-anchor="middle">${Math.round(item.qty)}</text>`;
+                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 4}" font-size="10" font-weight="800" font-family="'Asta Sans', sans-serif" fill="#4d5fa8" text-anchor="middle">${Math.round(item.qty)}</text>`;
                   }
               }
 
-              // --- 3D BAR RUPIAH (HIJAU/EMERALD) ---
+              // --- 2. BATANG 3D RUPIAH (PASTEL SEAFOAM / SOFT MINT) ---
               if (hRp > 0) {
-                  svgHtml += `<rect x="${xRp}" y="${yRp}" width="${barWidth}" height="${hRp}" fill="#05cd99" />`;
-                  svgHtml += `<polygon points="${xRp},${yRp} ${xRp + depth},${yRp - depth} ${xRp + barWidth + depth},${yRp - depth} ${xRp + barWidth},${yRp}" fill="#46f0c2" />`;
-                  svgHtml += `<polygon points="${xRp + barWidth},${yRp} ${xRp + barWidth + depth},${yRp - depth} ${xRp + barWidth + depth},${100 - depth} ${xRp + barWidth},100" fill="#038c67" />`;
+                  // Muka Depan (Mint Pastel)
+                  svgHtml += `<rect x="${xRp}" y="${yRp}" width="${barWidth}" height="${hRp}" fill="#52cbb3" rx="1.5" />`;
+                  // Atap 3D (Highlight Pastel Cerah)
+                  svgHtml += `<polygon points="${xRp},${yRp} ${xRp + depth},${yRp - depth} ${xRp + barWidth + depth},${yRp - depth} ${xRp + barWidth},${yRp}" fill="#a5ebd9" />`;
+                  // Sisi Kanan 3D (Bayangan Sage Lembut)
+                  svgHtml += `<polygon points="${xRp + barWidth},${yRp} ${xRp + barWidth + depth},${yRp - depth} ${xRp + barWidth + depth},${baselineY - depth} ${xRp + barWidth},${baselineY}" fill="#35a691" />`;
 
+                  // NILAI RUPIAH (Label Hijau Teduh & Tegak)
                   if (showValue) {
-                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 1.5}" font-size="2.6" font-weight="500" font-family="'Arial', sans-serif" fill="#05cd99" text-anchor="middle">${Math.round(realPct)}%</text>`;
+                      const rpShort = item.rp >= 1000 
+                          ? 'Rp ' + (item.rp / 1000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + 'k' 
+                          : 'Rp ' + Math.round(item.rp);
+
+                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 4}" font-size="9.5" font-weight="800" font-family="'Asta Sans', sans-serif" fill="#238270" text-anchor="middle">${rpShort}</text>`;
                   }
               }
           });
 
-          // GARIS TREN LINIER RAPI (Metode Regresi Linier Presisi)
+          // GARIS TREN LINIER
           if (showTrend && regressionPoints.length >= 2) {
               let n = regressionPoints.length;
               let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
@@ -7650,24 +8214,24 @@
               let intercept = (sumY - slope * sumX) / n;
 
               let startX = regressionPoints[0].x;
-              let startY = Math.max(2, Math.min(98, slope * startX + intercept));
+              let startY = Math.max(topMarginY, Math.min(baselineY, slope * startX + intercept));
               let endX = regressionPoints[n - 1].x;
-              let endY = Math.max(2, Math.min(98, slope * endX + intercept));
+              let endY = Math.max(topMarginY, Math.min(baselineY, slope * endX + intercept));
 
-              svgHtml += `<line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="2,2" stroke-linecap="round" />`;
-              svgHtml += `<circle cx="${startX}" cy="${startY}" r="1.2" fill="#fff" stroke="#f59e0b" stroke-width="0.8" />`;
-              svgHtml += `<circle cx="${endX}" cy="${endY}" r="1.2" fill="#fff" stroke="#f59e0b" stroke-width="0.8" />`;
+              svgHtml += `<line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="4,4" stroke-linecap="round" />`;
+              svgHtml += `<circle cx="${startX}" cy="${startY}" r="2" fill="#fff" stroke="#f59e0b" stroke-width="1.5" />`;
+              svgHtml += `<circle cx="${endX}" cy="${endY}" r="2" fill="#fff" stroke="#f59e0b" stroke-width="1.5" />`;
           }
 
-          if(svgEl) svgEl.innerHTML = svgHtml;
+          svgEl.innerHTML = svgHtml;
 
-          // Label Sumbu X
+          // Label Sumbu X (Tanggal)
           let xLabelsHtml = '';
           let stepLabel = numBars > 16 ? 2 : 1;
           dates.forEach((d, idx) => {
               let parts = d.split('-');
               let labelText = (idx % stepLabel === 0 || idx === numBars - 1) ? `${parts[2]}/${parts[1]}` : '';
-              xLabelsHtml += `<span style="width:${xStep}%; text-align:center; font-size:${numBars > 20 ? '8.5px' : '10px'};">${labelText}</span>`;
+              xLabelsHtml += `<span style="flex: 1; text-align: center; font-size: 10px; color: #8f9bba; font-weight: 700;">${labelText}</span>`;
           });
           if(xLabelEl) xLabelEl.innerHTML = xLabelsHtml;
       }
@@ -7719,7 +8283,7 @@
 
               if (val > 0) {
                   svgHtml += `<rect x="${x - (barW / 2)}" y="${y}" width="${barW}" height="${h}" fill="url(#gradYearBar)" rx="1.5" />`;
-                  svgHtml += `<text x="${x}" y="${y - 1.5}" font-size="2.6" font-weight="500" font-family="'Arial', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
+                  svgHtml += `<text x="${x}" y="${y - 1.5}" font-size="2.6" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
               }
 
               if (idx === 0) lineD += `M${x},${y} `;
@@ -7829,7 +8393,7 @@
                   svgHtml += `<polygon points="${xQty + barWidth},${yQty} ${xQty + barWidth + depth},${yQty - depth} ${xQty + barWidth + depth},${100 - depth} ${xQty + barWidth},100" fill="#2d0db3" />`;
 
                   if (showValue) {
-                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Arial', sans-serif" fill="#4318ff" text-anchor="middle">${Math.round(item.qty)}</text>`;
+                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#4318ff" text-anchor="middle">${Math.round(item.qty)}</text>`;
                   }
               }
 
@@ -7840,7 +8404,7 @@
                   svgHtml += `<polygon points="${xRp + barWidth},${yRp} ${xRp + barWidth + depth},${yRp - depth} ${xRp + barWidth + depth},${100 - depth} ${xRp + barWidth},100" fill="#038c67" />`;
 
                   if (showValue) {
-                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Arial', sans-serif" fill="#05cd99" text-anchor="middle">${Math.round(realPct)}%</text>`;
+                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${Math.round(realPct)}%</text>`;
                   }
               }
           });
@@ -7922,7 +8486,7 @@
                   // Side Face
                   svgHtml += `<polygon points="${x + barW},${y} ${x + barW + depth},${y - depth} ${x + barW + depth},${100 - depth} ${x + barW},100" fill="#04a37a" />`;
 
-                  svgHtml += `<text x="${x + (barW / 2)}" y="${y - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Arial', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
+                  svgHtml += `<text x="${x + (barW / 2)}" y="${y - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
               }
           });
 
