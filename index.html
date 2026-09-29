@@ -171,7 +171,7 @@
             z-index: 20;
         }
         .table-thin th, .table-thin td { 
-            padding: 4px 6px; /* Padding di perkecil agar tinggi baris menyusut */
+            padding: 8px 10px; /* Padding di perkecil agar tinggi baris menyusut */
             text-align: left; 
             border-bottom: 1px solid #f0f0f0; 
             font-weight: 350; 
@@ -1235,12 +1235,12 @@
                         </div>
                         <div class="form-group">
                             <label>Pekerjaan / Bagian <span class="text-danger">*</span></label>
-                            <select id="bbk-pek" class="form-control">
-                                <option value="">-- Pilih Pekerjaan --</option>
-                                <option value="Bahan Baku Masuk">Bahan Baku Masuk</option>
-                                <option value="Pengembalian Retur">Pengembalian Retur</option>
-                                <option value="Lain-Lain">Lain-Lain</option>
-                            </select>
+                            <input type="text" id="bbk-pek" list="list-bbk-pek" class="form-control" placeholder="Ketik / pilih pekerjaan..." onclick="this.select()">
+                            <datalist id="list-bbk-pek">
+                                <option value="Bahan Baku Masuk"></option>
+                                <option value="Pengembalian Retur"></option>
+                                <option value="Lain-Lain"></option>
+                            </datalist>
                         </div>
                         <div class="form-group">
                             <label>Nama Operator / Pemeriksa <span class="text-danger">*</span></label>
@@ -1258,9 +1258,8 @@
                         </div>
                         <div class="form-group">
                             <label>Supplier <span class="text-danger">*</span></label>
-                            <select id="bbk-supplier" class="form-control">
-                                <option value="">-- Pilih Supplier --</option>
-                            </select>
+                            <input type="text" id="bbk-supplier" list="list-bbk-supplier" class="form-control" placeholder="Ketik / pilih supplier..." onclick="this.select()">
+                            <datalist id="list-bbk-supplier"></datalist>
                         </div>
                         <div class="form-group">
                             <label>Referensi Dokumen / No. SJ <span class="text-danger">*</span></label>
@@ -1339,7 +1338,11 @@
                         </div>
                         <div class="form-group"><label>Tanggal <span class="text-danger">*</span></label><input type="date" id="input-date" class="form-control"></div>
                         <div class="form-group"><label>Shift <span class="text-danger">*</span></label><select id="select-shift" class="form-control"><option value="">-- Pilih Shift --</option><option>Shift 1</option><option>Shift 2</option><option>Shift 3</option><option>Non-Shift</option></select></div>
-                        <div class="form-group"><label>Pekerjaan <span class="text-danger">*</span></label><select id="select-pek" class="form-control" onchange="refreshAllQtyStokDisplay()"><option value="">-- Pilih Pekerjaan --</option></select></div>
+                        <div class="form-group">
+                            <label>Pekerjaan <span class="text-danger">*</span></label>
+                            <input type="text" id="select-pek" list="list-select-pek" class="form-control" placeholder="Ketik / pilih pekerjaan..." onclick="this.select()" oninput="refreshAllQtyStokDisplay()" onchange="refreshAllQtyStokDisplay()">
+                            <datalist id="list-select-pek"></datalist>
+                        </div>
                     </div>
 
                     <!-- BOX KARU & OPERATOR -->
@@ -2259,7 +2262,7 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbz6dNYcuckctar98ewRF4LYukGq3k_77QlS0cjYkysqGyGh14oFQdrHAqEAFJxgk4-mnQ/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwKC9bdRaf1-CtQYI3xYl3F5HhiBIixuQV0ffcf9GJCfPgBFeKmPeYk4Qs8nfqJHD6K3w/exec"; 
         
         // 2. Mesin Panggil Backend Tahan Banting (Dengan Auto-Retry & Anti-Throttling)
         async function panggilBackend(actionName, payloadData, attempt = 1) {
@@ -2531,21 +2534,16 @@
               if(typeof renderPerformaOperatorTiles === 'function') renderPerformaOperatorTiles();
           } catch (err) { console.error("Gagal muat operator:", err); }
 
-            // 2. Muat Master Barang
-          try {
-              let res = await panggilBackend('getMasterBarangData', {});
-              window.allMasterBarang = (res && res.success) ? res.data : [];
-          } catch (err) { console.error("Gagal muat master barang:", err);
+            // Cek Cache Lokal Browser: jika sudah pernah dimuat, tidak perlu download lagi (Instan 0 detik)
+            const cachedMaster = sessionStorage.getItem('CACHE_MASTER_BARANG');
+            if (cachedMaster) {
+                try {
+                    window.allMasterBarang = JSON.parse(cachedMaster);
+                } catch(e) { window.allMasterBarang = []; }
+            } else {
                 window.allMasterBarang = [];
             }
-
-            // 3. Muat Saldo Mutasi
-          try {
-              let res = await panggilBackend('getSaldoMutasiData', {});
-              window.allMutasiData = (res && res.success) ? res.data : [];
-          } catch (err) { console.error("Gagal muat saldo mutasi:", err);
-              window.allMutasiData = [];
-          }
+            window.allMutasiData = [];
 
             // Set Default Filter Tanggal
             const now = new Date();
@@ -2888,6 +2886,29 @@
             }
         });
 
+        // Fungsi Penarik Kilat: Hanya load master barang jika halaman tersebut memang butuh
+        async function ensureMasterBarangLoaded() {
+            if (window.allMasterBarang && window.allMasterBarang.length > 0) return window.allMasterBarang;
+            const cached = sessionStorage.getItem('CACHE_MASTER_BARANG');
+            if (cached) {
+                try {
+                    window.allMasterBarang = JSON.parse(cached);
+                    return window.allMasterBarang;
+                } catch(e) {}
+            }
+            try {
+                let res = await panggilBackend('getMasterBarangData', {});
+                if (res && res.success) {
+                    window.allMasterBarang = res.data || [];
+                    sessionStorage.setItem('CACHE_MASTER_BARANG', JSON.stringify(window.allMasterBarang));
+                    return window.allMasterBarang;
+                }
+            } catch (err) {
+                console.error("Gagal load master barang on-demand:", err);
+            }
+            return [];
+        }
+
         async function switchView(viewName, element) {
             // Tutup sidebar otomatis di mobile setelah klik menu
             if (window.innerWidth <= 768) {
@@ -2950,7 +2971,17 @@
                 
                 if(viewName === 'dashboard') loadDashboardStats();
                 if(viewName === 'dashboard-operator') loadOperatorDashboard();
-                if(viewName === 'input-baru') clearForm();
+                if(viewName === 'input-baru') {
+                    ensureMasterBarangLoaded().then(() => {
+                        recalculateAllStok();
+                    });
+                    clearForm();
+                }
+                if(viewName === 'input-bbk') {
+                    ensureMasterBarangLoaded().then(() => {
+                        populateBbkSupplierDropdown();
+                    });
+                }
                 if(viewName === 'input-bs') clearBsForm();
                 
                 if(viewName === 'master') {
@@ -4900,17 +4931,19 @@
         }
 
         // --- LOGIKA FORM INPUT BBK (PENGECEKAN BAHAN BAKU) ---
-        function populateBbkSupplierDropdown() {
-            const sel = document.getElementById('bbk-supplier');
-            if (!sel) return;
-            const current = sel.value;
+        async function populateBbkSupplierDropdown() {
+            const datalist = document.getElementById('list-bbk-supplier');
+            if (!datalist) return;
+
+            // Muat master barang hanya jika belum ada
+            await ensureMasterBarangLoaded();
+
             const suppliers = (window.allMasterBarang || [])
                 .map(row => String(row[5] || '').trim())
                 .filter(Boolean);
             const unique = [...new Set(suppliers)].sort();
-            sel.innerHTML = '<option value="">-- Pilih Supplier --</option>' +
-                unique.map(s => `<option value="${s}">${s}</option>`).join('');
-            if (current && unique.includes(current)) sel.value = current;
+            
+            datalist.innerHTML = unique.map(s => `<option value="${s}"></option>`).join('');
         }
 
         function clearBbkForm() {
@@ -4981,35 +5014,49 @@
             debounceBbkTimer = setTimeout(() => handleBbkInput(input, false), 200);
         }
 
-        function handleBbkInput(input, showAll = false) {
+        async function handleBbkInput(input, showAll = false) {
             const container = input.nextElementSibling;
             if(!container) return;
-            container.innerHTML = '';
+
+            // Blok seluruh teks otomatis saat diklik ulang agar jika user mengetik langsung mengganti
+            if (showAll && input.value) {
+                input.select();
+            }
 
             const supplierEl = document.getElementById('bbk-supplier');
             const selectedSupplier = supplierEl ? supplierEl.value.trim().toLowerCase() : '';
 
-            // Wajib pilih supplier dulu sebelum cari barang
             if (!selectedSupplier) {
                 showDialog("Silakan pilih Supplier terlebih dahulu!", "warning");
                 input.value = '';
                 container.style.display = 'none';
                 return;
             }
+
+            // Jika belum ada master barang, muat kilat
+            if (!window.allMasterBarang || window.allMasterBarang.length === 0) {
+                container.innerHTML = '<div style="padding:10px; font-size:12px; color:#8f9bba;">Memuat daftar kode...</div>';
+                container.style.display = 'block';
+                await ensureMasterBarangLoaded();
+            }
+
+            container.innerHTML = '';
             
-            const keyword = input.value.trim().toLowerCase();
-            if (!keyword && !showAll) { container.style.display = 'none'; return; }
-            if (!window.allMasterBarang) { container.style.display = 'none'; return; }
+            let keyword = input.value.trim().toLowerCase();
             
-            let keywords = keyword.split(/\s+/);
-            const filtered = window.allMasterBarang.filter(row => {
+            // Jika showAll aktif (klik/fokus lagi), reset pencarian sementara agar semua list muncul kembali
+            if (showAll) {
+                keyword = '';
+            }
+
+            let keywords = keyword.split(/\s+/).filter(Boolean);
+            const filtered = (window.allMasterBarang || []).filter(row => {
                 if(!Array.isArray(row)) return false;
                 
-                // Filter berdasarkan Supplier (Kolom ke-6 / index 5)
                 const itemSupplier = String(row[5] || '').trim().toLowerCase();
                 if (itemSupplier !== selectedSupplier) return false;
 
-                if (!keyword && showAll) return true;
+                if (keywords.length === 0) return true;
                 const combined = (row[0] || '').toLowerCase() + " " + (row[1] || '').toLowerCase();
                 return keywords.every(kw => combined.includes(kw));
             });
@@ -7026,44 +7073,42 @@
             debounceBsTimer = setTimeout(() => handleBsInput(input, false), 250);
         }
 
-        function handleBarangInput(input, showAll = false) {
+        async function handleBarangInput(input, showAll = false) {
             const container = input.nextElementSibling;
             if(!container) return;
-            container.innerHTML = '';
             
-            const keyword = input.value.trim().toLowerCase();
-            if (!keyword && !showAll) {
-                container.style.display = 'none';
-                return;
+            // Blok seluruh teks otomatis saat diklik ulang
+            if (showAll && input.value) {
+                input.select();
             }
-            
-            // Jika data master belum siap, tampilkan pesan memuat dan fetch kembali
+
             if (!window.allMasterBarang || window.allMasterBarang.length === 0) {
                 container.innerHTML = '<div style="padding:10px; font-size:12px; color:#8f9bba; text-align:center;">Memuat master barang...</div>';
                 container.style.display = 'block';
-                panggilBackend('getMasterBarangData', {}).then(res => {
-                    if (res && res.success) {
-                        window.allMasterBarang = res.data;
-                        handleBarangInput(input, showAll);
-                    }
-                }).catch(() => {});
-                return;
+                await ensureMasterBarangLoaded();
             }
+
+            container.innerHTML = '';
             
-            let keywords = keyword.split(/\s+/);
+            let keyword = input.value.trim().toLowerCase();
+            // Jika showAll aktif (klik/fokus lagi), munculkan seluruh list opsi kembali
+            if (showAll) {
+                keyword = '';
+            }
+
+            let keywords = keyword.split(/\s+/).filter(Boolean);
             
-            // --- TAMBAHAN: Logika Filter Pekerjaan vs Proses (Isi / Non Isi) ---
             const selectedPekerjaan = (document.getElementById('select-pek')?.value || '').toLowerCase().trim();
             const blockedJobsForNonIsi = ['jahit bulatan', 'pengisian', 'jahit tutup', 'penyarungan'];
             const hideNonIsi = blockedJobsForNonIsi.includes(selectedPekerjaan);
             
-            const filtered = window.allMasterBarang.filter(row => {
+            const filtered = (window.allMasterBarang || []).filter(row => {
                 if(!Array.isArray(row)) return false;
                 
-                const proses = (row[4] || '').toUpperCase().trim(); // Index 4 adalah Kolom E (Proses) di Master Barang
+                const proses = (row[4] || '').toUpperCase().trim();
                 if (hideNonIsi && proses === 'NON ISI') return false; 
                 
-                if (!keyword && showAll) return true;
+                if (keywords.length === 0) return true;
 
                 const kode = (row[0] || '').toLowerCase();
                 const nama = (row[1] || '').toLowerCase();
