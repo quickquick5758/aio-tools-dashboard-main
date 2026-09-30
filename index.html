@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AiO Tools - All in One Production</title>
-    <link href="https://fonts.googleapis.com/css2?family=Asta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <!-- Pustaka html2canvas untuk fitur Download Foto -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Pustaka SheetJS untuk fitur Import Data Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         /* CSS Reset & Global Styles */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Asta Sans', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Public Sans', sans-serif; }
         body { background-color: #f4f7fe; color: #2b3674; display: flex; height: 100vh; overflow: hidden; position: relative; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -2840,7 +2840,7 @@
                 const labelText = val === 10000 ? '10.000' : (val === 0 ? '0' : Number(val).toLocaleString('id-ID'));
                 
                 // Teks Angka Sumbu Y di Kiri
-                yGridSvg += `<text x="${yAxisWidth - 10}" y="${yPos + 3.5}" font-size="9.5" font-family="'Asta Sans', sans-serif" font-weight="700" fill="#8f9bba" text-anchor="end">${labelText}</text>`;
+                yGridSvg += `<text x="${yAxisWidth - 10}" y="${yPos + 3.5}" font-size="9.5" font-family="'Public Sans', sans-serif" font-weight="700" fill="#8f9bba" text-anchor="end">${labelText}</text>`;
                 // Garis Horizontal Grid Tipis
                 yGridSvg += `<line x1="${yAxisWidth}" y1="${yPos}" x2="${width - rightPadding}" y2="${yPos}" stroke="#edf2f7" stroke-width="1" />`;
             });
@@ -2885,7 +2885,7 @@
                     <g style="filter: drop-shadow(0 2px 4px rgba(43,54,116,0.15));">
                         <rect x="${badgeX - (badgeWidth / 2)}" y="${badgeY}" width="${badgeWidth}" height="${badgeHeight}" rx="11" fill="#ffffff" stroke="#e0e5f2" stroke-width="1"/>
                         <polygon points="${badgeX - 4},${badgeY + badgeHeight} ${badgeX + 4},${badgeY + badgeHeight} ${badgeX},${badgeY + badgeHeight + 4}" fill="#ffffff"/>
-                        <text x="${badgeX}" y="${badgeY + 15}" font-size="10.5" font-family="'Asta Sans', sans-serif" font-weight="800" fill="#2b3674" text-anchor="middle">${badgeText}</text>
+                        <text x="${badgeX}" y="${badgeY + 15}" font-size="10.5" font-family="'Public Sans', sans-serif" font-weight="800" fill="#2b3674" text-anchor="middle">${badgeText}</text>
                     </g>
                 `;
             }
@@ -5503,7 +5503,7 @@
                     Object.keys(tableDataByPekerjaan).forEach(pek => {
                         tablesHtml += `
                         <div style="min-width: 350px; background:#fff;">
-                            <table class="table-thin" style="width:100%; border-collapse:collapse; border: 1px solid #7ea3c8; font-family: Asta Sans, sans-serif;">
+                            <table class="table-thin" style="width:100%; border-collapse:collapse; border: 1px solid #7ea3c8; font-family: Public Sans, sans-serif;">
                                 <thead>
                                     <tr style="background:#9ebde3;">
                                         <th style="padding:6px 8px; border:1px solid #7ea3c8; color:#000; font-size:11px; text-transform:none; font-weight:bold; text-align:center;">Kategori</th>
@@ -8377,7 +8377,7 @@
 
                   // NILAI PCS (Label Biru Lembut namun Jelas)
                   if (showValue) {
-                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 4}" font-size="10" font-weight="800" font-family="'Asta Sans', sans-serif" fill="#4d5fa8" text-anchor="middle">${Math.round(item.qty)}</text>`;
+                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 4}" font-size="10" font-weight="800" font-family="'Public Sans', sans-serif" fill="#4d5fa8" text-anchor="middle">${Math.round(item.qty)}</text>`;
                   }
               }
 
@@ -8396,7 +8396,7 @@
                           ? 'Rp ' + (item.rp / 1000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + 'k' 
                           : 'Rp ' + Math.round(item.rp);
 
-                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 4}" font-size="9.5" font-weight="800" font-family="'Asta Sans', sans-serif" fill="#238270" text-anchor="middle">${rpShort}</text>`;
+                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 4}" font-size="9.5" font-weight="800" font-family="'Public Sans', sans-serif" fill="#238270" text-anchor="middle">${rpShort}</text>`;
                   }
               }
           });
@@ -8485,7 +8485,7 @@
 
               if (val > 0) {
                   svgHtml += `<rect x="${x - (barW / 2)}" y="${y}" width="${barW}" height="${h}" fill="url(#gradYearBar)" rx="1.5" />`;
-                  svgHtml += `<text x="${x}" y="${y - 1.5}" font-size="2.6" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
+                  svgHtml += `<text x="${x}" y="${y - 1.5}" font-size="2.6" font-weight="500" font-family="'Public Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
               }
 
               if (idx === 0) lineD += `M${x},${y} `;
@@ -8595,7 +8595,7 @@
                   svgHtml += `<polygon points="${xQty + barWidth},${yQty} ${xQty + barWidth + depth},${yQty - depth} ${xQty + barWidth + depth},${100 - depth} ${xQty + barWidth},100" fill="#2d0db3" />`;
 
                   if (showValue) {
-                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#4318ff" text-anchor="middle">${Math.round(item.qty)}</text>`;
+                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Public Sans', sans-serif" fill="#4318ff" text-anchor="middle">${Math.round(item.qty)}</text>`;
                   }
               }
 
@@ -8606,7 +8606,7 @@
                   svgHtml += `<polygon points="${xRp + barWidth},${yRp} ${xRp + barWidth + depth},${yRp - depth} ${xRp + barWidth + depth},${100 - depth} ${xRp + barWidth},100" fill="#038c67" />`;
 
                   if (showValue) {
-                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${Math.round(realPct)}%</text>`;
+                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Public Sans', sans-serif" fill="#05cd99" text-anchor="middle">${Math.round(realPct)}%</text>`;
                   }
               }
           });
@@ -8688,7 +8688,7 @@
                   // Side Face
                   svgHtml += `<polygon points="${x + barW},${y} ${x + barW + depth},${y - depth} ${x + barW + depth},${100 - depth} ${x + barW},100" fill="#04a37a" />`;
 
-                  svgHtml += `<text x="${x + (barW / 2)}" y="${y - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
+                  svgHtml += `<text x="${x + (barW / 2)}" y="${y - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Public Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
               }
           });
 
