@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AiO Tools - All in One Production</title>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Asta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <!-- Pustaka html2canvas untuk fitur Download Foto -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Pustaka SheetJS untuk fitur Import Data Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         /* CSS Reset & Global Styles */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Public Sans', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Asta Sans', sans-serif; }
         body { background-color: #f4f7fe; color: #2b3674; display: flex; height: 100vh; overflow: hidden; position: relative; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -98,7 +98,7 @@
         .profile-dropdown a.logout-btn svg { color: #ee5d50; }
         .profile-dropdown a.logout-btn:hover { background-color: #fce8e8; }
 
-        .content-body { flex: 1; overflow-y: auto; padding: 0 32px 32px 32px; }
+        .content-body { flex: 1; overflow-y: auto; padding: 0 32px 80px 32px; } /* Memberikan ruang aman 80px di atas footer */
 
         /* VIEW TOGGLE CLASSES */
         .view-section { display: none; animation: fadeIn 0.4s ease; }
@@ -220,7 +220,7 @@
             cursor: pointer; background: #fff; transition: 0.3s; margin-bottom: 5px;
         }
         .operator-tile.selected { background: #4318ff; color: #fff; border-color: #4318ff; }
-        .button-center { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
+        .button-center { display: flex; justify-content: center; gap: 15px; margin-top: 30px; margin-bottom: 35px; } /* Jeda ekstra dari bawah */
 
         /* Area form dinamis diperluas minimum tingginya agar kotak sugesti (dropdown) kode tidak terpotong */
         .scrollable-form-container { min-height: 260px; overflow: visible; }
@@ -1514,6 +1514,10 @@
                           <button id="btn-refresh-laporan" class="btn-modern" style="background:#f4f7fe; color:#4318ff; border: 1px solid #4318ff;" onclick="loadLaporanData()">
                               <svg style="width:14px; height:14px; margin-right:4px; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Refresh
                           </button>
+                          <!-- TOMBOL POSISI BARANG (DI SEBELAH KIRI EXPORT EXCEL) -->
+                          <button class="btn-modern" style="background:#e0e5ff; color:#4318ff; border: 1px solid #4318ff;" onclick="switchView('posisi-barang')">
+                              <svg style="width:14px; height:14px; margin-right:4px; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg> Posisi Barang
+                          </button>
                           <button class="btn-modern" style="background:#fff; color:#10b981; border: 1px solid #10b981;" onclick="exportTableToExcel('laporan', 'Rekap_Global_Laporan')">
                               <svg style="width:14px; height:14px; margin-right:4px; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Export Excel
                           </button>
@@ -1562,6 +1566,80 @@
                           </select>
                       </div>
                       <div id="pagination-laporan" style="display:flex; gap:5px;"></div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- 6a. VIEW POSISI BARANG (DATA MUTASI KOLOM B-F & H-M) -->
+          <div id="view-posisi-barang" class="view-section">
+              <div class="card">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap:wrap; gap:10px;">
+                      <div>
+                          <h3 class="text-primary font-bold" style="margin-bottom: 2px;">Posisi Saldo & Alur Barang</h3>
+                          <p style="font-size:12px; color:#8f9bba;">Monitoring posisi fisik barang per tahapan proses produksi (Gudang Mutasi)</p>
+                      </div>
+                      <div style="display: flex; gap: 8px;">
+                          <button class="btn-modern" style="background:#f4f7fe; color:#4318ff; border: 1px solid #4318ff;" onclick="loadPosisiBarangData()">
+                              <svg style="width:14px; height:14px; margin-right:4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Refresh
+                          </button>
+                          <button class="btn-modern" onclick="switchView('data-laporan')">Kembali ke Laporan</button>
+                      </div>
+                  </div>
+
+                  <!-- FILTER & PENCARIAN KODE BARANG -->
+                  <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
+                      <select id="filter-posisi-unit" class="search-input" style="width: 170px;" onchange="filterPosisiBarang()">
+                          <option value="">Semua Unit</option>
+                          <option value="CV JHB 1">CV JHB 1</option>
+                          <option value="CV JHB 2">CV JHB 2</option>
+                          <option value="CV JHB 5">CV JHB 5</option>
+                      </select>
+                      <div style="position:relative; flex:1; min-width:240px;">
+                          <input type="text" id="filter-posisi-search" class="search-input" placeholder="Ketik Kode / Nama Barang / Motif..." style="width:100%; padding-left:36px;" oninput="filterPosisiBarang()">
+                          <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#8f9bba;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                      </div>
+                  </div>
+
+                  <div class="table-container">
+                      <table class="table-thin" id="table-posisi-barang">
+                          <thead>
+                              <tr class="header-group">
+                                  <th colspan="6">Identitas Barang</th>
+                                  <th colspan="6">Posisi Saldo Proses (Pcs)</th>
+                              </tr>
+                              <tr>
+                                  <th>Unit</th>
+                                  <th>Kode</th>
+                                  <th>Nama Barang</th>
+                                  <th>Kategori</th>
+                                  <th>Motif</th>
+                                  <th>Supplier</th>
+                                  <!-- Kolom G (Saldo Awal) DILOMPATI -->
+                                  <th style="text-align:right;">Masuk</th>
+                                  <th style="text-align:right;">PE (Pengisian)</th>
+                                  <th style="text-align:right;">JT (Jahit Tutup)</th>
+                                  <th style="text-align:right;">PY (Penyarungan)</th>
+                                  <th style="text-align:right;">PP (Packing)</th>
+                                  <th style="text-align:right;">Ikat / Ball</th>
+                              </tr>
+                          </thead>
+                          <tbody id="tbody-posisi-barang">
+                              <tr><td colspan="12" style="text-align:center; padding:25px; color:#8f9bba;">Memuat data mutasi...</td></tr>
+                          </tbody>
+                      </table>
+                  </div>
+
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 15px;">
+                      <div>
+                          <span style="font-size:13px; color:#8f9bba; font-weight:700;">Tampilkan: </span>
+                          <select id="limit-posisi" class="search-input" style="width:80px; padding:4px;" onchange="renderPosisiBarangTable(tableStates.posisiBarang.data, 1)">
+                              <option value="15">15</option>
+                              <option value="25">25</option>
+                              <option value="50">50</option>
+                              <option value="all">Semua</option>
+                          </select>
+                      </div>
+                      <div id="pagination-posisi" style="display:flex; gap:5px;"></div>
                   </div>
               </div>
           </div>
@@ -2273,9 +2351,29 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxPb7TyF4v2-U6XPDqJfFvu4V0OWXoukOoclCE6df6WOaRUFOhq7HwMip0Xv8qw8QE/exec"; 
-        
-        // 2. Mesin Panggil Backend Tahan Banting (Dengan Auto-Retry & Anti-Throttling)
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyFlEhjmjbdbWRM3ly-ATU3nG8a_sC2hpfGvoczFaATJhf3RiyAKpYlgcc3xn5TOay6CA/exec";         
+
+        // 2. HELPER: Parser Nominal Desimal Aman (Cegah Nilai Berubah Jadi Triliunan)
+        function parseNominalFrontend(val) {
+            if (val === null || val === undefined || val === '') return 0;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            let str = String(val).replace(/Rp\s*|\s+/gi, '').trim();
+            if (!str) return 0;
+            if (str.includes('.') && str.includes(',')) {
+                str = str.replace(/\./g, '').replace(',', '.');
+            } else if (str.includes(',')) {
+                str = str.replace(',', '.');
+            } else if (str.includes('.')) {
+                let parts = str.split('.');
+                if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3 && parts[0].length <= 3)) {
+                    str = str.replace(/\./g, '');
+                }
+            }
+            const num = parseFloat(str);
+            return isNaN(num) ? 0 : num;
+        }
+
+        // 3. Mesin Panggil Backend Tahan Banting (Dengan Auto-Retry & Anti-Throttling)
         async function panggilBackend(actionName, payloadData, attempt = 1) {
           const maxAttempts = 3; // Otomatis mencoba ulang sampai 3 kali jika server Google sibuk
           try {
@@ -2381,7 +2479,8 @@
             bukuPengecekan: { data: [], currentPage: 1, limit: 15 },
             view: { data: [], currentPage: 1, limit: 15 },
             sisaOm: { data: [], currentPage: 1, limit: 15 },
-            trackingSj: { data: [], currentPage: 1, limit: 15 }
+            trackingSj: { data: [], currentPage: 1, limit: 15 },
+            posisiBarang: { data: [], currentPage: 1, limit: 15 }
         };
 
         function renderPaginationButtons(stateKey, containerId, renderFunc) {
@@ -2559,21 +2658,32 @@
           try {
               let data = await panggilBackend('getMasterOperatorData', {});
               allOperators = data || [];
-              const karus = [...new Set(allOperators.map(i => i.karu))];
-              const peks = [...new Set(allOperators.map(i => i.pekerjaan))];
+              const karus = [...new Set(allOperators.map(i => i.karu))].filter(Boolean);
+              
+              // PERBAIKAN: Standarisasi Master Pekerjaan agar list tidak hilang jika operator kosong
+              const standardPekerjaan = [
+                  "Garuk Dakron", "Pengisian", "Jahit Tutup", "Penyarungan", 
+                  "Packing", "Ikat/Ball", "Tutup Besi", "Jahit Bulatan", 
+                  "Pasang Hipseat", "Pasang Besi"
+              ];
+              const peksFromOp = allOperators.map(i => i.pekerjaan).filter(Boolean);
+              const peks = [...new Set([...standardPekerjaan, ...peksFromOp])];
+
               const kSelect = document.getElementById('select-karu');
               const bsKaruSelect = document.getElementById('bs-karu');
               const pSelect = document.getElementById('select-pek');
               
               karus.forEach(k => {
-                  if(k) {
-                      if(kSelect) kSelect.innerHTML += `<option value="${k}">${k}</option>`;
-                      if(bsKaruSelect) bsKaruSelect.innerHTML += `<option value="${k}">${k}</option>`;
-                  }
+                  if(kSelect) kSelect.innerHTML += `<option value="${k}">${k}</option>`;
+                  if(bsKaruSelect) bsKaruSelect.innerHTML += `<option value="${k}">${k}</option>`;
               });
-              peks.forEach(p => {
-                  if(p && pSelect) pSelect.innerHTML += `<option value="${p}">${p}</option>`;
-              });
+              
+              if(pSelect) {
+                  pSelect.innerHTML = `<option value="">-- Pilih Pekerjaan --</option>`;
+                  peks.forEach(p => {
+                      pSelect.innerHTML += `<option value="${p}">${p}</option>`;
+                  });
+              }
               if(typeof renderPerformaOperatorTiles === 'function') renderPerformaOperatorTiles();
           } catch (err) { console.error("Gagal muat operator:", err); }
 
@@ -2840,7 +2950,7 @@
                 const labelText = val === 10000 ? '10.000' : (val === 0 ? '0' : Number(val).toLocaleString('id-ID'));
                 
                 // Teks Angka Sumbu Y di Kiri
-                yGridSvg += `<text x="${yAxisWidth - 10}" y="${yPos + 3.5}" font-size="9.5" font-family="'Public Sans', sans-serif" font-weight="700" fill="#8f9bba" text-anchor="end">${labelText}</text>`;
+                yGridSvg += `<text x="${yAxisWidth - 10}" y="${yPos + 3.5}" font-size="9.5" font-family="'Asta Sans', sans-serif" font-weight="700" fill="#8f9bba" text-anchor="end">${labelText}</text>`;
                 // Garis Horizontal Grid Tipis
                 yGridSvg += `<line x1="${yAxisWidth}" y1="${yPos}" x2="${width - rightPadding}" y2="${yPos}" stroke="#edf2f7" stroke-width="1" />`;
             });
@@ -2885,7 +2995,7 @@
                     <g style="filter: drop-shadow(0 2px 4px rgba(43,54,116,0.15));">
                         <rect x="${badgeX - (badgeWidth / 2)}" y="${badgeY}" width="${badgeWidth}" height="${badgeHeight}" rx="11" fill="#ffffff" stroke="#e0e5f2" stroke-width="1"/>
                         <polygon points="${badgeX - 4},${badgeY + badgeHeight} ${badgeX + 4},${badgeY + badgeHeight} ${badgeX},${badgeY + badgeHeight + 4}" fill="#ffffff"/>
-                        <text x="${badgeX}" y="${badgeY + 15}" font-size="10.5" font-family="'Public Sans', sans-serif" font-weight="800" fill="#2b3674" text-anchor="middle">${badgeText}</text>
+                        <text x="${badgeX}" y="${badgeY + 15}" font-size="10.5" font-family="'Asta Sans', sans-serif" font-weight="800" fill="#2b3674" text-anchor="middle">${badgeText}</text>
                     </g>
                 `;
             }
@@ -2953,7 +3063,7 @@
             return [];
         }
 
-        async function switchView(viewName, element) {
+        async function switchView(viewName, element, isEditMode = false) {
             // Tutup sidebar otomatis di mobile setelah klik menu
             if (window.innerWidth <= 768) {
                 const sidebar = document.getElementById('mainSidebar');
@@ -3019,14 +3129,16 @@
                     ensureMasterBarangLoaded().then(() => {
                         recalculateAllStok();
                     });
-                    clearForm();
+                    if (!isEditMode) clearForm();
                 }
                 if(viewName === 'input-bbk') {
                     ensureMasterBarangLoaded().then(() => {
                         populateBbkSupplierDropdown();
                     });
                 }
-                if(viewName === 'input-bs') clearBsForm();
+                if(viewName === 'input-bs') {
+                    if (!isEditMode) clearBsForm();
+                }
                 
                 if(viewName === 'master') {
                     if(document.getElementById('masterSearch')) document.getElementById('masterSearch').value = '';
@@ -3039,6 +3151,10 @@
                 if(viewName === 'buku-pengecekan') {
                     if(document.getElementById('filter-bpc-search')) document.getElementById('filter-bpc-search').value = '';
                     if(typeof loadBbkGlobalData === 'function') loadBbkGlobalData();
+                }
+                if(viewName === 'posisi-barang') {
+                    if(document.getElementById('filter-posisi-search')) document.getElementById('filter-posisi-search').value = '';
+                    loadPosisiBarangData();
                 }
                 if(viewName === 'sisa-om') {
                     if(document.getElementById('filter-sisaom-search')) document.getElementById('filter-sisaom-search').value = '';
@@ -4523,21 +4639,33 @@
                 
                 // Cek jika baris tidak sepenuhnya kosong
                 if (barang || qty) {
+                    const partsCheck = barang.split(' - ');
+                    const kodeCheck = partsCheck[0] ? partsCheck[0].trim().toUpperCase() : '';
+                    
+                    // PENCEGAHAN MISINPUT: Cek apakah kode barang benar-benar terdaftar di Master Barang
+                    const isValidItem = window.allMasterBarang && window.allMasterBarang.some(m => String(m[0] || '').trim().toUpperCase() === kodeCheck);
+
+                    if (!isValidItem) {
+                        return showDialog(`Baris ke-${idx + 1}: Kode barang [<b>${barang}</b>] tidak valid atau belum terdaftar di Master Barang!<br><br>Mohon klik item dari daftar pilihan (sugesti).`, "warning");
+                    }
+
                     if (!barang || !qty || parseFloat(qty) <= 0) {
                         partialRow = true; // Baris diisi setengah, atau Qty 0
                     } else {
+                        const kodeItem = barang.split(' - ')[0] ? barang.split(' - ')[0].trim().toUpperCase() : barang;
+
                         if (seenBarang.has(barang.toUpperCase()) && !duplicateMsg) {
-                            duplicateMsg = `Terdapat input ganda untuk item dengan motif yang sama persis:<br><b style="color:#2b3674;">${barang}</b><br>Silakan gabungkan Qty pada baris yang sama.`;
+                            duplicateMsg = `Terdapat input ganda untuk Kode Barang [<b>${kodeItem}</b>]:<br><b style="color:#2b3674;">${barang}</b><br>Silakan gabungkan Qty pada baris yang sama.`;
                         }
                         seenBarang.add(barang.toUpperCase());
 
                         const inputQtyNum = parseFloat(qty);
                         
-                        // Validasi: Cek apakah Qty melebihi Saldo Gudang
+                        // Validasi: Cek apakah Qty melebihi Saldo Gudang (Menampilkan KODE barang)
                         if (qtyStokEl && qtyStokEl.hasAttribute('data-saldo')) {
                             const maxSaldo = parseFloat(qtyStokEl.getAttribute('data-saldo')) || 0;
                             if (inputQtyNum > maxSaldo && !exceedSaldoMsg) {
-                                exceedSaldoMsg = `Qty Produksi pada baris ke-${idx + 1} (${inputQtyNum.toLocaleString('id-ID')}) melebihi Saldo Gudang (${maxSaldo.toLocaleString('id-ID')})!`;
+                                exceedSaldoMsg = `Qty Produksi pada baris ke-${idx + 1} [<b>${kodeItem}</b>] (${inputQtyNum.toLocaleString('id-ID')}) melebihi Saldo Gudang (${maxSaldo.toLocaleString('id-ID')})!`;
                             }
                         }
 
@@ -4597,12 +4725,22 @@
             let seenBarang = new Set();
             let duplicateMsg = null;
             
-            document.querySelectorAll('.bs-row-item').forEach(row => {
+            document.querySelectorAll('.bs-row-item').forEach((row, idx) => {
                 const barang = row.querySelector('.bs-barang-search').value.trim();
                 const qty = row.querySelector('.bs-qty-val').value.trim();
                 const ket = row.querySelector('.bs-ket-val').value.trim();
                 
                 if (barang || qty) {
+                    const partsCheck = barang.split(' - ');
+                    const kodeCheck = partsCheck[0] ? partsCheck[0].trim().toUpperCase() : '';
+                    
+                    // PENCEGAHAN MISINPUT: Validasi keberadaan kode di master barang
+                    const isValidItem = window.allMasterBarang && window.allMasterBarang.some(m => String(m[0] || '').trim().toUpperCase() === kodeCheck);
+
+                    if (!isValidItem) {
+                        return showDialog(`Baris ke-${idx + 1}: Kode barang BS [<b>${barang}</b>] tidak valid atau tidak dipilih dari sugesti!<br><br>Mohon pilih barang yang benar dari dropdown.`, "warning");
+                    }
+
                     if (!barang || !qty || parseFloat(qty) <= 0) {
                         partialRow = true;
                     } else {
@@ -4668,9 +4806,8 @@
             const isPrivileged = privilegedRoles.includes(roleLower);
 
             if (window.currentOpenDocType === 'BS') {
-                switchView('input-bs');
+                switchView('input-bs', null, true); // True agar tidak ter-reset
                 
-                // --- FIX: Kembalikan state edit karena switchView meresetnya ---
                 window.currentEditingReport = report;
                 window.currentEditingDetails = details;
 
@@ -4719,7 +4856,7 @@
                                 <div class="bs-barang-suggestions" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #e0e5f2; border-radius: 2px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 4px;"></div>
                             </div>
                             <div class="form-group" style="margin-bottom:0;"><input type="text" inputmode="numeric" class="form-control bs-qty-val" oninput="this.value = this.value.replace(/[^0-9]/g, '');" onkeydown="if(['ArrowUp','ArrowDown','e','E','+','-','.'].includes(event.key)) event.preventDefault();" placeholder="0" style="margin-top:0; padding:10px;"></div>
-                            <div class="form-group" style="margin-bottom:0;"><input type="text" class="form-control bs-ket-val" oninput="this.value = this.value.toUpperCase()" placeholder="BS NODA/CACAT..." style="margin-top:0; padding:10px;"></div>
+                            <div class="form-group" style="margin-bottom:0;"><input type="text" class="form-control bs-ket-val" placeholder="BS NODA/CACAT..." style="margin-top:0; padding:10px; text-transform: uppercase;"></div>
                             <button type="button" onclick="removeBsRow(this)" style="background: #fce8e8; color: #ee5d50; border: none; border-radius: 2px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;" title="Hapus Baris">
                                 <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
@@ -4728,9 +4865,8 @@
                     bsContainer.insertAdjacentHTML('beforeend', emptyBsRow);
                 }
             } else {
-                switchView('input-baru');
+                switchView('input-baru', null, true); // True agar tidak ter-reset
 
-                // --- FIX: Kembalikan state edit karena switchView meresetnya ---
                 window.currentEditingReport = report;
                 window.currentEditingDetails = details;
 
@@ -5503,7 +5639,7 @@
                     Object.keys(tableDataByPekerjaan).forEach(pek => {
                         tablesHtml += `
                         <div style="min-width: 350px; background:#fff;">
-                            <table class="table-thin" style="width:100%; border-collapse:collapse; border: 1px solid #7ea3c8; font-family: Public Sans, sans-serif;">
+                            <table class="table-thin" style="width:100%; border-collapse:collapse; border: 1px solid #7ea3c8; font-family: Asta Sans, sans-serif;">
                                 <thead>
                                     <tr style="background:#9ebde3;">
                                         <th style="padding:6px 8px; border:1px solid #7ea3c8; color:#000; font-size:11px; text-transform:none; font-weight:bold; text-align:center;">Kategori</th>
@@ -6672,11 +6808,56 @@
         }
 
         function batalDokumen() {
-            showDialog("Apakah Anda yakin ingin membatalkan dokumen ini? Qty akan diubah menjadi 0 dan saldo akan kembali ke gudang.", "confirm", () => {
-                const report = window.currentEditingReport;
-                if (!report) return;
-                const idLaporan = report[1];
-                
+            const report = window.currentEditingReport;
+            if (!report) return;
+            const idLaporan = report[1];
+
+            // MODAL PROMPT: Wajib Mengisi Alasan Pembatalan
+            const dialog = document.getElementById('custom-dialog');
+            const title = document.getElementById('dialog-title');
+            const msg = document.getElementById('dialog-message');
+            const actions = document.getElementById('dialog-actions');
+            const icon = document.getElementById('dialog-icon');
+
+            title.textContent = 'Alasan Pembatalan Dokumen';
+            title.style.color = '#ee5d50';
+            icon.innerHTML = `<svg style="width:48px;height:48px;color:#ee5d50;margin:0 auto;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+
+            msg.innerHTML = `
+                <div style="text-align:left;">
+                    <p style="margin-bottom:8px; font-size:13px; color:#2b3674;">Dokumen <b>${idLaporan}</b> akan dibatalkan. Qty diubah menjadi 0 dan saldo dikembalikan ke gudang.</p>
+                    <label style="display:block; font-size:12px; font-weight:700; color:#2b3674; margin-bottom:4px;">Alasan Pembatalan <span style="color:#ee5d50;">*</span></label>
+                    <textarea id="input-alasan-batal" class="form-control" rows="3" placeholder="Contoh: Double input / Salah Qty / Salah Barang..." style="resize:none; font-size:13px;" required></textarea>
+                    <span id="err-alasan-batal" style="display:none; color:#ee5d50; font-size:11.5px; font-weight:700; margin-top:4px;">Alasan pembatalan wajib diisi!</span>
+                </div>
+            `;
+
+            actions.innerHTML = '';
+
+            const btnCancel = document.createElement('button');
+            btnCancel.className = 'btn-modern';
+            btnCancel.style.background = '#f1f5f9';
+            btnCancel.style.color = '#64748b';
+            btnCancel.textContent = 'Kembali';
+            btnCancel.onclick = () => { dialog.style.display = 'none'; };
+
+            const btnProses = document.createElement('button');
+            btnProses.className = 'btn-modern';
+            btnProses.style.background = '#ee5d50';
+            btnProses.textContent = 'Proses Batal';
+            btnProses.onclick = () => {
+                const alasanInput = document.getElementById('input-alasan-batal');
+                const errText = document.getElementById('err-alasan-batal');
+                const alasanVal = alasanInput ? alasanInput.value.trim() : '';
+
+                if (!alasanVal) {
+                    if (errText) errText.style.display = 'block';
+                    if (alasanInput) { alasanInput.focus(); alasanInput.style.borderColor = '#ee5d50'; }
+                    return;
+                }
+
+                dialog.style.display = 'none';
+
                 const actionsContainer = document.getElementById('doc-open-actions');
                 if(actionsContainer) {
                     actionsContainer.innerHTML = '<span style="color:#2b3674; font-weight:bold;">Memproses pembatalan...</span>';
@@ -6685,29 +6866,32 @@
                 panggilBackend('updateStatusBatal', { 
                     idLaporan: idLaporan,
                     userId: window.currentUserId || "",
-                    userName: window.currentUserName || ""
+                    userName: window.currentUserName || "",
+                    alasan: alasanVal
                 })
-                    .then(res => {
-                        if (res && res.success) {
-                            document.getElementById('doc-open-badge').innerHTML = '<span style="background:#fce8e8; color:#ee5d50; padding:4px 8px; border-radius:2px; font-size:12px; font-weight:bold; vertical-align:middle; margin-left:10px;">BATAL</span>';
-                            if(actionsContainer) actionsContainer.style.display = 'none';
-                            
-                            if (window.currentEditingReport) window.currentEditingReport[9] = 'Batal';
-                            loadLaporanData(); 
+                .then(res => {
+                    if (res && res.success) {
+                        if (window.currentEditingReport) window.currentEditingReport[9] = 'Batal';
+                        loadLaporanData(); 
+                        goBackFromDocument();
+                        showDialog(`Dokumen <b>${idLaporan}</b> berhasil dibatalkan.<br>Alasan tersimpan: <i>${alasanVal}</i>`, "warning");
+                    } else {
+                        showDialog("Gagal membatalkan dokumen: " + (res ? res.message : "Kesalahan internal"), "warning");
+                    }
+                })
+                .catch(err => {
+                    showDialog("Gagal koneksi ke server: " + err.message, "warning");
+                });
+            };
 
-                            // Tutup modal dokumen otomatis setelah dibatalkan
-                            goBackFromDocument();
-                            showDialog("Dokumen berhasil dibatalkan. Saldo telah dikembalikan.", "warning");
-                        } else {
-                            showDialog("Gagal membatalkan dokumen: " + (res ? res.message : "Kesalahan internal"), "warning");
-                            if(actionsContainer) actionsContainer.style.display = 'none';
-                        }
-                    })
-                    .catch(err => {
-                        showDialog("Gagal koneksi ke server.", "warning");
-                        if(actionsContainer) actionsContainer.style.display = 'none';
-                    });
-            });
+            actions.appendChild(btnCancel);
+            actions.appendChild(btnProses);
+            dialog.style.display = 'flex';
+
+            setTimeout(() => {
+                const inp = document.getElementById('input-alasan-batal');
+                if (inp) inp.focus();
+            }, 100);
         }
 
             function approveDokumenLaporan(idLaporan) {
@@ -6921,8 +7105,7 @@
                 tableStates.view.data.forEach(r => {
                     totalDataQty += parseFloat(r[13]) || 0;
                     if(canViewPrice) {
-                        let rawIns = String(r[16] || '0').split(',')[0].replace(/[^\d]/g, '');
-                        totalDataInsentif += parseFloat(rawIns) || 0;
+                        totalDataInsentif += parseNominalFrontend(r[16]);
                     }
                 });
 
@@ -7249,7 +7432,26 @@
                 
                 const rawBarangText = `${kode} - ${nama} - ${warna}`;
                 const highlightedBadgeText = highlightSearchBadge(rawBarangText, keyword);
-                div.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; font-size:13px; color:#2b3674;"><span>${highlightedBadgeText}</span></div>`;
+
+                // ADJUSTMENT: Kembalikan tampilan saldo stok real-time pada opsi dropdown
+                const stockAvail = getAvailableStock(rawBarangText);
+                const stockDisplay = (stockAvail === '-' || stockAvail === 99999) ? '-' : Number(stockAvail).toLocaleString('id-ID');
+                
+                let badgeStyle = 'background: rgba(5, 205, 153, 0.12); color: #05cd99; border: 1px solid rgba(5, 205, 153, 0.3);';
+                if (stockAvail !== '-' && stockAvail !== 99999 && stockAvail <= 0) {
+                    badgeStyle = 'background: rgba(238, 93, 80, 0.12); color: #ee5d50; border: 1px solid rgba(238, 93, 80, 0.3);';
+                } else if (stockAvail === '-' || stockAvail === 99999) {
+                    badgeStyle = 'background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;';
+                }
+
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; width:100%; gap:8px;">
+                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#2b3674;">${highlightedBadgeText}</span>
+                        <span style="font-size:11px; font-weight:700; padding:2px 8px; border-radius:3px; white-space:nowrap; ${badgeStyle}">
+                            Stok: ${stockDisplay}
+                        </span>
+                    </div>
+                `;
                 
                 div.onmouseover = () => div.style.backgroundColor = '#f4f7fe';
                 div.onmouseout = () => div.style.backgroundColor = '#fff';
@@ -7274,11 +7476,17 @@
                 const map = new Map();
                 (window.allMutasiData || []).forEach(row => {
                     if (!Array.isArray(row)) return;
-                    const unit = String(row[0] || '').trim().toLowerCase();
+                    // Normalisasi unit (menghapus awalan 'cv ' agar 'CV JHB 1' cocok dengan 'JHB 1')
+                    const rawUnit = String(row[0] || '').trim().toLowerCase().replace(/^cv\s*/i, '');
                     const kode = String(row[1] || '').trim().toUpperCase();
-                    const motif = String(row[4] || '').trim().toUpperCase(); // Index 4 = Motif di DATA_MUTASI
-                    const key = unit + '|' + kode + '|' + motif;
-                    if (!map.has(key)) map.set(key, row); 
+                    const motif = String(row[4] || '-').trim().toUpperCase();
+                    
+                    const key = rawUnit + '|' + kode + '|' + motif;
+                    if (!map.has(key)) map.set(key, row);
+
+                    // Fallback key tanpa motif untuk pencarian fleksibel
+                    const keyNoMotif = rawUnit + '|' + kode;
+                    if (!map.has(keyNoMotif)) map.set(keyNoMotif, row);
                 });
                 _stokLookupCache = { source: window.allMutasiData, map: map };
             }
@@ -7309,18 +7517,24 @@
                 }
             }
 
-            const selectedUnit = (document.getElementById('input-unit')?.value || window.currentUserUnit || '').trim().toLowerCase();
+            const selectedUnit = (document.getElementById('input-unit')?.value || window.currentUserUnit || '').trim().toLowerCase().replace(/^cv\s*/i, '');
             const selectedPek = (document.getElementById('select-pek')?.value || '').trim().toLowerCase();
             
-            if (selectedPek === "tutup besi" || selectedPek === "jahit bulatan") {
+            // PERBAIKAN: Masukkan pasang hipseat dan pasang besi agar bebas limit saldo gudang
+            const isBypassJob = ["tutup besi", "pasang besi", "jahit bulatan", "pasang hipseat"].includes(selectedPek);
+            if (isBypassJob) {
                 qtyStokEl.value = "-"; 
-                qtyStokEl.setAttribute('data-saldo', 999999999); 
+                qtyStokEl.setAttribute('data-saldo', 99999); 
                 applyQtyStokColor(qtyStokEl, '-');
                 return;
             }
 
             const mapKolomPek = {
-                "pengisian": 8, "jahit tutup": 9, "penyarungan": 10, "packing/press": 11, "ikat/ball": 12
+                "pengisian": 8, "pe": 8,
+                "jahit tutup": 9, "jt": 9,
+                "penyarungan": 10, "py": 10,
+                "packing": 11, "packing/press": 11, "pp": 11, "press": 11,
+                "ikat/ball": 12, "ikat": 12, "ball": 12
             };
 
             const targetColIdx = mapKolomPek[selectedPek];
@@ -7394,13 +7608,19 @@
 
         // --- TAMBAHAN: Fungsi Bantuan Cek Sisa Saldo untuk Badge Dropdown ---
         function getAvailableStock(rawBarangString) {
-            const selectedUnit = (document.getElementById('input-unit')?.value || window.currentUserUnit || '').trim().toLowerCase();
+            const selectedUnit = (document.getElementById('input-unit')?.value || window.currentUserUnit || '').trim().toLowerCase().replace(/^cv\s*/i, '');
             const selectedPek = (document.getElementById('select-pek')?.value || '').trim().toLowerCase();
 
-            if (selectedPek === "tutup besi" || selectedPek === "jahit bulatan") return 999999999;
+            const isBypassJob = ["tutup besi", "pasang besi", "jahit bulatan", "pasang hipseat"].includes(selectedPek);
+            if (isBypassJob) return 99999;
 
+            // PERBAIKAN: Alias lengkap pekerjaan untuk pengecekan saldo badge
             const mapKolomPek = {
-                "pengisian": 8, "jahit tutup": 9, "penyarungan": 10, "packing/press": 11, "ikat/ball": 12
+                "pengisian": 8, "pe": 8,
+                "jahit tutup": 9, "jt": 9,
+                "penyarungan": 10, "py": 10,
+                "packing": 11, "packing/press": 11, "pp": 11, "press": 11,
+                "ikat/ball": 12, "ikat": 12, "ball": 12
             };
             const targetColIdx = mapKolomPek[selectedPek];
             if (targetColIdx === undefined || !window.allMutasiData || window.allMutasiData.length === 0) return 0;
@@ -7484,19 +7704,26 @@
             recalculateAllStok();
         }
 
-        function handleBsInput(input, showAll = false) {
+        async function handleBsInput(input, showAll = false) {
             const container = input.nextElementSibling;
             if(!container) return;
-            container.innerHTML = '';
-            
-            const keyword = input.value.trim().toLowerCase();
-            if (!keyword && !showAll) {
-                container.style.display = 'none';
-                return;
+
+            // Blok seluruh teks saat diklik agar mudah diganti
+            if (showAll && input.value) {
+                input.select();
             }
-            if (!window.allMasterBarang) {
-                container.style.display = 'none';
-                return;
+
+            // PERBAIKAN: Muat otomatis master barang jika belum pernah dibuka
+            if (!window.allMasterBarang || window.allMasterBarang.length === 0) {
+                container.innerHTML = '<div style="padding:10px; font-size:12px; color:#8f9bba; text-align:center;">Memuat master barang...</div>';
+                container.style.display = 'block';
+                await ensureMasterBarangLoaded();
+            }
+
+            container.innerHTML = '';
+            let keyword = input.value.trim().toLowerCase();
+            if (showAll) {
+                keyword = '';
             }
             
             let keywords = keyword.split(/\s+/);
@@ -8377,7 +8604,7 @@
 
                   // NILAI PCS (Label Biru Lembut namun Jelas)
                   if (showValue) {
-                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 4}" font-size="10" font-weight="800" font-family="'Public Sans', sans-serif" fill="#4d5fa8" text-anchor="middle">${Math.round(item.qty)}</text>`;
+                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 4}" font-size="10" font-weight="800" font-family="'Asta Sans', sans-serif" fill="#4d5fa8" text-anchor="middle">${Math.round(item.qty)}</text>`;
                   }
               }
 
@@ -8396,7 +8623,7 @@
                           ? 'Rp ' + (item.rp / 1000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + 'k' 
                           : 'Rp ' + Math.round(item.rp);
 
-                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 4}" font-size="9.5" font-weight="800" font-family="'Public Sans', sans-serif" fill="#238270" text-anchor="middle">${rpShort}</text>`;
+                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 4}" font-size="9.5" font-weight="800" font-family="'Asta Sans', sans-serif" fill="#238270" text-anchor="middle">${rpShort}</text>`;
                   }
               }
           });
@@ -8485,7 +8712,7 @@
 
               if (val > 0) {
                   svgHtml += `<rect x="${x - (barW / 2)}" y="${y}" width="${barW}" height="${h}" fill="url(#gradYearBar)" rx="1.5" />`;
-                  svgHtml += `<text x="${x}" y="${y - 1.5}" font-size="2.6" font-weight="500" font-family="'Public Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
+                  svgHtml += `<text x="${x}" y="${y - 1.5}" font-size="2.6" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
               }
 
               if (idx === 0) lineD += `M${x},${y} `;
@@ -8595,7 +8822,7 @@
                   svgHtml += `<polygon points="${xQty + barWidth},${yQty} ${xQty + barWidth + depth},${yQty - depth} ${xQty + barWidth + depth},${100 - depth} ${xQty + barWidth},100" fill="#2d0db3" />`;
 
                   if (showValue) {
-                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Public Sans', sans-serif" fill="#4318ff" text-anchor="middle">${Math.round(item.qty)}</text>`;
+                      svgHtml += `<text x="${xQty + (barWidth / 2)}" y="${yQty - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#4318ff" text-anchor="middle">${Math.round(item.qty)}</text>`;
                   }
               }
 
@@ -8606,7 +8833,7 @@
                   svgHtml += `<polygon points="${xRp + barWidth},${yRp} ${xRp + barWidth + depth},${yRp - depth} ${xRp + barWidth + depth},${100 - depth} ${xRp + barWidth},100" fill="#038c67" />`;
 
                   if (showValue) {
-                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Public Sans', sans-serif" fill="#05cd99" text-anchor="middle">${Math.round(realPct)}%</text>`;
+                      svgHtml += `<text x="${xRp + (barWidth / 2)}" y="${yRp - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${Math.round(realPct)}%</text>`;
                   }
               }
           });
@@ -8688,7 +8915,7 @@
                   // Side Face
                   svgHtml += `<polygon points="${x + barW},${y} ${x + barW + depth},${y - depth} ${x + barW + depth},${100 - depth} ${x + barW},100" fill="#04a37a" />`;
 
-                  svgHtml += `<text x="${x + (barW / 2)}" y="${y - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Public Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
+                  svgHtml += `<text x="${x + (barW / 2)}" y="${y - depth - 1.2}" font-size="2.4" font-weight="500" font-family="'Asta Sans', sans-serif" fill="#05cd99" text-anchor="middle">${(val/1000).toFixed(0)}k</text>`;
               }
           });
 
@@ -8938,6 +9165,110 @@
           });
           
           tbody.innerHTML = html;
+      }
+
+      // --- LOGIKA HALAMAN POSISI BARANG (DATA MUTASI B-F & H-M) ---
+      async function loadPosisiBarangData() {
+          const tbody = document.getElementById('tbody-posisi-barang');
+          if (tbody) tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:25px; color:#8f9bba;">Mengambil data posisi mutasi dari server...</td></tr>';
+          
+          try {
+              const res = await panggilBackend('getSaldoMutasiData', {});
+              if (res && res.success) {
+                  window.allMutasiData = res.data || [];
+                  _stokLookupCache.source = null; // Reset cache lookup form
+                  filterPosisiBarang();
+              } else {
+                  if (tbody) tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:#ee5d50; padding:25px;">Gagal memuat data mutasi: ${res ? res.message : 'Error'}</td></tr>`;
+              }
+          } catch (err) {
+              if (tbody) tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:#ee5d50; padding:25px;">Koneksi error: ${err.message}</td></tr>`;
+          }
+      }
+
+      function filterPosisiBarang() {
+          if (!window.allMutasiData) return;
+          const unit = (document.getElementById('filter-posisi-unit')?.value || '').toLowerCase().trim();
+          const keyword = (document.getElementById('filter-posisi-search')?.value || '').toLowerCase().trim();
+          const keywords = keyword.split(/\s+/).filter(Boolean);
+
+          const filtered = window.allMutasiData.filter(row => {
+              if (!Array.isArray(row) || !row[1]) return false; // Abaikan jika baris kosong
+              
+              // row[0] adalah Unit
+              const rowUnit = String(row[0] || '').toLowerCase();
+              const matchUnit = unit === '' || rowUnit.includes(unit.replace(/^cv\s*/i, ''));
+
+              // Pencarian pada Kolom B-F (Kode, Nama, Kategori, Motif, Supplier)
+              const matchSearch = keywords.length === 0 || keywords.every(kw => {
+                  return [row[1], row[2], row[3], row[4], row[5]].some(cell => 
+                      String(cell || '').toLowerCase().includes(kw)
+                  );
+              });
+
+              return matchUnit && matchSearch;
+          });
+
+          renderPosisiBarangTable(filtered, 1);
+      }
+
+      function renderPosisiBarangTable(dataArray, page = 1) {
+          tableStates.posisiBarang.data = dataArray || [];
+          tableStates.posisiBarang.currentPage = page;
+          const limitEl = document.getElementById('limit-posisi');
+          const limitVal = limitEl ? limitEl.value : 15;
+          tableStates.posisiBarang.limit = limitVal === 'all' ? tableStates.posisiBarang.data.length : parseInt(limitVal, 10);
+
+          const tbody = document.getElementById('tbody-posisi-barang');
+          if (!tbody) return;
+          tbody.innerHTML = '';
+
+          if (tableStates.posisiBarang.data.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:25px; color:#8f9bba;">Tidak ada data barang yang sesuai kriteria pencarian.</td></tr>';
+              renderPaginationButtons('posisiBarang', 'pagination-posisi', renderPosisiBarangTable);
+              return;
+          }
+
+          let start = (tableStates.posisiBarang.currentPage - 1) * tableStates.posisiBarang.limit;
+          let end = start + tableStates.posisiBarang.limit;
+          let paginatedData = tableStates.posisiBarang.data.slice(start, end);
+
+          paginatedData.forEach(row => {
+              const tr = document.createElement('tr');
+              
+              // 1. Identitas Barang: Kolom A, B, C, D, E, F (Index 0 s/d 5)
+              for (let i = 0; i <= 5; i++) {
+                  const td = document.createElement('td');
+                  let cellVal = row[i] !== undefined && row[i] !== null && row[i] !== '' ? row[i] : '-';
+                  if (i === 1) td.style.fontWeight = '700'; // Kode bold
+                  td.textContent = cellVal;
+                  tr.appendChild(td);
+              }
+
+              // 2. Saldo Posisi Proses: Kolom H s/d M (Index 7 s/d 12) -> Kolom G (Index 6) DILOMPATI
+              for (let j = 7; j <= 12; j++) {
+                  const td = document.createElement('td');
+                  td.style.textAlign = 'right';
+                  
+                  let valNum = parseFloat(row[j]) || 0;
+                  td.textContent = Number(valNum).toLocaleString('id-ID');
+
+                  if (valNum > 0) {
+                      td.style.fontWeight = '700';
+                      td.style.color = '#05cd99'; // Hijau jika ada saldo
+                  } else if (valNum < 0) {
+                      td.style.fontWeight = '700';
+                      td.style.color = '#ee5d50'; // Merah jika minus
+                  } else {
+                      td.style.color = '#a3aed1'; // Abu-abu jika nol
+                  }
+                  tr.appendChild(td);
+              }
+
+              tbody.appendChild(tr);
+          });
+
+          renderPaginationButtons('posisiBarang', 'pagination-posisi', renderPosisiBarangTable);
       }
 
       function quickNavigateToLaporan(idDoc) {
