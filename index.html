@@ -1588,16 +1588,25 @@
 
                   <!-- FILTER & PENCARIAN KODE BARANG -->
                   <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
-                      <select id="filter-posisi-unit" class="search-input" style="width: 170px;" onchange="filterPosisiBarang()">
+                      <select id="filter-posisi-unit" class="search-input" style="width: 150px;" onchange="filterPosisiBarang()">
                           <option value="">Semua Unit</option>
                           <option value="CV JHB 1">CV JHB 1</option>
                           <option value="CV JHB 2">CV JHB 2</option>
                           <option value="CV JHB 5">CV JHB 5</option>
                       </select>
-                      <div style="position:relative; flex:1; min-width:240px;">
+                      <!-- DROPDOWN FILTER SUPPLIER -->
+                      <select id="filter-posisi-supplier" class="search-input" style="width: 220px;" onchange="filterPosisiBarang()">
+                          <option value="">Semua Supplier</option>
+                      </select>
+                      <div style="position:relative; flex:1; min-width:200px;">
                           <input type="text" id="filter-posisi-search" class="search-input" placeholder="Ketik Kode / Nama Barang / Motif..." style="width:100%; padding-left:36px;" oninput="filterPosisiBarang()">
                           <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#8f9bba;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                       </div>
+                      <!-- CHECKBOX FILTER HANYA YANG ADA SALDO -->
+                      <label style="cursor:pointer; font-size:12.5px; font-weight:700; color:#2b3674; display:flex; align-items:center; gap:6px; background:#f8fafc; padding:8px 12px; border-radius:2px; border:1px solid #e0e5f2;">
+                          <input type="checkbox" id="chk-posisi-ada-saldo" onchange="filterPosisiBarang()">
+                          Hanya yang ada saldo
+                      </label>
                   </div>
 
                   <div class="table-container">
@@ -7075,15 +7084,16 @@
                             td.style.fontWeight = 'bold';
                             td.textContent = cellVal;
                         } 
-                        // Kolom Harga & Insentif (Index 15 & 16)
+                        // Kolom Harga & Insentif (Index 15 & 16) - Dibulatkan ke bilangan bulat agar tidak ada pecahan rancu
                         else if (i === 15 || i === 16) { 
                             td.style.textAlign = 'right';
-                            if(cellVal !== '-' && !isNaN(cellVal) && cellVal !== '') {
-                                 td.textContent = 'Rp ' + Number(cellVal).toLocaleString('id-ID');
-                                 if (i === 16) td.style.color = '#05cd99'; // Highlight hijau untuk Insentif
+                            let numVal = parseNominalFrontend(cellVal);
+                            if (numVal > 0) {
+                                 td.textContent = 'Rp ' + Number(Math.round(numVal)).toLocaleString('id-ID');
+                                 if (i === 16) td.style.color = '#05cd99';
                                  td.style.fontWeight = 'bold';
                             } else {
-                                 td.textContent = cellVal;
+                                 td.textContent = 'Rp 0';
                             }
                         }
                         // Kolom Default
@@ -7139,13 +7149,14 @@
                     tdTotHarga.style.borderTop = '2px solid #e0e5f2';
                     trTot.appendChild(tdTotHarga);
 
-                    const tdTotInsentif = document.createElement('td'); // Inject Harga Penjumlahan Total
+                    const tdTotInsentif = document.createElement('td');
                     tdTotInsentif.style.textAlign = 'right';
-                    tdTotInsentif.style.fontWeight = '600';
+                    tdTotInsentif.style.fontWeight = '700';
                     tdTotInsentif.style.color = '#05cd99';
                     tdTotInsentif.style.fontSize = '14px';
                     tdTotInsentif.style.borderTop = '2px solid #e0e5f2';
-                    tdTotInsentif.textContent = 'Rp ' + Number(totalDataInsentif).toLocaleString('id-ID');
+                    // PERBAIKAN: Gunakan Math.round agar pecahan desimal seperti ,296 dibulatkan murni ke rupiah utuh
+                    tdTotInsentif.textContent = 'Rp ' + Number(Math.round(totalDataInsentif)).toLocaleString('id-ID');
                     trTot.appendChild(tdTotInsentif);
                 }
 
@@ -9177,6 +9188,19 @@
               if (res && res.success) {
                   window.allMutasiData = res.data || [];
                   _stokLookupCache.source = null; // Reset cache lookup form
+                  
+                  // PENGISIAN OTOMATIS DROPDOWN SUPPLIER DARI DATA MUTASI
+                  const supSelect = document.getElementById('filter-posisi-supplier');
+                  if (supSelect) {
+                      const curVal = supSelect.value;
+                      const suppliers = [...new Set(window.allMutasiData.map(r => String(r[5] || '').trim()).filter(Boolean))].sort();
+                      supSelect.innerHTML = `<option value="">Semua Supplier</option>`;
+                      suppliers.forEach(s => {
+                          supSelect.innerHTML += `<option value="${s}">${s}</option>`;
+                      });
+                      supSelect.value = curVal;
+                  }
+
                   filterPosisiBarang();
               } else {
                   if (tbody) tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:#ee5d50; padding:25px;">Gagal memuat data mutasi: ${res ? res.message : 'Error'}</td></tr>`;
@@ -9189,24 +9213,36 @@
       function filterPosisiBarang() {
           if (!window.allMutasiData) return;
           const unit = (document.getElementById('filter-posisi-unit')?.value || '').toLowerCase().trim();
+          const supplier = (document.getElementById('filter-posisi-supplier')?.value || '').toLowerCase().trim();
+          const onlyWithStock = document.getElementById('chk-posisi-ada-saldo')?.checked || false;
           const keyword = (document.getElementById('filter-posisi-search')?.value || '').toLowerCase().trim();
           const keywords = keyword.split(/\s+/).filter(Boolean);
 
           const filtered = window.allMutasiData.filter(row => {
               if (!Array.isArray(row) || !row[1]) return false; // Abaikan jika baris kosong
               
-              // row[0] adalah Unit
+              // 1. Filter Unit
               const rowUnit = String(row[0] || '').toLowerCase();
               const matchUnit = unit === '' || rowUnit.includes(unit.replace(/^cv\s*/i, ''));
 
-              // Pencarian pada Kolom B-F (Kode, Nama, Kategori, Motif, Supplier)
+              // 2. Filter Supplier (Kolom F / Index 5)
+              const rowSupplier = String(row[5] || '').toLowerCase().trim();
+              const matchSupplier = supplier === '' || rowSupplier === supplier;
+
+              // 3. Filter Checkbox: Hanya Tampilkan yang Ada Saldonya (> 0 di kolom proses H-M / Index 7-12)
+              let matchStock = true;
+              if (onlyWithStock) {
+                  matchStock = [7, 8, 9, 10, 11, 12].some(colIdx => (parseFloat(row[colIdx]) || 0) > 0);
+              }
+
+              // 4. Pencarian Teks pada Kolom B-F (Kode, Nama, Kategori, Motif, Supplier)
               const matchSearch = keywords.length === 0 || keywords.every(kw => {
                   return [row[1], row[2], row[3], row[4], row[5]].some(cell => 
                       String(cell || '').toLowerCase().includes(kw)
                   );
               });
 
-              return matchUnit && matchSearch;
+              return matchUnit && matchSupplier && matchStock && matchSearch;
           });
 
           renderPosisiBarangTable(filtered, 1);
