@@ -1720,39 +1720,58 @@
               </div>
           </div>
 
-            <!-- 7. VIEW SISA OM -->
+            <!-- 7. VIEW SISA OM (STATISTIK DINAMIS BUKU LAPORAN OM KOLOM Z-AL) -->
             <div id="view-sisa-om" class="view-section">
+                <!-- 4 KARTU STATISTIK RINGKASAN OM -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                    <div class="card" style="padding: 16px; border-left: 4px solid #4318ff;">
+                        <span style="font-size: 11px; color: #8f9bba; font-weight: 700; text-transform: uppercase;">Total Order (Qty OM)</span>
+                        <h3 id="stat-om-total" style="font-size: 22px; color: #2b3674; font-weight: 800; margin-top: 4px;">0</h3>
+                        <span style="font-size: 10.5px; color: #8f9bba;">Akumulasi Order Masuk</span>
+                    </div>
+                    <div class="card" style="padding: 16px; border-left: 4px solid #05cd99;">
+                        <span style="font-size: 11px; color: #8f9bba; font-weight: 700; text-transform: uppercase;">Telah Terealisasi (Selesai)</span>
+                        <h3 id="stat-om-selesai" style="font-size: 22px; color: #05cd99; font-weight: 800; margin-top: 4px;">0</h3>
+                        <span id="stat-om-selesai-pct" style="font-size: 10.5px; color: #05cd99; font-weight: 700;">0% Terselesaikan</span>
+                    </div>
+                    <div class="card" style="padding: 16px; border-left: 4px solid #ee5d50;">
+                        <span style="font-size: 11px; color: #8f9bba; font-weight: 700; text-transform: uppercase;">Sisa OM (Belum Selesai)</span>
+                        <h3 id="stat-om-sisa" style="font-size: 22px; color: #ee5d50; font-weight: 800; margin-top: 4px;">0</h3>
+                        <span style="font-size: 10.5px; color: #ee5d50; font-weight: 700;">Outstanding Order</span>
+                    </div>
+                    <div class="card" style="padding: 16px; border-left: 4px solid #f59e0b;">
+                        <span style="font-size: 11px; color: #8f9bba; font-weight: 700; text-transform: uppercase;">Total Qty Sisa (Pcs)</span>
+                        <h3 id="stat-om-sisa-pcs" style="font-size: 22px; color: #f59e0b; font-weight: 800; margin-top: 4px;">0</h3>
+                        <span style="font-size: 10.5px; color: #8f9bba;">Fisik Belum Terkirim</span>
+                    </div>
+                </div>
+
                 <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-                        <h3 class="text-secondary font-bold" style="margin-bottom: 0;">Rincian Sisa OM</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap:wrap; gap:12px;">
                         <div>
-                            <!-- Tombol Download Foto -->
-                            <button class="btn-modern" style="background:#4318ff; color:#fff; display:inline-flex; align-items:center; gap:8px; margin-right: 8px;" onclick="downloadSisaOmAsImage(event)">
-                                <svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                Download Foto
+                            <h3 class="text-primary font-bold" style="font-size: 20px; margin-bottom: 2px;">Data Statistik Sisa OM</h3>
+                            <p style="font-size:12px; color:#8f9bba;">Pantauan berkala realisasi Order Makloon per Supplier & Bulan (Buku Laporan OM Kolom Z–AL)</p>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn-modern" style="background:#4318ff; color:#fff;" onclick="downloadSisaOmAsImage(event)">
+                                <svg style="width:14px; height:14px; margin-right:4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download Foto
                             </button>
-                            <button class="btn-modern" onclick="loadSisaOmData()">Muat Ulang Data</button>
+                            <button class="btn-modern" style="background:#f4f7fe; color:#4318ff; border: 1px solid #4318ff;" onclick="loadSisaOmData()">
+                                <svg style="width:14px; height:14px; margin-right:4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Refresh
+                            </button>
                         </div>
                     </div>
+
                     <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
-                        <select id="filter-sisaom-unit" class="search-input" onchange="filterSisaOmData()">
-                            <option value="">Semua Unit</option>
-                            <option value="CV JHB 1">CV JHB 1</option>
-                            <option value="CV JHB 2">CV JHB 2</option>
-                            <option value="CV JHB 5">CV JHB 5</option>
-                        </select>
-                        <!-- Filter Rentang Bulan -->
-                        <div style="display:flex; align-items:center; gap:6px; background:#fff; padding:2px 10px; border:1px solid #e0e5f2; border-radius:2px;">
-                            <span style="font-size:11px; font-weight:700; color:#8f9bba;">Bulan:</span>
-                            <input type="month" id="filter-sisaom-start-month" class="search-input" style="width: 140px; border:none; padding:4px;" onchange="filterSisaOmData()">
-                            <span style="color:#8f9bba; font-weight:bold;">-</span>
-                            <input type="month" id="filter-sisaom-end-month" class="search-input" style="width: 140px; border:none; padding:4px;" onchange="filterSisaOmData()">
+                        <div style="position:relative; flex: 1; min-width: 260px;">
+                            <input type="text" id="filter-sisaom-search" class="search-input" placeholder="Cari Supplier / Data..." style="width: 100%; padding-left: 36px;" oninput="filterSisaOmData()">
+                            <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#8f9bba;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
-                        <input type="text" id="filter-sisaom-search" class="search-input" placeholder="Cari Kode Barang / Nama / Kategori..." style="flex: 1;" oninput="filterSisaOmData()">
                     </div>
+
                     <div class="table-container">
                         <table class="table-thin" id="table-sisa-om">
-                            <thead>
+                            <thead id="thead-sisa-om">
                                 <tr id="thead-sisa-om-row">
                                     <th>Loading Data...</th>
                                 </tr>
@@ -1760,6 +1779,7 @@
                             <tbody id="tbody-sisa-om"></tbody>
                         </table>
                     </div>
+
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 15px;">
                         <div>
                             <span style="font-size:13px; color:#8f9bba; font-weight:700;">Tampilkan: </span>
@@ -1767,7 +1787,7 @@
                                 <option value="15">15</option>
                                 <option value="25">25</option>
                                 <option value="50">50</option>
-                                <option value="all">Semua</option>
+                                <option value="all" selected>Semua</option>
                             </select>
                         </div>
                         <div id="pagination-sisaom" style="display:flex; gap:5px;"></div>
@@ -2362,7 +2382,7 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyFlEhjmjbdbWRM3ly-ATU3nG8a_sC2hpfGvoczFaATJhf3RiyAKpYlgcc3xn5TOay6CA/exec";         
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzspoE3_MhLdpZXcQBW_OD2jWTWYATafhWL3_ZaIYlxvXE8YlnhRNPC6ql6OzrFgREaDA/exec";         
 
         // 2. HELPER: Parser Nominal Desimal Aman (Presisi Angka Murni)
         function parseNominalFrontend(val) {
@@ -2756,6 +2776,13 @@
                     document.getElementById('stat-rp-masuk').textContent = `Rp ${Number(res.rp.masuk).toLocaleString('id-ID')}`;
                     document.getElementById('stat-rp-prod').textContent = `Rp ${Number(res.rp.prod).toLocaleString('id-ID')}`;
                     document.getElementById('stat-rp-kirim').textContent = `Rp ${Number(res.rp.kirim).toLocaleString('id-ID')}`;
+
+                    // PERBAIKAN: Pastikan Author dan level berwenang langsung melihat nominal Rupiah saat dashboard dimuat
+                    const cleanRoleCheck = String(window.currentUserRole || '').toLowerCase().trim();
+                    const isRupiahPermitted = ['author', 'supervisor', 'staff finance', 'admin finance', 'staff produksi', 'admin produksi'].includes(cleanRoleCheck);
+                    document.querySelectorAll('.stat-rupiah').forEach(el => {
+                        el.style.display = isRupiahPermitted ? 'block' : 'none';
+                    });
 
                     // Populate Active Operators (Dynamic from report)
                     document.getElementById('stat-op-total').innerHTML = `${res.operators.total} <span style="font-size:14px; font-weight:400; color:#e0e5ff;">Orang</span>`;
@@ -4215,11 +4242,11 @@
                     // Sembunyikan Overlay Login
                     document.getElementById('loginOverlay').style.display = 'none'; 
 
-                    // Simpan Data User ke Global Variable
-                    window.currentUserRole = response.role || "Operator";
-                    window.currentUserUnit = response.unit || "";
-                    window.currentUserName = response.name || user;
-                    window.currentUserId = response.userId || user; // Rekam User ID akun
+                    // Simpan Data User ke Global Variable (Dibersihkan dari spasi tak terlihat)
+                    window.currentUserRole = String(response.role || "Operator").trim();
+                    window.currentUserUnit = String(response.unit || "").trim();
+                    window.currentUserName = String(response.name || user).trim();
+                    window.currentUserId = String(response.userId || user).trim();
 
                     // STAY TO LOGIN (Simpan di memory browser)
                     sessionStorage.setItem('authSession', JSON.stringify({
@@ -7858,89 +7885,110 @@
             }
         }
 
-        function filterSisaOmData() {
-            if (!window.rawSisaOmData) return;
-            const unitEl = document.getElementById('filter-sisaom-unit');
-            const startMonthEl = document.getElementById('filter-sisaom-start-month');
-            const endMonthEl = document.getElementById('filter-sisaom-end-month');
-            const searchEl = document.getElementById('filter-sisaom-search');
-            
-            const unit = unitEl ? unitEl.value.toLowerCase() : '';
-            const startMonth = startMonthEl ? startMonthEl.value : '';
-            const endMonth = endMonthEl ? endMonthEl.value : '';
-            const searchVal = searchEl ? searchEl.value.toLowerCase().trim() : '';
-            let keywords = searchVal.split(/\s+/);
-
-            const actualData = window.rawSisaOmData.length > 1 ? window.rawSisaOmData.slice(1) : window.rawSisaOmData;
-
-            const filtered = actualData.filter(row => {
-                if(!Array.isArray(row)) return false;
-                const matchUnit = unit === '' || row.some(cell => String(cell).toLowerCase().includes(unit));
-                const matchSearch = searchVal === '' || keywords.every(kw => row.some(cell => String(cell).toLowerCase().includes(kw)));
-                
-                // Filter rentang bulan (Start Month sampai End Month)
-                let matchMonth = true;
-                if (startMonth || endMonth) {
-                    matchMonth = row.some(cell => {
-                        const cellStr = String(cell || '');
-                        // Cocokkan pola YYYY-MM di dalam cell (contoh: 2026-08-15 atau 2026-08)
-                        const match = cellStr.match(/\b(\d{4}-\d{2})\b/);
-                        if (match) {
-                            const ym = match[1];
-                            if (startMonth && endMonth) return ym >= startMonth && ym <= endMonth;
-                            if (startMonth) return ym >= startMonth;
-                            if (endMonth) return ym <= endMonth;
-                        }
-                        return false;
-                    });
-                }
-                
-                return matchUnit && matchSearch && matchMonth;
-            }).reverse();
-
-            renderSisaOmTable(filtered, 1);
-        }
-
+        // --- LOGIKA STATISTIK DINAMIS SISA OM (BUKU LAPORAN OM KOLOM Z-AL) ---
         function loadSisaOmData() {
             const tbody = document.getElementById('tbody-sisa-om');
             if(!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:20px; color:#8f9bba;">Mengambil data Sisa OM dari server...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:25px; color:#8f9bba;">Mengambil data Buku Laporan OM dari server...</td></tr>';
             
             panggilBackend('getSisaOmData', {})
                 .then(function(data) {
                     window.rawSisaOmData = data || [];
+                    processAndCalculateOmStats();
                     filterSisaOmData();
                 })
                 .catch(err => {
-                    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#ee5d50;">Gagal memuat data Sisa OM.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; color:#ee5d50; padding:25px;">Gagal memuat data: ${err.message}</td></tr>`;
                 });
         }
 
-        function renderSisaOmTable(dataArray, page = 1) {
+        // Hitung 4 Kartu Statistik Dinamis Sisa OM
+        function processAndCalculateOmStats() {
+            if (!window.rawSisaOmData || window.rawSisaOmData.length < 2) return;
+            
+            let totOm = 0;
+            let totSelesai = 0;
+            let totSisaOm = 0;
+            let totSisaPcs = 0;
+
+            // Lewati baris header awal (ambil baris data yang ada nama supplier)
+            for (let i = 1; i < window.rawSisaOmData.length; i++) {
+                const row = window.rawSisaOmData[i];
+                if (!row || !row[0] || String(row[0]).trim().toUpperCase() === 'TOTAL') continue;
+                
+                // Cari angka di kolom-kolom rekapitulasi (Jika tabel bentuk Qty OM / Qty Pcs)
+                let omVal = parseFloat(String(row[1] || '0').replace(/[^0-9.-]/g, '')) || 0;
+                let selesaiVal = parseFloat(String(row[2] || '0').replace(/[^0-9.-]/g, '')) || 0;
+                let sisaVal = parseFloat(String(row[3] || '0').replace(/[^0-9.-]/g, '')) || 0;
+                let sisaPcsVal = parseFloat(String(row[6] || row[row.length - 1] || '0').replace(/[^0-9.-]/g, '')) || 0;
+
+                totOm += omVal;
+                totSelesai += selesaiVal;
+                totSisaOm += sisaVal;
+                totSisaPcs += sisaPcsVal;
+            }
+
+            const pctSelesai = totOm > 0 ? Math.min(100, Math.round((totSelesai / totOm) * 100)) : 0;
+
+            document.getElementById('stat-om-total').textContent = Number(totOm).toLocaleString('id-ID');
+            document.getElementById('stat-om-selesai').textContent = Number(totSelesai).toLocaleString('id-ID');
+            document.getElementById('stat-om-selesai-pct').textContent = `${pctSelesai}% Terselesaikan`;
+            document.getElementById('stat-om-sisa').textContent = Number(totSisaOm).toLocaleString('id-ID');
+            document.getElementById('stat-om-sisa-pcs').textContent = Number(totSisaPcs).toLocaleString('id-ID') + ' Pcs';
+        }
+
+        function filterSisaOmData() {
+            if (!window.rawSisaOmData || window.rawSisaOmData.length === 0) return;
+            const searchVal = (document.getElementById('filter-sisaom-search')?.value || '').toLowerCase().trim();
+            const keywords = searchVal.split(/\s+/).filter(Boolean);
+
+            // Deteksi baris header (biasanya baris ke-1 atau ke-2)
+            let headerIndex = 0;
+            for (let i = 0; i < Math.min(3, window.rawSisaOmData.length); i++) {
+                if (window.rawSisaOmData[i] && window.rawSisaOmData[i].some(cell => String(cell).toLowerCase().includes('supplier') || String(cell).toLowerCase().includes('om'))) {
+                    headerIndex = i;
+                    break;
+                }
+            }
+
+            const actualRows = window.rawSisaOmData.slice(headerIndex + 1);
+
+            const filtered = actualRows.filter(row => {
+                if (!Array.isArray(row) || !row.some(c => String(c).trim() !== '')) return false;
+                if (keywords.length === 0) return true;
+                return keywords.every(kw => row.some(cell => String(cell || '').toLowerCase().includes(kw)));
+            });
+
+            renderSisaOmTable(filtered, 1, headerIndex);
+        }
+
+        function renderSisaOmTable(dataArray, page = 1, headerRowIndex = 0) {
             tableStates.sisaOm.data = dataArray || [];
             tableStates.sisaOm.currentPage = page;
             const limitEl = document.getElementById('limit-sisaom');
-            const limitVal = limitEl ? limitEl.value : 15;
-            tableStates.sisaOm.limit = limitVal === 'all' ? tableStates.sisaOm.data.length : parseInt(limitVal);
+            const limitVal = limitEl ? limitEl.value : 'all';
+            tableStates.sisaOm.limit = limitVal === 'all' ? tableStates.sisaOm.data.length : parseInt(limitVal, 10);
 
+            const thead = document.getElementById('thead-sisa-om');
             const tbody = document.getElementById('tbody-sisa-om');
-            const theadRow = document.getElementById('thead-sisa-om-row');
-            if(!tbody || !theadRow) return;
-            tbody.innerHTML = '';
-            
-            if (window.rawSisaOmData && window.rawSisaOmData.length > 0) {
-                theadRow.innerHTML = '';
-                window.rawSisaOmData[0].forEach((colName, index) => {
-                    const th = document.createElement('th');
-                    th.innerHTML = `${colName} <span class="sort-icon">▲▼</span>`;
-                    th.style.cursor = 'pointer';
-                    th.onclick = () => sortTable('table-sisa-om', index, 'sisaOm', renderSisaOmTable);
-                    theadRow.appendChild(th);
+            if (!tbody || !thead) return;
+
+            // Render Header Dinamis Menyesuaikan Kolom Z–AL dari Sheet
+            if (window.rawSisaOmData && window.rawSisaOmData.length > headerRowIndex) {
+                const headerCols = window.rawSisaOmData[headerRowIndex];
+                let thHtml = '<tr>';
+                headerCols.forEach((colName, idx) => {
+                    let cleanCol = String(colName || `Kolom ${idx + 1}`).trim();
+                    if (!cleanCol) cleanCol = `-`;
+                    thHtml += `<th style="text-align: ${idx === 0 ? 'left' : 'right'}; white-space: nowrap;">${cleanCol}</th>`;
                 });
+                thHtml += '</tr>';
+                thead.innerHTML = thHtml;
             }
 
+            tbody.innerHTML = '';
             if (tableStates.sisaOm.data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${window.rawSisaOmData && window.rawSisaOmData[0] ? window.rawSisaOmData[0].length : 10}" style="text-align:center; padding:20px; color:#8f9bba;">Tidak ada data Sisa OM.</td></tr>`;
+                tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:25px; color:#8f9bba;">Tidak ada data Order Makloon yang cocok.</td></tr>';
                 renderPaginationButtons('sisaOm', 'pagination-sisaom', renderSisaOmTable);
                 return;
             }
@@ -7951,20 +7999,47 @@
 
             paginatedData.forEach(row => {
                 const tr = document.createElement('tr');
-                if(Array.isArray(row)) {
-                    row.forEach(cell => {
-                        const td = document.createElement('td');
-                        td.textContent = cell !== undefined && cell !== null ? cell : '-';
-                        // Jika isinya murni angka, ratakan ke kanan
-                        if (cell !== '' && cell !== '-' && !isNaN(cell)) {
-                            td.style.textAlign = 'right';
-                            td.style.fontWeight = 'bold';
-                        }
-                        tr.appendChild(td);
-                    });
+                const isTotalRow = String(row[0] || '').trim().toUpperCase() === 'TOTAL';
+
+                if (isTotalRow) {
+                    tr.style.background = '#f8fafc';
+                    tr.style.fontWeight = '800';
+                    tr.style.borderTop = '2px solid #e0e5f2';
                 }
+
+                row.forEach((cell, idx) => {
+                    const td = document.createElement('td');
+                    let rawStr = String(cell !== undefined && cell !== null ? cell : '-').trim();
+                    let num = parseFloat(rawStr.replace(/[^0-9.-]/g, ''));
+
+                    // Kolom pertama (Supplier / Kategori) rata kiri
+                    if (idx === 0) {
+                        td.style.textAlign = 'left';
+                        td.style.fontWeight = '700';
+                        td.style.color = '#2b3674';
+                        td.textContent = rawStr || '-';
+                    } else {
+                        td.style.textAlign = 'right';
+                        if (!isNaN(num) && rawStr !== '-' && rawStr !== '') {
+                            td.textContent = Number(num).toLocaleString('id-ID');
+                            if (num > 0) {
+                                td.style.fontWeight = '600';
+                                td.style.color = isTotalRow ? '#4318ff' : '#2b3674';
+                            } else if (num < 0) {
+                                td.style.fontWeight = '700';
+                                td.style.color = '#ee5d50'; // Warna merah jika minus
+                            } else {
+                                td.style.color = '#a3aed1'; // Warna abu jika 0
+                            }
+                        } else {
+                            td.textContent = rawStr;
+                        }
+                    }
+                    tr.appendChild(td);
+                });
                 tbody.appendChild(tr);
             });
+
             renderPaginationButtons('sisaOm', 'pagination-sisaom', renderSisaOmTable);
         }
 
