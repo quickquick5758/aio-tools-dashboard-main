@@ -2461,7 +2461,7 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwJWO02j13uqxFYI-dPfJxdInEh5aw8bPkDZmm4rGkGokAHMW7igqWEtgj95hlh1auTLQ/exec";         
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzXoT6MAu4kgqy_sdg2O44NBQkvWpzPjerQiUVrHF6J6KdmewvXcXWkBgquCbeynT5Fiw/exec";         
 
         // 2. HELPER: Parser Nominal Desimal Aman (Presisi Angka Murni)
         function parseNominalFrontend(val) {
@@ -2821,8 +2821,12 @@
             if(document.getElementById('bs-date')) document.getElementById('bs-date').value = today;
             if(document.getElementById('filter-trackingsj-start')) document.getElementById('filter-trackingsj-start').value = firstDay;
             if(document.getElementById('filter-trackingsj-end')) document.getElementById('filter-trackingsj-end').value = today;
-            if(document.getElementById('filter-sisaom-start-month')) document.getElementById('filter-sisaom-start-month').value = `${year}-${month}`;
-            if(document.getElementById('filter-sisaom-end-month')) document.getElementById('filter-sisaom-end-month').value = `${year}-${month}`;
+            
+            // Set Default Tanggal 1 s/d Hari ini untuk Sisa OM & Rincian OM
+            if(document.getElementById('filter-sisaom-start')) document.getElementById('filter-sisaom-start').value = firstDay;
+            if(document.getElementById('filter-sisaom-end')) document.getElementById('filter-sisaom-end').value = today;
+            if(document.getElementById('filter-rincianom-start')) document.getElementById('filter-rincianom-start').value = firstDay;
+            if(document.getElementById('filter-rincianom-end')) document.getElementById('filter-rincianom-end').value = today;
             
             // Tambahan Khusus Buku Pengecekan
             if(document.getElementById('filter-bpc-start')) document.getElementById('filter-bpc-start').value = firstDay;
@@ -3189,9 +3193,16 @@
 
             // 1. UPDATE: Ganti Judul Header agar user tahu di mana dia berada
             let menuName = 'Dashboard';
-            if (element) menuName = element.textContent.trim();
+            if (element && element.textContent) menuName = element.textContent.trim();
             else if (viewName === 'document-open') menuName = 'Buka Dokumen';
             else if (viewName === 'preview') menuName = 'Preview Data';
+            else if (viewName === 'sisa-om') menuName = 'Sisa OM';
+            else if (viewName === 'rincian-om') menuName = 'Rincian OM';
+            else if (viewName === 'posisi-barang') menuName = 'Posisi Barang';
+            else if (viewName === 'buku-pengecekan') menuName = 'Buku Pengecekan';
+            else if (viewName === 'input-baru') menuName = 'Input Baru';
+            else if (viewName === 'input-bbk') menuName = 'Input Hasil Pengecekan';
+            else if (viewName === 'input-bs') menuName = 'Input BS/Reject';
             
             menuName = menuName.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim(); // Bersihkan dari spasi/icon SVG
             const headerTitle = document.querySelector('.header-title h2');
@@ -3272,6 +3283,15 @@
                     loadPosisiBarangData();
                 }
                 if(viewName === 'sisa-om') {
+                    // Pastikan filter tanggal di Sisa OM sudah terisi default
+                    const now = new Date();
+                    const todayStr = now.toISOString().slice(0, 10);
+                    const firstDayStr = todayStr.slice(0, 8) + '01';
+                    const startEl = document.getElementById('filter-sisaom-start');
+                    const endEl = document.getElementById('filter-sisaom-end');
+                    if (startEl && !startEl.value) startEl.value = firstDayStr;
+                    if (endEl && !endEl.value) endEl.value = todayStr;
+
                     loadSisaOmData();
                 }
                 if(viewName === 'rincian-om') {
@@ -7967,19 +7987,55 @@
             }
         }
 
-        // --- LOGIKA STATISTIK DINAMIS SISA OM (BUKU LAPORAN OM BARIS 4 & 5) ---
+        // Helper Standarisasi Tanggal ke YYYY-MM-DD agar perbandingan tanggal selalu presisi
+        function normalizeDateYMD(val) {
+            if (!val) return '';
+            val = String(val).trim();
+            if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+            let parts = val.split(/[\/\-]/);
+            if (parts.length === 3) {
+                if (parts[0].length === 4) { // YYYY-MM-DD
+                    return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+                } else if (parts[2].length === 4) { // DD-MM-YYYY
+                    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                }
+            }
+            let d = new Date(val);
+            if (!isNaN(d.getTime())) {
+                let y = d.getFullYear();
+                let m = String(d.getMonth() + 1).padStart(2, '0');
+                let day = String(d.getDate()).padStart(2, '0');
+                return `${y}-${m}-${day}`;
+            }
+            return val;
+        }
+
+        // --- LOGIKA STATISTIK DINAMIS SISA OM (BUKU LAPORAN OM) ---
         function loadSisaOmData() {
-            const tbody = document.getElementById('tbody-sisa-om');
-            if(!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:25px; color:#8f9bba;">Mengambil data Buku Laporan OM...</td></tr>';
+            const pivotContainer = document.getElementById('supplier-pivot-cards');
+            if (pivotContainer) {
+                pivotContainer.innerHTML = '<p style="color:#8f9bba; font-size:13px; padding:15px;">Mengambil data Buku Laporan OM...</p>';
+            }
+            const tbodyRincian = document.getElementById('tbody-rincian-om');
+            if (tbodyRincian) {
+                tbodyRincian.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:25px; color:#8f9bba;">Mengambil data Buku Laporan OM...</td></tr>';
+            }
             
             panggilBackend('getSisaOmData', {})
                 .then(function(data) {
                     window.rawSisaOmData = data || [];
                     filterSisaOmData();
+                    populateRincianOmSuppliers();
+                    filterRincianOmData();
                 })
                 .catch(err => {
-                    tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; color:#ee5d50; padding:25px;">Gagal memuat data: ${err.message}</td></tr>`;
+                    console.error("Gagal getSisaOmData:", err);
+                    if (pivotContainer) {
+                        pivotContainer.innerHTML = `<p style="color:#ee5d50; font-size:13px; padding:15px;">Gagal memuat data: ${err.message}</p>`;
+                    }
+                    if (tbodyRincian) {
+                        tbodyRincian.innerHTML = `<tr><td colspan="13" style="text-align:center; color:#ee5d50; padding:25px;">Gagal memuat data: ${err.message}</td></tr>`;
+                    }
                 });
         }
 
@@ -8004,7 +8060,7 @@
                 const matchUnit = unit === '' || rowUnit.includes(unit.replace(/^cv\s*/i, ''));
 
                 let matchDate = true;
-                const rowDate = String(row[2] || '').trim();
+                const rowDate = normalizeDateYMD(row[2]);
                 if (startDate && endDate && rowDate) {
                     matchDate = (rowDate >= startDate && rowDate <= endDate);
                 } else if (startDate && rowDate) {
@@ -8025,6 +8081,21 @@
 
         // --- MESIN KHUSUS HALAMAN RINCIAN OM ---
         function openRincianOmPage() {
+            // SINKRONISASI: Salin filter Unit & Tanggal dari halaman Sisa OM ke Rincian OM
+            const sisaStart = document.getElementById('filter-sisaom-start')?.value;
+            const sisaEnd = document.getElementById('filter-sisaom-end')?.value;
+            const sisaUnit = document.getElementById('filter-sisaom-unit')?.value;
+
+            if (sisaStart && document.getElementById('filter-rincianom-start')) {
+                document.getElementById('filter-rincianom-start').value = sisaStart;
+            }
+            if (sisaEnd && document.getElementById('filter-rincianom-end')) {
+                document.getElementById('filter-rincianom-end').value = sisaEnd;
+            }
+            if (sisaUnit !== undefined && document.getElementById('filter-rincianom-unit')) {
+                document.getElementById('filter-rincianom-unit').value = sisaUnit;
+            }
+
             if (!window.rawSisaOmData || window.rawSisaOmData.length === 0) {
                 loadSisaOmData();
                 return;
@@ -8075,7 +8146,7 @@
 
                 // 3. Rentang Tanggal OM (Index 2)
                 let matchDate = true;
-                const rowDate = String(row[2] || '').trim();
+                const rowDate = normalizeDateYMD(row[2]);
                 if (startDate && endDate && rowDate) {
                     matchDate = (rowDate >= startDate && rowDate <= endDate);
                 } else if (startDate && rowDate) {
