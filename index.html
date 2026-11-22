@@ -254,8 +254,18 @@
         #table-laporan-elem td {
             padding: 8px 11px !important;
         }
-        .btn-modern { background: #4318ff; color: #fff; border: none; border-radius: 2px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.3s; }
+        .btn-modern { background: #4318ff; color: #fff; border: none; border-radius: 2px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.25s ease; }
         .btn-modern:hover { background: #3311db; }
+
+        /* Efek Bounce Lentur Pil Bulan Rekap Produksi */
+        .btn-rp-month {
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s ease !important;
+        }
+        .btn-rp-month:hover {
+            transform: translateY(-3px) scale(1.08);
+            box-shadow: 0 8px 16px -2px rgba(56, 189, 248, 0.35) !important;
+            border-color: #38bdf8 !important;
+        }
 
         .operator-tile { 
             padding: 8px 12px; border-radius: 2px; border: 1px solid #e0e5f2; 
@@ -263,6 +273,110 @@
         }
         .operator-tile.selected { background: #4318ff; color: #fff; border-color: #4318ff; }
         .button-center { display: flex; justify-content: center; gap: 15px; margin-top: 30px; margin-bottom: 35px; } /* Jeda ekstra dari bawah */
+
+        /* --- KOTAK CENTANG LEBAR & RESPONSIF --- */
+        .chk-lg {
+            width: 22px !important;
+            height: 22px !important;
+            min-width: 22px;
+            min-height: 22px;
+            cursor: pointer;
+            accent-color: #4318ff;
+            transform: scale(1.15);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            vertical-align: middle;
+        }
+        .chk-lg:hover {
+            transform: scale(1.3);
+        }
+
+        /* --- GLOBAL SHARP, BOUNCE & PASTEL LIGHT-BLUE SHADOW DI SEMUA HALAMAN --- */
+        .card, .stat-card, .card-living-glossy, .om-group-card, .input-wrapper {
+            position: relative;
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.25s ease;
+        }
+        
+        /* Efek Sorot Kursor: Bounce Lentur & Shadow Tipis Biru Muda Pastel */
+        .card:hover, .stat-card:hover, .card-living-glossy:hover, .om-group-card:hover {
+            transform: translateY(-4px) scale(1.008);
+            box-shadow: 0 14px 30px -4px rgba(56, 189, 248, 0.32), 0 0 0 1.5px rgba(56, 189, 248, 0.3) !important;
+            border-color: #7dd3fc !important;
+        }
+
+        /* Garis Cahaya Hidup (Living Light Line) di Atas Kartu */
+        .card-living-glossy, .card {
+            overflow: hidden;
+        }
+        .card-living-glossy::before, .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, #34d399, transparent);
+            transition: all 0.7s ease;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .card-living-glossy:hover::before, .card:hover::before {
+            left: 100%;
+        }
+
+        /* Ambient Glow di Belakang Tabel (Glossy Backdrop Tanpa Mengganggu Isi Tabel) */
+        .table-glow-container {
+            position: relative;
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+        .table-glow-backdrop {
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(-45deg, rgba(56, 189, 248, 0.2), rgba(67, 24, 255, 0.15), rgba(5, 205, 153, 0.15), rgba(244, 63, 94, 0.1));
+            background-size: 250% 250%;
+            animation: livingMeshGradient 10s ease infinite;
+            filter: blur(14px);
+            border-radius: 6px;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .table-glow-container > .table-container {
+            position: relative;
+            z-index: 2;
+            background: #ffffff;
+        }
+
+        /* Kartu Accordion Group OM */
+        .om-group-card {
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: all 0.25s ease;
+        }
+        .om-group-card.selected {
+            border-color: #4318ff;
+            background: #f8faff;
+            box-shadow: 0 4px 14px rgba(67, 24, 255, 0.08);
+        }
+        .om-group-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            user-select: none;
+        }
+        .om-group-card.expanded .om-group-header {
+            border-bottom-color: #e2e8f0;
+        }
+        .om-group-body {
+            display: none;
+            padding: 12px 16px;
+            background: #ffffff;
+        }
+        .om-group-card.expanded .om-group-body {
+            display: block;
+        }
 
         /* Area form dinamis diperluas minimum tingginya agar kotak sugesti (dropdown) kode tidak terpotong */
         .scrollable-form-container { min-height: 260px; overflow: visible; }
@@ -1015,7 +1129,7 @@
                       </div>
                       <div class="submenu">
                           <a href="#" class="submenu-item" onclick="switchView('data-view', this)">View Data</a>
-                          <a href="#" class="submenu-item">Rekap Produksi</a>
+                          <a href="#" class="submenu-item" onclick="switchView('rekap-produksi', this)">Rekap Produksi</a>
                       </div>
                       
                       <div class="menu-item has-submenu" onclick="toggleSubmenu(this)" style="padding-left:0px; margin-top:8px;">
@@ -1143,7 +1257,7 @@
             <!-- 1. DASHBOARD VIEW -->
             <div id="view-dashboard" class="view-section active">
                 <div class="grid-stats">
-                    <div class="card stat-card">
+                    <div class="card stat-card card-living-glossy">
                         <div class="stat-info">
                             <p class="text-muted">Total Bahan Baku Masuk</p>
                             <h3 class="text-secondary font-bold" id="stat-qty-masuk">0 <span>Pcs</span></h3>
@@ -1154,7 +1268,7 @@
                         </div>
                     </div>
 
-                    <div class="card stat-card">
+                    <div class="card stat-card card-living-glossy">
                         <div class="stat-info">
                             <p class="text-muted">Total Terproduksi</p>
                             <h3 class="text-secondary font-bold" id="stat-qty-prod">0 <span>Pcs</span></h3>
@@ -1165,7 +1279,7 @@
                         </div>
                     </div>
 
-                    <div class="card stat-card">
+                    <div class="card stat-card card-living-glossy">
                         <div class="stat-info">
                             <p class="text-muted">Total Dikirim</p>
                             <h3 class="text-secondary font-bold" id="stat-qty-kirim">0 <span>Pcs</span></h3>
@@ -1176,7 +1290,7 @@
                         </div>
                     </div>
 
-                    <div class="card card-gradient">
+                    <div class="card card-gradient card-living-glossy">
                         <div class="z-index-10">
                             <p class="font-bold">Operator Aktif</p>
                             <h3 class="font-bold" id="stat-op-total">0 <span style="font-size:14px; font-weight:400; color:#e0e5ff;">Orang</span></h3>
@@ -1371,49 +1485,50 @@
                 </div>
             </div>
 
-            <!-- VIEW SCHEDULE PRODUKSI HARI INI (OPSI A: STAFF CONTROLLED & HANDOVER) -->
+            <!-- VIEW SCHEDULE PRODUKSI HARIAN (ACUAN 1 HARI KERJA & OPER SORE) -->
             <div id="view-schedule-hari-ini" class="view-section" style="padding-bottom: 100px;">
-                <!-- 4 BOX STATISTIK SCHEDULE (DILENGKAPI INDIKATOR HUTANG TARGET KEMARIN) -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
-                    <div class="card" style="padding: 16px; border: 1px solid #cbd5e1; border-top: 3.5px solid #4318ff; background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);">
+                
+                <!-- 4 KARTU STATISTIK LIVING GLOSSY BOUNCE -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                    <div class="card-living-glossy" style="padding: 16px 18px; border-top: 3.5px solid #4318ff;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size: 11px; color: #4318ff; font-weight: 800; text-transform: uppercase;">Target Baru Hari Ini</span>
-                            <span style="font-size:12px;">✨</span>
+                            <span style="font-size: 11px; color: #4318ff; font-weight: 800; text-transform: uppercase;">Target Baru Harian</span>
+                            <span style="font-size:16px;">📋</span>
                         </div>
                         <h3 id="stat-sch-target-baru" style="font-size: 26px; color: #1e1b4b; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; color:#8f9bba; font-weight:500;">Pcs</span></h3>
-                        <span style="font-size: 11px; color: #8f9bba;">Komitmen Baru</span>
+                        <span style="font-size: 11px; color: #8f9bba;">Schedule 1 Hari Kerja</span>
                     </div>
 
-                    <div class="card" style="padding: 16px; border: 1px solid #cbd5e1; border-top: 3.5px solid #ee5d50; background: linear-gradient(180deg, #ffffff 0%, #fff5f5 100%);">
+                    <div class="card-living-glossy" style="padding: 16px 18px; border-top: 3.5px solid #ee5d50;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size: 11px; color: #b91c1c; font-weight: 800; text-transform: uppercase;">Hutang Target Kemarin</span>
-                            <span style="font-size:12px;">⏳</span>
+                            <span style="font-size: 11px; color: #b91c1c; font-weight: 800; text-transform: uppercase;">Operan Sisa (Sore Kemarin)</span>
+                            <span style="font-size:16px;">⏳</span>
                         </div>
                         <h3 id="stat-sch-hutang" style="font-size: 26px; color: #ee5d50; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; color:#8f9bba; font-weight:500;">Pcs</span></h3>
-                        <span style="font-size: 11px; color: #ee5d50; font-weight: 700;">Wajib Dituntaskan</span>
+                        <span style="font-size: 11px; color: #ee5d50; font-weight: 700;">Prioritas Tuntas Hari Ini</span>
                     </div>
 
-                    <div class="card" style="padding: 16px; border: 1px solid #cbd5e1; border-top: 3.5px solid #05cd99; background: linear-gradient(180deg, #ffffff 0%, #f0fdf9 100%);">
+                    <div class="card-living-glossy" style="padding: 16px 18px; border-top: 3.5px solid #05cd99;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size: 11px; color: #047857; font-weight: 800; text-transform: uppercase;">Realisasi Selesai</span>
-                            <span style="font-size:12px;">✅</span>
+                            <span style="font-size: 11px; color: #047857; font-weight: 800; text-transform: uppercase;">Akumulasi Realisasi Shift</span>
+                            <span style="font-size:16px;">✅</span>
                         </div>
                         <h3 id="stat-sch-realisasi" style="font-size: 26px; color: #05cd99; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; color:#8f9bba; font-weight:500;">Pcs</span></h3>
                         <span id="stat-sch-pct" style="font-size: 11px; color: #05cd99; font-weight: 700;">0% Tercapai</span>
                     </div>
 
-                    <div class="card" style="padding: 16px; border: 1px solid #cbd5e1; border-top: 3.5px solid #f59e0b; background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);">
+                    <div class="card-living-glossy" style="padding: 16px 18px; border-top: 3.5px solid #f59e0b;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size: 11px; color: #b45309; font-weight: 800; text-transform: uppercase;">Total Sisa Beban</span>
-                            <span style="font-size:12px;">📦</span>
+                            <span style="font-size: 11px; color: #b45309; font-weight: 800; text-transform: uppercase;">Sisa Beban Belum Selesai</span>
+                            <span style="font-size:16px;">📦</span>
                         </div>
                         <h3 id="stat-sch-sisa" style="font-size: 26px; color: #d97706; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; color:#8f9bba; font-weight:500;">Pcs</span></h3>
-                        <span id="stat-sch-operan-info" style="font-size: 11px; color: #8f9bba;">Termasuk 0 pcs operan</span>
+                        <span id="stat-sch-operan-info" style="font-size: 11px; color: #8f9bba;">Siap dievaluasi sore nanti</span>
                     </div>
                 </div>
 
-                <!-- CONTROLS & FILTER BAR -->
-                <div class="card" style="padding: 16px; margin-bottom: 20px;">
+                <!-- CONTROLS & FILTER BAR DENGAN AKSES CEPAT -->
+                <div class="card card-living-glossy" style="padding: 16px; margin-bottom: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; flex: 1;">
                             <select id="filter-sch-unit" class="search-input" style="width: 140px;" onchange="filterScheduleTable()">
@@ -1422,192 +1537,222 @@
                                 <option value="CV JHB 2">CV JHB 2</option>
                                 <option value="CV JHB 5">CV JHB 5</option>
                             </select>
-                            <input type="date" id="filter-sch-date" class="search-input" style="width: 135px;" onchange="filterScheduleTable()">
-                            <select id="filter-sch-shift" class="search-input" style="width: 130px;" onchange="filterScheduleTable()">
-                                <option value="">Semua Shift</option>
-                                <option value="Shift 1">Shift 1</option>
-                                <option value="Shift 2">Shift 2</option>
-                                <option value="Shift 3">Shift 3</option>
-                                <option value="Non-Shift">Non-Shift</option>
-                            </select>
-                            <select id="filter-sch-karu" class="search-input" style="width: 150px;" onchange="filterScheduleTable()">
-                                <option value="">Semua Karu</option>
-                            </select>
-                            <input type="text" id="filter-sch-search" class="search-input" placeholder="Cari No OM / Kode / Karu..." style="flex: 1; min-width: 180px;" oninput="filterScheduleTable()">
+                            <div style="display: flex; align-items: center; gap: 6px; background: #fff; padding: 2px 10px; border: 1px solid #e0e5f2; border-radius: 2px;">
+                                <span style="font-size: 11px; font-weight: 700; color: #8f9bba;">Tgl Schedule:</span>
+                                <input type="date" id="filter-sch-date" class="search-input" style="width: 130px; border:none; padding:4px;" onchange="filterScheduleTable()">
+                            </div>
+                            <input type="text" id="filter-sch-search" class="search-input" placeholder="Cari No OM / Kode / Nama Barang..." style="flex: 1; min-width: 180px;" oninput="filterScheduleTable()">
                         </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button id="btn-create-schedule" class="btn-modern" style="background: #10b981; color: #fff; display: flex; align-items: center; gap: 6px;" onclick="openCreateScheduleModal()">
-                                <svg style="width:14px; height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> + Buat Schedule (Dari Sisa OM)
+
+                        <!-- TOMBOL AKSI UTAMA (MEMBUKA FULL PAGE) -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="btn-modern" style="background:#4318ff; color:#fff; display:flex; align-items:center; gap:6px; font-weight:700;" onclick="switchView('buat-schedule')">
+                                <svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                                + Buat Schedule Harian (Full Page)
                             </button>
-                            <button class="btn-modern" style="background: #f4f7fe; color: #4318ff; border: 1px solid #4318ff;" onclick="loadScheduleProduksiData()">
-                                <svg style="width:14px; height:14px; margin-right:4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Refresh
+                            <button class="btn-modern" style="background:#10b981; color:#fff; display:flex; align-items:center; gap:6px;" onclick="triggerImportScheduleExcel()">
+                                <svg style="width:15px; height:15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                Import Schedule (Excel)
+                            </button>
+                            <button class="btn-modern" style="background:#d97706; color:#fff; display:flex; align-items:center; gap:6px;" onclick="openOperanSoreModal()" title="Oper sisa schedule yang belum tuntas ke schedule besok">
+                                ⏳ Evaluasi Operan Sore
+                            </button>
+                            <button class="btn-modern" style="background:#f4f7fe; color:#4318ff; border: 1px solid #4318ff;" onclick="loadScheduleProduksiData()">
+                                Refresh
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- TABEL SCHEDULE PRODUKSI HARI INI -->
-                <div class="table-container">
-                    <table class="table-thin" id="table-schedule-today">
-                        <thead>
-                            <tr class="header-group">
-                                <th colspan="6">Identitas Order & Barang</th>
-                                <th colspan="6">Alokasi & Handover Schedule Karu (Pcs)</th>
-                                <th colspan="2">Status & Kontrol</th>
-                            </tr>
-                            <tr>
-                                <th>Unit</th>
-                                <th>Shift</th>
-                                <th style="text-align: center;">Tipe Target</th>
-                                <th>No OM</th>
-                                <th>Kode</th>
-                                <th>Nama Barang</th>
-                                <th>Motif</th>
-                                <th style="background:#f1f5f9; color:#4318ff;">Penanggung Jawab</th>
-                                <th style="text-align: right;">Target Awal</th>
-                                <th style="text-align: right; color:#d97706;">Operan</th>
-                                <th style="text-align: right; font-weight:800; background:#f8fafc;">Target Akhir</th>
-                                <th style="text-align: right; color:#05cd99;">Realisasi</th>
-                                <th style="text-align: right; color:#ee5d50;">Sisa</th>
-                                <th style="text-align: center;">Status</th>
-                                <th style="text-align: center;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-schedule-today">
-                            <tr><td colspan="14" style="text-align:center; padding:25px; color:#8f9bba;">Memuat data schedule produksi...</td></tr>
-                        </tbody>
-                    </table>
+                <!-- BANNER NOTIFIKASI JIKA TERJADI AUTO-SCHEDULE DARI DO KARENA STAF TIDAK INPUT -->
+                <div id="banner-auto-do-info" style="display:none; margin-bottom:14px; background:#eff6ff; border:1px solid #bfdbfe; border-left:4px solid #3b82f6; border-radius:4px; padding:10px 14px; font-size:12.5px; color:#1e40af;">
+                    <span style="font-weight:800;">⚡ Informasi Schedule Otomatis:</span> Pada tanggal terpilih, staf tidak menginput schedule kerja. Sistem secara otomatis menyusun schedule berdasarkan <b>Surat Jalan (DO)</b> pengiriman barang di hari yang sama agar realisasi tetap balance.
+                </div>
+
+                <!-- TABEL SCHEDULE DENGAN GLOSSY BACKDROP DI BELAKANGNYA -->
+                <div class="table-glow-container">
+                    <div class="table-glow-backdrop"></div>
+                    <div class="table-container">
+                        <table class="table-thin" id="table-schedule-today">
+                            <thead>
+                                <tr class="header-group">
+                                    <th colspan="6">Identitas Order Makloon & Barang</th>
+                                    <th colspan="5">Target Schedule Harian (Semua Shift)</th>
+                                    <th colspan="2">Status & Evaluasi Sore</th>
+                                </tr>
+                                <tr>
+                                    <th>Unit</th>
+                                    <th style="text-align: center;">Tipe Target</th>
+                                    <th>No OM</th>
+                                    <th>Kode Barang</th>
+                                    <th>Nama Barang</th>
+                                    <th>Motif</th>
+                                    <th style="text-align: right;">Target Awal</th>
+                                    <th style="text-align: right; color:#d97706;">Operan</th>
+                                    <th style="text-align: right; font-weight:800; background:#f8fafc;">Target Akhir</th>
+                                    <th style="text-align: right; color:#05cd99;">Realisasi</th>
+                                    <th style="text-align: right; color:#ee5d50;">Sisa</th>
+                                    <th style="text-align: center;">Status</th>
+                                    <th style="text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-schedule-today">
+                                <tr><td colspan="13" style="text-align:center; padding:25px; color:#8f9bba;">Memuat data schedule harian...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- MODAL: BUAT SCHEDULE BARU DARI SISA OM -->
-            <div id="modal-create-schedule" class="custom-dialog-overlay">
-                <div class="custom-dialog-box" style="max-width: 650px; text-align: left; padding: 25px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
-                        <h3 class="text-secondary font-bold" style="font-size:18px; margin:0;">Buat Schedule Produksi Baru</h3>
-                        <button onclick="document.getElementById('modal-create-schedule').style.display='none'" style="background:none; border:none; font-size:22px; cursor:pointer; color:#8f9bba;">&times;</button>
+            <!-- HALAMAN PENUH (FULL PAGE): PEMBUATAN SCHEDULE SISTEM CENTANG NO OM -->
+            <div id="view-buat-schedule" class="view-section" style="padding-bottom: 100px;">
+                <div class="card card-living-glossy" style="margin-bottom: 20px;">
+                    <!-- Header Halaman Penuh -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:1px solid #e2e8f0; padding-bottom:16px; margin-bottom:16px;">
+                        <div>
+                            <h3 class="text-primary font-bold" style="font-size:22px; margin:0;">Pembuatan Schedule Produksi (Centang No OM)</h3>
+                            <p style="font-size:12.5px; color:#8f9bba; margin:3px 0 0 0;">Centang No OM untuk memilih seluruh pesanan pelanggan sekaligus. Jadwal berlaku 1 hari kerja untuk acuan semua shift.</p>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-modern" style="background:#f4f7fe; color:#4318ff; border:1px solid #4318ff; padding:8px 16px;" onclick="switchView('schedule-hari-ini')">
+                                &larr; Kembali ke Schedule Hari Ini
+                            </button>
+                            <button class="btn-modern" style="background:#10b981; font-weight:700; padding:8px 24px;" onclick="submitScheduleByOmSelection()">
+                                Simpan Schedule Harian &rarr;
+                            </button>
+                        </div>
                     </div>
-                    <form onsubmit="submitNewSchedule(event); return false;">
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+
+                    <!-- Parameter Schedule Harian -->
+                    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:14px 16px; margin-bottom:16px;">
+                        <span style="font-size:11px; font-weight:800; color:#4318ff; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:10px;">Parameter Schedule Harian:</span>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
                             <div class="form-group" style="margin:0;">
-                                <label>Pilih Unit <span class="text-danger">*</span></label>
-                                <select id="sch-input-unit" class="form-control" required onchange="populateOmOptionsForSchedule()">
+                                <label style="font-size:11.5px; font-weight:700; color:#1e293b;">Tanggal Pengerjaan <span class="text-danger">*</span></label>
+                                <input type="date" id="sch-om-date" class="form-control" style="padding:8px 10px; font-size:13px;">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label style="font-size:11.5px; font-weight:700; color:#1e293b;">Unit Produksi <span class="text-danger">*</span></label>
+                                <select id="sch-om-unit" class="form-control" style="padding:8px 10px; font-size:13px;" onchange="renderOmGroupingPicker()">
                                     <option value="CV JHB 1">CV JHB 1</option>
                                     <option value="CV JHB 2">CV JHB 2</option>
                                     <option value="CV JHB 5">CV JHB 5</option>
                                 </select>
                             </div>
                             <div class="form-group" style="margin:0;">
-                                <label>Tanggal Schedule <span class="text-danger">*</span></label>
-                                <input type="date" id="sch-input-date" class="form-control" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Pilih Order Makloon (Dari Sisa OM Aktif) <span class="text-danger">*</span></label>
-                            <select id="sch-select-om" class="form-control" required onchange="onSelectOmItemForSchedule()">
-                                <option value="">-- Pilih Sisa OM --</option>
-                            </select>
-                        </div>
-
-                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px; margin-bottom:12px; background:#f8fafc; padding:10px; border:1px solid #e2e8f0; border-radius:2px;">
-                            <div><span style="font-size:11px; color:#8f9bba;">Nama Barang</span><div id="sch-preview-barang" style="font-weight:700; font-size:12px; color:#2b3674;">-</div></div>
-                            <div><span style="font-size:11px; color:#8f9bba;">Motif</span><div id="sch-preview-motif" style="font-weight:700; font-size:12px; color:#2b3674;">-</div></div>
-                            <div><span style="font-size:11px; color:#8f9bba;">Sisa OM Tersedia</span><div id="sch-preview-sisa-om" style="font-weight:800; font-size:13px; color:#ee5d50;">0 pcs</div></div>
-                        </div>
-
-                        <div style="display:grid; grid-template-columns: 1fr 1fr 1.2fr 1fr; gap:10px; margin-bottom:16px;">
-                            <div class="form-group" style="margin:0;">
-                                <label>Shift <span class="text-danger">*</span></label>
-                                <select id="sch-input-shift" class="form-control" required>
-                                    <option value="Shift 1">Shift 1</option>
-                                    <option value="Shift 2">Shift 2</option>
-                                    <option value="Shift 3">Shift 3</option>
-                                    <option value="Non-Shift">Non-Shift</option>
+                                <label style="font-size:11.5px; font-weight:700; color:#4318ff;">Pilih Pelanggan / Supplier <span class="text-danger">*</span></label>
+                                <select id="sch-om-supplier" class="form-control" style="padding:8px 10px; font-size:13px; font-weight:700; border-color:#4318ff; background:#fff;" onchange="renderOmGroupingPicker()">
+                                    <option value="">Semua Pelanggan</option>
                                 </select>
                             </div>
                             <div class="form-group" style="margin:0;">
-                                <label>Tipe Target <span class="text-danger">*</span></label>
-                                <select id="sch-input-tipe-target" class="form-control" required>
-                                    <option value="Target Baru">✨ Target Baru</option>
-                                    <option value="Hutang Target">⏳ Hutang Kemarin</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>Karu <span class="text-danger">*</span></label>
-                                <select id="sch-input-karu" class="form-control" required></select>
-                            </div>
-                            <div class="form-group" style="margin:0;">
-                                <label>Target Qty <span class="text-danger">*</span></label>
-                                <input type="number" id="sch-input-qty" class="form-control" placeholder="0" min="1" required>
+                                <label style="font-size:11.5px; font-weight:700; color:#1e293b;">Keterangan Batch</label>
+                                <input type="text" id="sch-om-catatan" class="form-control" placeholder="Contoh: Rencana Harian Shift 1-3..." style="padding:8px 10px; font-size:13px;">
                             </div>
                         </div>
+                    </div>
 
-                        <div style="display:flex; justify-content:flex-end; gap:10px;">
-                            <button type="button" class="btn-modern" style="background:#f1f5f9; color:#64748b;" onclick="document.getElementById('modal-create-schedule').style.display='none'">Batal</button>
-                            <button type="submit" id="btn-submit-sch" class="btn-modern" style="background:#10b981;">Simpan Schedule</button>
+                    <!-- Toolbar Filter & Pemilihan Massal -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;">
+                        <div style="position:relative; flex:1; min-width:260px;">
+                            <input type="text" id="sch-om-search" class="search-input" placeholder="Cari No OM / Supplier / Kode Barang..." style="width:100%; padding-left:36px;" oninput="renderOmGroupingPicker()">
+                            <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#8f9bba;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
-                    </form>
+                        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                            <label style="font-size:13px; font-weight:700; color:#4318ff; display:flex; align-items:center; gap:8px; cursor:pointer; background:#f8fafc; padding:8px 14px; border-radius:4px; border:1px solid #cbd5e1;">
+                                <input type="checkbox" id="chk-select-all-om" class="chk-lg" onchange="toggleSelectAllOmCards(this)"> Centang Semua OM
+                            </label>
+                            <span id="badge-sch-om-count" style="background:#e0e5ff; color:#4318ff; font-weight:800; padding:9px 16px; border-radius:4px; font-size:13px;">
+                                0 OM Dipilih (0 Pcs)
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Daftar Kartu OM (Tampilan Luas Full Page) -->
+                    <div id="sch-om-cards-container" style="min-height:350px;">
+                        <!-- Diisi otomatis oleh JavaScript -->
+                    </div>
+
+                    <!-- Footer Tombol Simpan Bawah -->
+                    <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; border-top:1px solid #e2e8f0; padding-top:16px;">
+                        <button type="button" class="btn-modern" style="background:#f1f5f9; color:#64748b;" onclick="switchView('schedule-hari-ini')">Batal</button>
+                        <button type="button" class="btn-modern" style="background:#10b981; font-weight:700; padding:11px 28px; font-size:14px;" onclick="submitScheduleByOmSelection()">
+                            Simpan Schedule Harian &rarr;
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- MODAL: OPER BEBAN / HANDOVER (KONTROL STAFF) -->
-            <div id="modal-handover-schedule" class="custom-dialog-overlay">
-                <div class="custom-dialog-box" style="max-width: 480px; text-align: left; padding: 25px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #f0f0f0; padding-bottom:8px;">
-                        <h3 class="text-secondary font-bold" style="font-size:18px; margin:0; color:#d97706;">Oper Beban Produksi (Handover)</h3>
-                        <button onclick="document.getElementById('modal-handover-schedule').style.display='none'" style="background:none; border:none; font-size:22px; cursor:pointer; color:#8f9bba;">&times;</button>
+            <!-- MODAL: PREVIEW & INLINE EDIT HASIL IMPORT EXCEL -->
+            <div id="modal-import-sch-preview" class="custom-dialog-overlay">
+                <div class="custom-dialog-box" style="max-width: 950px; text-align: left; padding: 24px; max-height: 90vh; display:flex; flex-direction:column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f0f0f0; padding-bottom:12px; margin-bottom:14px; flex-shrink:0;">
+                        <div>
+                            <h3 class="text-secondary font-bold" style="font-size:18px; margin:0; color:#10b981;">Preview & Edit Data Import Schedule</h3>
+                            <p style="font-size:12px; color:#8f9bba; margin:2px 0 0 0;">Periksa dan ubah data langsung di tabel sebelum disimpan permanen ke server.</p>
+                        </div>
+                        <button onclick="document.getElementById('modal-import-sch-preview').style.display='none'" style="background:none; border:none; font-size:24px; cursor:pointer; color:#8f9bba;">&times;</button>
                     </div>
-                    <p style="font-size:12px; color:#64748b; margin-bottom:14px; line-height:1.4;">
-                        Alihkan sisa kuota yang belum tuntas dari Karu awal ke Karu lain agar alur produksi tidak berhenti.
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-shrink:0;">
+                        <span id="label-import-summary" style="font-size:12.5px; font-weight:700; color:#2b3674;">0 Baris Schedule Ditemukan</span>
+                        <button class="btn-modern" style="background:#0284c7; font-size:11.5px; padding:4px 10px;" onclick="downloadTemplateSchedule()">Unduh Format Template</button>
+                    </div>
+
+                    <div class="table-container" style="flex:1; max-height:55vh; overflow-y:auto;">
+                        <table class="table-thin" id="table-import-sch-preview">
+                            <thead>
+                                <tr>
+                                    <th style="width:40px; text-align:center;">No</th>
+                                    <th>No OM</th>
+                                    <th>Kode Barang</th>
+                                    <th>Nama Barang</th>
+                                    <th>Motif</th>
+                                    <th style="width:110px; text-align:right;">Qty Target</th>
+                                    <th style="width:130px;">Tgl Schedule</th>
+                                    <th style="width:110px;">Unit</th>
+                                    <th style="width:40px; text-align:center;">Hapus</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-import-sch-preview">
+                                <!-- Baris preview interaktif diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px; border-top:1px solid #f0f0f0; padding-top:12px; flex-shrink:0;">
+                        <button type="button" class="btn-modern" style="background:#f1f5f9; color:#64748b;" onclick="document.getElementById('modal-import-sch-preview').style.display='none'">Batal</button>
+                        <button type="button" class="btn-modern" style="background:#10b981; font-weight:700; padding:10px 24px;" onclick="executeSaveImportSchedule()">
+                            Konfirmasi & Simpan Schedule &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: EVALUASI OPERAN SORE (HANDOVER SISA KE BESOK) -->
+            <div id="modal-operan-sore" class="custom-dialog-overlay">
+                <div class="custom-dialog-box" style="max-width: 580px; text-align: left; padding: 24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f0f0f0; padding-bottom:10px; margin-bottom:14px;">
+                        <h3 class="text-secondary font-bold" style="font-size:18px; margin:0; color:#d97706;">Evaluasi Operan Sisa Schedule</h3>
+                        <button onclick="document.getElementById('modal-operan-sore').style.display='none'" style="background:none; border:none; font-size:24px; cursor:pointer; color:#8f9bba;">&times;</button>
+                    </div>
+                    <p style="font-size:12.5px; color:#64748b; line-height:1.5; margin-bottom:14px;">
+                        Evaluasi ini dijalankan setiap sore. Sistem akan mendata item-item schedule yang <b>masih memiliki sisa beban</b> dan mengoper statusnya ke tanggal kerja berikutnya sebagai <b>Hutang Target</b>.
                     </p>
 
-                    <form onsubmit="submitHandoverSchedule(event); return false;">
-                        <input type="hidden" id="ho-id-schedule">
-                        
-                        <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:2px; padding:10px; margin-bottom:14px; font-size:12px;">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                <span style="color:#92400e;">Karu Asal:</span> <b id="ho-karu-asal" style="color:#b45309;">-</b>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                <span style="color:#92400e;">Barang:</span> <b id="ho-barang-info" style="color:#1e1b4b;">-</b>
-                            </div>
-                            <div style="display:flex; justify-content:space-between;">
-                                <span style="color:#92400e;">Sisa Belum Selesai:</span> <b id="ho-sisa-tersedia" style="color:#ee5d50; font-size:13px;">0 pcs</b>
-                            </div>
-                        </div>
+                    <div id="operan-sore-summary-box" style="background:#fffbeb; border:1px solid #fde68a; border-radius:4px; padding:12px 14px; margin-bottom:16px; font-size:12.5px;">
+                        Memindai sisa schedule...
+                    </div>
 
-                        <div style="display:grid; grid-template-columns: 1.3fr 1fr; gap:10px;">
-                            <div class="form-group">
-                                <label>Karu Penerima Operan <span class="text-danger">*</span></label>
-                                <select id="ho-select-karu-tujuan" class="form-control" required></select>
-                            </div>
-                            <div class="form-group">
-                                <label>Shift Tujuan <span class="text-danger">*</span></label>
-                                <select id="ho-select-shift-tujuan" class="form-control" required>
-                                    <option value="Shift 1">Shift 1</option>
-                                    <option value="Shift 2">Shift 2</option>
-                                    <option value="Shift 3">Shift 3</option>
-                                    <option value="Non-Shift">Non-Shift</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label>Target Tanggal Kerja Baru (Besok) <span class="text-danger">*</span></label>
+                        <input type="date" id="operan-next-date" class="form-control" style="padding:8px 10px;">
+                    </div>
 
-                        <div class="form-group">
-                            <label>Qty yang Dioper (Pcs) <span class="text-danger">*</span></label>
-                            <input type="number" id="ho-input-qty" class="form-control" placeholder="0" min="1" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Alasan Handover / Keterangan <span class="text-danger">*</span></label>
-                            <input type="text" id="ho-input-alasan" class="form-control" placeholder="Contoh: Operan 50 pcs WIP, shift Karu A berakhir" required>
-                        </div>
-
-                        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-                            <button type="button" class="btn-modern" style="background:#f1f5f9; color:#64748b;" onclick="document.getElementById('modal-handover-schedule').style.display='none'">Batal</button>
-                            <button type="submit" id="btn-submit-ho" class="btn-modern" style="background:#d97706;">Konfirmasi Oper Beban</button>
-                        </div>
-                    </form>
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                        <button type="button" class="btn-modern" style="background:#f1f5f9; color:#64748b;" onclick="document.getElementById('modal-operan-sore').style.display='none'">Tutup</button>
+                        <button type="button" class="btn-modern" style="background:#d97706; font-weight:700;" onclick="executeOperanSoreSubmit()">Oper Beban ke Besok &rarr;</button>
+                    </div>
                 </div>
             </div>
 
@@ -2118,6 +2263,236 @@
                           </select>
                       </div>
                       <div id="pagination-posisi" style="display:flex; gap:5px;"></div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- 6a-3. VIEW REKAP PRODUKSI (MONITORING MUTASI KARTU STOK BULANAN 2026) -->
+          <div id="view-rekap-produksi" class="view-section" style="padding-bottom: 90px;">
+              
+              <!-- HEADER & NAVIGASI 12 BULAN DENGAN FILTER TAHUN & EFEK BOUNCE -->
+              <div class="card card-living-glossy" style="padding: 16px 20px; margin-bottom: 18px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+                      <div>
+                          <div style="display:flex; align-items:center; gap:8px;">
+                              <h3 class="text-primary font-bold" style="font-size:20px; margin:0;">Rekap Produksi & Mutasi Kartu Stok</h3>
+                              <span style="background:#f1f5f9; color:#64748b; font-weight:700; font-size:11px; padding:3px 8px; border-radius:3px;">Baseline SO Des 2025</span>
+                          </div>
+                          <p style="font-size:12px; color:#8f9bba; margin:3px 0 0 0;">Monitoring Mutasi Bulanan</p>
+                      </div>
+
+                      <!-- SAKLAR BASELINE: SALDO FISIK (SO) VS SALDO DATA (BUKU) -->
+                      <div style="display:flex; align-items:center; gap:8px; background:#f8fafc; padding:4px 8px; border-radius:4px; border:1px solid #cbd5e1;">
+                          <span style="font-size:11.5px; font-weight:700; color:#2b3674;">Versi:</span>
+                          <button type="button" id="btn-rp-mode-fisik" class="btn-modern" style="padding:4px 10px; font-size:11.5px; background:#4318ff; color:#fff;" onclick="setRekapProduksiBaselineMode('fisik')">
+                              Saldo Fisik (SO)
+                          </button>
+                          <button type="button" id="btn-rp-mode-data" class="btn-modern" style="padding:4px 10px; font-size:11.5px; background:transparent; color:#64748b;" onclick="setRekapProduksiBaselineMode('data')">
+                              Saldo Data (Buku)
+                          </button>
+                      </div>
+                  </div>
+
+                  <!-- BARIS PIL 12 BULAN DENGAN FILTER TAHUN DI DEPANNYA & EFEK BOUNCE -->
+                  <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; border-top:1px dashed #e2e8f0; padding-top:12px;">
+                      <!-- FILTER TAHUN SEBELUM PIL BULAN -->
+                      <div style="display:flex; align-items:center; gap:6px; background:#f8fafc; padding:2px 8px; border-radius:4px; border:1px solid #cbd5e1;">
+                          <span style="font-size:11px; font-weight:800; color:#2b3674; text-transform:uppercase;">Tahun:</span>
+                          <select id="rp-year-select" style="border:none; background:transparent; font-weight:800; color:#4318ff; font-size:12.5px; outline:none; cursor:pointer;" onchange="changeRekapProduksiYear(this.value)">
+                              <option value="2026" selected>2026</option>
+                              <option value="2025">2025</option>
+                          </select>
+                      </div>
+
+                      <div id="rp-month-pills-container" style="display:flex; gap:6px; flex-wrap:wrap; flex:1;">
+                          <button type="button" class="btn-rp-month" data-month="01" onclick="selectRekapProduksiMonth('01', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Januari</button>
+                          <button type="button" class="btn-rp-month" data-month="02" onclick="selectRekapProduksiMonth('02', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Februari</button>
+                          <button type="button" class="btn-rp-month" data-month="03" onclick="selectRekapProduksiMonth('03', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Maret</button>
+                          <button type="button" class="btn-rp-month" data-month="04" onclick="selectRekapProduksiMonth('04', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">April</button>
+                          <button type="button" class="btn-rp-month" data-month="05" onclick="selectRekapProduksiMonth('05', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Mei</button>
+                          <button type="button" class="btn-rp-month" data-month="06" onclick="selectRekapProduksiMonth('06', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Juni</button>
+                          <button type="button" class="btn-rp-month" data-month="07" onclick="selectRekapProduksiMonth('07', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Juli</button>
+                          <button type="button" class="btn-rp-month" data-month="08" onclick="selectRekapProduksiMonth('08', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Agustus</button>
+                          <button type="button" class="btn-rp-month" data-month="09" onclick="selectRekapProduksiMonth('09', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">September</button>
+                          <button type="button" class="btn-rp-month" data-month="10" onclick="selectRekapProduksiMonth('10', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Oktober</button>
+                          <button type="button" class="btn-rp-month" data-month="11" onclick="selectRekapProduksiMonth('11', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">November</button>
+                          <button type="button" class="btn-rp-month" data-month="12" onclick="selectRekapProduksiMonth('12', this)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:4px; cursor:pointer;">Desember</button>
+                          <button type="button" class="btn-rp-month" data-month="all" onclick="selectRekapProduksiMonth('all', this)" style="padding:6px 15px; font-size:12px; font-weight:800; border-radius:4px; cursor:pointer;">Rekap 1 Tahun (YTD)</button>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- 5 KARTU STATISTIK LIVING GLOSSY: TEKS BESAR ADALAH PCS, TEKS KECIL ADALAH RUPIAH (TANPA + / -) -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+                  <div class="card-living-glossy" style="padding: 14px 16px; border-top: 3.5px solid #4318ff;">
+                      <span style="font-size: 11px; color: #4318ff; font-weight: 800; text-transform: uppercase;">Saldo Awal</span>
+                      <h3 id="rp-stat-awal-pcs" style="font-size: 24px; color: #1e1b4b; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span></h3>
+                      <span id="rp-stat-awal-rp" style="font-size: 12px; color: #64748b; font-weight: 700;">Rp 0</span>
+                  </div>
+
+                  <div class="card-living-glossy" style="padding: 14px 16px; border-top: 3.5px solid #0284c7;">
+                      <span style="font-size: 11px; color: #0284c7; font-weight: 800; text-transform: uppercase;">Masuk</span>
+                      <h3 id="rp-stat-masuk-pcs" style="font-size: 24px; color: #0284c7; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span></h3>
+                      <span id="rp-stat-masuk-rp" style="font-size: 12px; color: #0284c7; font-weight: 700;">Rp 0</span>
+                  </div>
+
+                  <div class="card-living-glossy" style="padding: 14px 16px; border-top: 3.5px solid #dc2626;">
+                      <span style="font-size: 11px; color: #b91c1c; font-weight: 800; text-transform: uppercase;">Retur</span>
+                      <h3 id="rp-stat-retur-pcs" style="font-size: 24px; color: #b91c1c; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span></h3>
+                      <span id="rp-stat-retur-rp" style="font-size: 12px; color: #b91c1c; font-weight: 700;">Rp 0</span>
+                  </div>
+
+                  <div class="card-living-glossy" style="padding: 14px 16px; border-top: 3.5px solid #ea580c;">
+                      <span style="font-size: 11px; color: #ea580c; font-weight: 800; text-transform: uppercase;">Keluar</span>
+                      <h3 id="rp-stat-keluar-pcs" style="font-size: 24px; color: #ea580c; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span></h3>
+                      <span id="rp-stat-keluar-rp" style="font-size: 12px; color: #ea580c; font-weight: 700;">Rp 0</span>
+                  </div>
+
+                  <div class="card-living-glossy" style="padding: 14px 16px; border-top: 3.5px solid #05cd99;">
+                      <span style="font-size: 11px; color: #047857; font-weight: 800; text-transform: uppercase;">Saldo Akhir</span>
+                      <h3 id="rp-stat-akhir-pcs" style="font-size: 24px; color: #05cd99; font-weight: 800; margin: 4px 0;">0 <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span></h3>
+                      <span id="rp-stat-akhir-rp" style="font-size: 12px; color: #05cd99; font-weight: 700;">Rp 0</span>
+                  </div>
+              </div>
+
+              <!-- CONTROLS & FILTER BAR: DILENGKAPI CHECKBOX KUSTOM TAMPILKAN PCS & RUPIAH -->
+              <div class="card card-living-glossy" style="padding: 16px; margin-bottom: 20px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; flex:1;">
+                          <select id="filter-rp-unit" class="search-input" style="width: 140px;" onchange="filterRekapProduksiMutasi()">
+                              <option value="">Semua Unit</option>
+                              <option value="CV JHB 1">CV JHB 1</option>
+                              <option value="CV JHB 2">CV JHB 2</option>
+                              <option value="CV JHB 5">CV JHB 5</option>
+                          </select>
+                          <select id="filter-rp-supplier" class="search-input" style="width: 200px;" onchange="filterRekapProduksiMutasi()">
+                              <option value="">Semua Supplier</option>
+                          </select>
+                          <div style="position:relative; flex:1; min-width:200px;">
+                              <input type="text" id="filter-rp-search" class="search-input" placeholder="Ketik Kode / Nama Barang / Motif..." style="width:100%; padding-left:36px;" oninput="filterRekapProduksiMutasi()">
+                              <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#8f9bba;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                          </div>
+                          
+                          <!-- CHECKBOX CUSTOM TAMPILAN SESUAI PERMINTAAN USER -->
+                          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                              <label style="cursor:pointer; font-size:12px; font-weight:700; color:#2b3674; display:flex; align-items:center; gap:6px; background:#f8fafc; padding:8px 12px; border-radius:2px; border:1px solid #cbd5e1; white-space:nowrap;">
+                                  <input type="checkbox" id="chk-rp-show-pcs" class="chk-lg" checked onchange="toggleRekapProduksiColumns()"> Tampilkan Pcs
+                              </label>
+                              <label style="cursor:pointer; font-size:12px; font-weight:700; color:#2b3674; display:flex; align-items:center; gap:6px; background:#f8fafc; padding:8px 12px; border-radius:2px; border:1px solid #cbd5e1; white-space:nowrap;">
+                                  <input type="checkbox" id="chk-rp-show-rp" class="chk-lg" checked onchange="toggleRekapProduksiColumns()"> Tampilkan Nilai (Rp)
+                              </label>
+                              <label style="cursor:pointer; font-size:12px; font-weight:700; color:#2b3674; display:flex; align-items:center; gap:6px; background:#f8fafc; padding:8px 12px; border-radius:2px; border:1px solid #cbd5e1; white-space:nowrap;">
+                                  <input type="checkbox" id="chk-rp-ada-saldo" class="chk-lg" onchange="filterRekapProduksiMutasi()"> Hanya Ada Aktivitas
+                              </label>
+                          </div>
+                      </div>
+
+                      <div style="display:flex; gap:8px;">
+                          <button class="btn-modern" style="background:#10b981; color:#fff; display:flex; align-items:center; gap:6px;" onclick="exportRekapProduksiToExcel()">
+                              <svg style="width:14px; height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                              Export Excel Mutasi
+                          </button>
+                          <button class="btn-modern" style="background:#f4f7fe; color:#4318ff; border:1px solid #4318ff;" onclick="loadRekapProduksiMutasiData()">
+                              Refresh Database
+                          </button>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- TABEL MUTASI REKAP PRODUKSI DENGAN AMBIENT GLOW BACKDROP -->
+              <div class="table-glow-container">
+                  <div class="table-glow-backdrop"></div>
+                  <div class="table-container">
+                      <table class="table-thin" id="table-rekap-produksi">
+                          <thead>
+                              <tr class="header-group">
+                                  <th colspan="6">Identitas Barang & Supplier</th>
+                                  <th colspan="2" style="background:#f1f5f9; color:#4318ff;">Saldo Awal</th>
+                                  <th colspan="2" style="background:#f0fdf4; color:#0284c7;">Masuk</th>
+                                  <th colspan="2" style="background:#fef2f2; color:#b91c1c;">Retur</th>
+                                  <th colspan="2" style="background:#fff7ed; color:#ea580c;">Keluar</th>
+                                  <th colspan="2" style="background:#f0fdfa; color:#05cd99;">Saldo Akhir</th>
+                                  <th rowspan="2" style="vertical-align:middle; text-align:center;">Buku Besar</th>
+                              </tr>
+                              <tr>
+                                  <th>Unit</th>
+                                  <th>Kode</th>
+                                  <th>Nama Barang</th>
+                                  <th>Kategori</th>
+                                  <th>Motif</th>
+                                  <th>Supplier</th>
+                                  <th style="text-align:right;">Pcs</th>
+                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
+                                  <th style="text-align:right;">Pcs</th>
+                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
+                                  <th style="text-align:right;">Pcs</th>
+                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
+                                  <th style="text-align:right;">Pcs</th>
+                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
+                                  <th style="text-align:right;">Pcs</th>
+                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
+                              </tr>
+                          </thead>
+                          <tbody id="tbody-rekap-produksi">
+                              <tr><td colspan="17" style="text-align:center; padding:25px; color:#8f9bba;">Memuat mutasi rekap produksi...</td></tr>
+                          </tbody>
+                          <tfoot id="tfoot-rekap-produksi"></tfoot>
+                      </table>
+                  </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; flex-wrap:wrap; gap:10px;">
+                  <div>
+                      <span style="font-size:13px; color:#8f9bba; font-weight:700;">Tampilkan: </span>
+                      <select id="limit-rekap-produksi" class="search-input" style="width:85px; padding:4px;" onchange="renderRekapProduksiTable(tableStates.rekapProduksi.data, 1)">
+                          <option value="15">15</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="all">Semua</option>
+                      </select>
+                  </div>
+                  <div id="pagination-rekap-produksi" style="display:flex; gap:5px;"></div>
+              </div>
+          </div>
+
+          <!-- MODAL: BUKU BESAR RIWAYAT KARTU STOK REKAP PRODUKSI -->
+          <div id="modal-rp-ledger" class="custom-dialog-overlay">
+              <div class="custom-dialog-box" style="max-width: 920px; text-align:left; padding:22px; max-height:85vh; display:flex; flex-direction:column;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:12px; flex-shrink:0;">
+                      <h3 class="text-secondary font-bold" style="font-size:18px; margin:0; color:#4318ff;">Buku Besar Arus Mutasi Barang</h3>
+                      <button onclick="document.getElementById('modal-rp-ledger').style.display='none'" style="background:none; border:none; font-size:24px; cursor:pointer; color:#8f9bba;">&times;</button>
+                  </div>
+
+                  <!-- KOTAK INFORMASI HEADER LENGKAP: NAMA BARANG, KODE, SUPPLIER, & SALDO AWAL (TANPA RUPIAH) -->
+                  <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:12px 14px; margin-bottom:12px; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; flex-shrink:0;">
+                      <div><span style="font-size:11px; color:#8f9bba; text-transform:uppercase; font-weight:700;">Nama Barang:</span> <div id="rp-ledger-nama" style="color:#1e1b4b; font-size:13px; font-weight:800;">-</div></div>
+                      <div><span style="font-size:11px; color:#8f9bba; text-transform:uppercase; font-weight:700;">Kode & Motif:</span> <div id="rp-ledger-kode" style="color:#4318ff; font-size:13px; font-weight:800;">-</div></div>
+                      <div><span style="font-size:11px; color:#8f9bba; text-transform:uppercase; font-weight:700;">Supplier:</span> <div id="rp-ledger-sup" style="color:#2b3674; font-size:13px; font-weight:700;">-</div></div>
+                      <div><span style="font-size:11px; color:#8f9bba; text-transform:uppercase; font-weight:700;">Saldo Awal (Baseline):</span> <div id="rp-ledger-saldo-awal" style="color:#05cd99; font-size:14px; font-weight:800;">0 Pcs</div></div>
+                  </div>
+
+                  <!-- TABEL BUKU BESAR MURNI FISIK (PCS) TANPA KOLOM RUPIAH -->
+                  <div class="table-container" style="flex:1; max-height:50vh; overflow-y:auto;">
+                      <table class="table-thin" id="table-rp-ledger-detail">
+                          <thead>
+                              <tr>
+                                  <th style="width:95px; text-align:center;">Tanggal</th>
+                                  <th>Tipe Transaksi</th>
+                                  <th>Referensi Dokumen</th>
+                                  <th style="text-align:right; color:#0284c7;">Masuk (+)</th>
+                                  <th style="text-align:right; color:#b91c1c;">Retur (-)</th>
+                                  <th style="text-align:right; color:#ea580c;">Keluar (-)</th>
+                                  <th style="text-align:right; font-weight:800; color:#1e1b4b;">Sisa Saldo</th>
+                              </tr>
+                          </thead>
+                          <tbody id="tbody-rp-ledger-detail">
+                              <tr><td colspan="7" style="text-align:center; padding:20px; color:#8f9bba;">Memuat mutasi...</td></tr>
+                          </tbody>
+                      </table>
+                  </div>
+
+                  <div style="display:flex; justify-content:flex-end; margin-top:14px; border-top:1px solid #f0f0f0; padding-top:10px; flex-shrink:0;">
+                      <button type="button" class="btn-modern" style="background:#4318ff; padding:8px 20px;" onclick="document.getElementById('modal-rp-ledger').style.display='none'">Tutup Kartu Stok</button>
                   </div>
               </div>
           </div>
@@ -2978,7 +3353,7 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxHFivVIghhwozQgGAnN7f-_8x2WIl1EAbfEGSjOeOM4XMu9_5bmBOFi2dppjLMnrp-8w/exec";         
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxTFFSIR1aogZlcqsi32IqQKrX3Lqw85GvFi1gSUvvzcCe66gOLv6DOw08hXnlhvNgCYA/exec";         
 
         // 2. HELPER: Parser Nominal Desimal Aman (Presisi Angka Murni)
         function parseNominalFrontend(val) {
@@ -3105,7 +3480,8 @@
             sisaOm: { data: [], currentPage: 1, limit: 15 },
             trackingSj: { data: [], currentPage: 1, limit: 15 },
             posisiBarang: { data: [], currentPage: 1, limit: 15 },
-            rincianOm: { data: [], currentPage: 1, limit: 15 }
+            rincianOm: { data: [], currentPage: 1, limit: 15 },
+            rekapProduksi: { data: [], currentPage: 1, limit: 15 }
         };
 
         function renderPaginationButtons(stateKey, containerId, renderFunc) {
@@ -3802,6 +4178,10 @@
                     if(document.getElementById('filter-posisi-search')) document.getElementById('filter-posisi-search').value = '';
                     loadPosisiBarangData();
                 }
+                if(viewName === 'rekap-produksi') {
+                    if(document.getElementById('filter-rp-search')) document.getElementById('filter-rp-search').value = '';
+                    loadRekapProduksiMutasiData();
+                }
                 if(viewName === 'sisa-om') {
                     // Pastikan filter tanggal di Sisa OM sudah terisi default
                     const now = new Date();
@@ -3822,6 +4202,9 @@
                     if (!window.rawSisaOmData || window.rawSisaOmData.length === 0) {
                         loadSisaOmData();
                     }
+                }
+                if(viewName === 'buat-schedule') {
+                    initBuatScheduleFullPage();
                 }
                 if(viewName === 'tracking-sj') {
                     if(document.getElementById('filter-trackingsj-search')) document.getElementById('filter-trackingsj-search').value = '';
@@ -6128,6 +6511,7 @@
                 return matchUnit && matchDate && matchShift && matchKaru && matchKw;
             });
 
+            let hasAutoDoOnDate = false;
             filtered.forEach(it => {
                 const isDebt = it.tipeTarget.toLowerCase().includes('hutang') || (dateStr !== '' && it.tanggal < dateStr && it.sisa > 0);
                 if (isDebt) {
@@ -6138,7 +6522,17 @@
                 realPcs += it.realisasiPrd;
                 sisaPcs += it.sisa;
                 operanPcs += it.operanKeluar;
+
+                if (it.tipeTarget.includes('Auto DO') && it.tanggal === dateStr) {
+                    hasAutoDoOnDate = true;
+                }
             });
+
+            // Tampilkan banner peringatan ramah jika schedule hari ini terisi otomatis dari DO
+            const bannerAuto = document.getElementById('banner-auto-do-info');
+            if (bannerAuto) {
+                bannerAuto.style.display = hasAutoDoOnDate ? 'block' : 'none';
+            }
 
             document.getElementById('stat-sch-target-baru').innerHTML = `${Number(targetBaruPcs).toLocaleString('id-ID')} <span style="font-size:13px; color:#8f9bba;">Pcs</span>`;
             document.getElementById('stat-sch-hutang').innerHTML = `${Number(hutangPcs).toLocaleString('id-ID')} <span style="font-size:13px; color:#8f9bba;">Pcs</span>`;
@@ -11750,6 +12144,1358 @@
               recalculateAllStok();
           }
       }
+
+      // =========================================================================
+      // MESIN SCHEDULE PRODUKSI HARIAN (SISTEM CENTANG OM & PREVIEW IMPORT)
+      // =========================================================================
+      window.omGroupCache = [];
+      window.importScheduleDraftRows = [];
+
+      // --- 1. INISIALISASI HALAMAN PENUH PEMBUATAN SCHEDULE (FULL PAGE) ---
+      async function initBuatScheduleFullPage() {
+          const now = new Date();
+          const tomorrow = new Date(now);
+          if (now.getHours() >= 14) tomorrow.setDate(now.getDate() + 1);
+          
+          const tglInp = document.getElementById('sch-om-date');
+          if (tglInp && !tglInp.value) tglInp.value = tomorrow.toISOString().slice(0, 10);
+
+          const container = document.getElementById('sch-om-cards-container');
+          if (container) container.innerHTML = '<p style="text-align:center; padding:50px; color:#4318ff; font-weight:700;">Menyiapkan daftar Order Makloon per Pelanggan...</p>';
+
+          if (!window.rawSisaOmData || window.rawSisaOmData.length <= 1) {
+              try {
+                  const data = await panggilBackend('getSisaOmData', {});
+                  window.rawSisaOmData = data || [];
+              } catch (e) {
+                  if (container) container.innerHTML = `<p style="color:#ee5d50; padding:20px;">Gagal memuat Sisa OM: ${e.message}</p>`;
+                  return;
+              }
+          }
+
+          buildOmGroupsData();
+
+          // Isi Dropdown Pelanggan / Supplier
+          const supSelect = document.getElementById('sch-om-supplier');
+          if (supSelect) {
+              const curSup = supSelect.value;
+              const allSups = [...new Set(window.omGroupCache.map(g => g.supplier).filter(Boolean))].sort();
+              supSelect.innerHTML = '<option value="">Semua Pelanggan</option>';
+              allSups.forEach(s => {
+                  supSelect.innerHTML += `<option value="${s}">${s}</option>`;
+              });
+              supSelect.value = curSup;
+          }
+
+          renderOmGroupingPicker();
+      }
+
+      // Kelompokkan Sisa OM dengan KUNCI KOMPOSIT UNIK: Supplier + No OM + Unit (Mencegah Tertukar Barang Antar Pelanggan)
+      function buildOmGroupsData() {
+          const actualRows = (window.rawSisaOmData || []).slice(1);
+          const omMap = new Map();
+
+          actualRows.forEach(r => {
+              if (!Array.isArray(r) || !r[1]) return;
+              const qSisa = parseFloat(String(r[12] || '0').replace(/[^0-9.-]/g, '')) || 0;
+              if (qSisa <= 0) return; // Hanya ambil barang yang belum tuntas
+
+              const noOm = String(r[1] || '').trim();
+              const unit = String(r[0] || '').trim();
+              const supplier = String(r[8] || 'Tanpa Supplier').trim();
+
+              // KUNCI UNIK MUTLAK: Pelanggan + No OM + Unit agar barang pelanggan lain tidak pernah menyatu
+              const groupKey = `${supplier.toUpperCase()}___${noOm.toUpperCase()}___${unit.toUpperCase()}`;
+
+              if (!omMap.has(groupKey)) {
+                  omMap.set(groupKey, {
+                      key: groupKey,
+                      noOm: noOm,
+                      unit: unit,
+                      supplier: supplier,
+                      totalSisa: 0,
+                      selected: false,
+                      items: []
+                  });
+              }
+
+              const group = omMap.get(groupKey);
+              group.totalSisa += qSisa;
+              group.items.push({
+                  kode: String(r[4] || '').trim(),
+                  namaBarang: String(r[5] || '').trim(),
+                  motif: String(r[7] || '-').trim(),
+                  supplier: supplier,
+                  sisaQty: qSisa,
+                  targetQty: qSisa, // Default ke sisa penuh
+                  selected: false
+              });
+          });
+
+          window.omGroupCache = Array.from(omMap.values());
+      }
+
+      function renderOmGroupingPicker() {
+          const container = document.getElementById('sch-om-cards-container');
+          if (!container) return;
+
+          const unitFilter = (document.getElementById('sch-om-unit')?.value || '').toLowerCase().replace(/^cv\s*/i, '');
+          const supplierFilter = (document.getElementById('sch-om-supplier')?.value || '').toLowerCase().trim();
+          const searchVal = (document.getElementById('sch-om-search')?.value || '').toLowerCase().trim();
+          const keywords = searchVal.split(/\s+/).filter(Boolean);
+
+          const filtered = (window.omGroupCache || []).filter(group => {
+              if (unitFilter && !group.unit.toLowerCase().includes(unitFilter)) return false;
+              if (supplierFilter && group.supplier.toLowerCase() !== supplierFilter) return false;
+
+              if (keywords.length > 0) {
+                  const matchOm = keywords.every(kw => group.noOm.toLowerCase().includes(kw) || group.supplier.toLowerCase().includes(kw));
+                  const matchItems = keywords.every(kw => group.items.some(it => it.kode.toLowerCase().includes(kw) || it.namaBarang.toLowerCase().includes(kw)));
+                  return matchOm || matchItems;
+              }
+              return true;
+          });
+
+          if (filtered.length === 0) {
+              container.innerHTML = '<p style="text-align:center; padding:30px; color:#8f9bba;">Tidak ada data Order Makloon yang cocok.</p>';
+              updateOmSelectedStats();
+              return;
+          }
+
+          container.innerHTML = '';
+
+          filtered.forEach((group, gIdx) => {
+              const card = document.createElement('div');
+              card.className = `om-group-card ${group.selected ? 'selected' : ''}`;
+              card.id = `om-card-${gIdx}`;
+
+              let itemsRowsHtml = '';
+              group.items.forEach((it, iIdx) => {
+                  itemsRowsHtml += `
+                      <tr style="border-bottom:1px solid #f1f5f9;">
+                          <td style="text-align:center; width:36px;">
+                              <input type="checkbox" class="chk-lg chk-sub-item" data-gidx="${gIdx}" data-iidx="${iIdx}" ${it.selected ? 'checked' : ''} onchange="handleSubItemCheck(this, ${gIdx}, ${iIdx})">
+                          </td>
+                          <td style="font-weight:700; color:#4318ff;">${it.kode}</td>
+                          <td>${it.namaBarang}</td>
+                          <td>${it.motif}</td>
+                          <td style="text-align:right; font-weight:800; color:#ee5d50;">${it.sisaQty.toLocaleString('id-ID')}</td>
+                          <td style="width:130px; text-align:right;">
+                              <input type="number" class="form-control sch-item-qty" style="height:32px; padding:4px 8px; text-align:right; font-weight:700;" value="${it.targetQty}" min="1" max="${it.sisaQty}" oninput="validateItemScheduleQty(this, ${gIdx}, ${iIdx}, ${it.sisaQty})">
+                          </td>
+                      </tr>
+                  `;
+              });
+
+              card.innerHTML = `
+                  <div class="om-group-header" onclick="toggleOmAccordion(event, ${gIdx})">
+                      <div style="display:flex; align-items:center; gap:12px;">
+                          <input type="checkbox" class="chk-lg chk-om-master" data-gidx="${gIdx}" ${group.selected ? 'checked' : ''} onclick="event.stopPropagation();" onchange="toggleOmGroupMasterCheck(this, ${gIdx})">
+                          <div>
+                              <b style="font-size:14px; color:#1e1b4b;">${group.noOm}</b>
+                              <span style="font-size:11.5px; color:#64748b; margin-left:8px;">${group.supplier} (${group.unit})</span>
+                          </div>
+                      </div>
+                      <div style="display:flex; align-items:center; gap:14px;">
+                          <span style="font-size:12px; font-weight:800; color:#ee5d50;">${group.totalSisa.toLocaleString('id-ID')} Pcs</span>
+                          <span class="om-chevron" style="font-size:12px; color:#8f9bba; transition:transform 0.2s;">▼ Rincian</span>
+                      </div>
+                  </div>
+                  <div class="om-group-body">
+                      <table class="table-thin" style="width:100%; font-size:12px;">
+                          <thead>
+                              <tr style="background:#f8fafc;">
+                                  <th style="width:36px; text-align:center;">Pilih</th>
+                                  <th>Kode</th>
+                                  <th>Nama Barang</th>
+                                  <th>Motif</th>
+                                  <th style="text-align:right;">Sisa OM</th>
+                                  <th style="text-align:right;">Qty Target Schedule</th>
+                              </tr>
+                          </thead>
+                          <tbody>${itemsRowsHtml}</tbody>
+                      </table>
+                  </div>
+              `;
+
+              container.appendChild(card);
+          });
+
+          updateOmSelectedStats();
+      }
+
+      function toggleOmAccordion(e, gIdx) {
+          const card = document.getElementById(`om-card-${gIdx}`);
+          if (!card) return;
+          card.classList.toggle('expanded');
+          const chevron = card.querySelector('.om-chevron');
+          if (chevron) {
+              chevron.textContent = card.classList.contains('expanded') ? '▲ Tutup' : '▼ Rincian';
+          }
+      }
+
+      // Saat No OM dicentang: centang semua item di dalamnya
+      function toggleOmGroupMasterCheck(masterChk, gIdx) {
+          const group = window.omGroupCache[gIdx];
+          if (!group) return;
+          group.selected = masterChk.checked;
+
+          group.items.forEach(it => {
+              it.selected = masterChk.checked;
+          });
+
+          const card = document.getElementById(`om-card-${gIdx}`);
+          if (card) {
+              card.classList.toggle('selected', masterChk.checked);
+              card.querySelectorAll('.chk-sub-item').forEach(sub => sub.checked = masterChk.checked);
+          }
+
+          updateOmSelectedStats();
+      }
+
+      // Saat item di dalam OM dicentang mandiri
+      function handleSubItemCheck(subChk, gIdx, iIdx) {
+          const group = window.omGroupCache[gIdx];
+          if (!group || !group.items[iIdx]) return;
+
+          group.items[iIdx].selected = subChk.checked;
+
+          const anySelected = group.items.some(it => it.selected);
+          const allSelected = group.items.every(it => it.selected);
+
+          group.selected = anySelected;
+
+          const card = document.getElementById(`om-card-${gIdx}`);
+          if (card) {
+              card.classList.toggle('selected', anySelected);
+              const master = card.querySelector('.chk-om-master');
+              if (master) master.checked = allSelected;
+          }
+
+          updateOmSelectedStats();
+      }
+
+      function toggleSelectAllOmCards(mainChk) {
+          (window.omGroupCache || []).forEach(group => {
+              group.selected = mainChk.checked;
+              group.items.forEach(it => it.selected = mainChk.checked);
+          });
+
+          document.querySelectorAll('.om-group-card').forEach(card => {
+              card.classList.toggle('selected', mainChk.checked);
+              card.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = mainChk.checked);
+          });
+
+          updateOmSelectedStats();
+      }
+
+      function validateItemScheduleQty(input, gIdx, iIdx, maxSisa) {
+          let val = parseFloat(input.value) || 0;
+          if (val > maxSisa) {
+              input.value = maxSisa;
+              val = maxSisa;
+              showDialog(`Qty schedule tidak boleh melebihi sisa OM (${maxSisa} Pcs)!`, "warning");
+          } else if (val <= 0) {
+              input.value = 1;
+              val = 1;
+          }
+          if (window.omGroupCache[gIdx] && window.omGroupCache[gIdx].items[iIdx]) {
+              window.omGroupCache[gIdx].items[iIdx].targetQty = val;
+          }
+          updateOmSelectedStats();
+      }
+
+      function updateOmSelectedStats() {
+          let selectedOmCount = 0;
+          let totalQtyScheduled = 0;
+
+          (window.omGroupCache || []).forEach(group => {
+              let omHasChecked = false;
+              group.items.forEach(it => {
+                  if (it.selected) {
+                      omHasChecked = true;
+                      totalQtyScheduled += it.targetQty;
+                  }
+              });
+              if (omHasChecked) selectedOmCount++;
+          });
+
+          const badge = document.getElementById('badge-sch-om-count');
+          if (badge) {
+              badge.textContent = `${selectedOmCount} OM Dipilih (${totalQtyScheduled.toLocaleString('id-ID')} Pcs)`;
+          }
+      }
+
+      async function submitScheduleByOmSelection() {
+          const selectedItems = [];
+          (window.omGroupCache || []).forEach(group => {
+              group.items.forEach(it => {
+                  if (it.selected && it.targetQty > 0) {
+                      selectedItems.push({
+                          noOm: group.noOm,
+                          kode: it.kode,
+                          namaBarang: it.namaBarang,
+                          motif: it.motif,
+                          qtyTarget: it.targetQty,
+                          tipeTarget: "Target Baru"
+                      });
+                  }
+              });
+          });
+
+          if (selectedItems.length === 0) {
+              return showDialog("Pilih minimal 1 No OM atau centang barang untuk dijadwalkan!", "warning");
+          }
+
+          const tgl = document.getElementById('sch-om-date')?.value;
+          const unit = document.getElementById('sch-om-unit')?.value;
+          const catatan = document.getElementById('sch-om-catatan')?.value.trim();
+
+          if (!tgl || !unit) return showDialog("Lengkapi Tanggal dan Unit Schedule!", "warning");
+
+          showDialog(`Konfirmasi simpan <b>${selectedItems.length} item schedule</b> untuk 1 hari kerja (<b>${tgl}</b>) di <b>${unit}</b>?`, "confirm", async () => {
+              showQuickSuccess("Menyimpan Schedule...");
+
+              try {
+                  const res = await panggilBackend('saveScheduleBatch', {
+                      tanggal: tgl,
+                      unit: unit,
+                      catatanGlobal: catatan,
+                      items: selectedItems,
+                      userId: window.currentUserId || "",
+                      userName: window.currentUserName || "Staff"
+                  });
+
+                  if (res && res.success) {
+                      showDialog(`Berhasil membuat <b>${res.count} schedule kerja</b> untuk 1 hari penuh!`, "warning", () => {
+                          switchView('schedule-hari-ini');
+                      });
+                  } else {
+                      showDialog("Gagal menyimpan schedule: " + (res ? res.message : "Error"), "warning");
+                  }
+              } catch (err) {
+                  showDialog("Koneksi gagal: " + err.message, "warning");
+              }
+          });
+      }
+
+      // --- 2. FITUR IMPORT EXCEL DENGAN PREVIEW & EDITABLE TABLE ---
+      function downloadTemplateSchedule() {
+          const ws_data = [
+              ["No OM", "Kode", "Nama Barang", "Motif", "Qty", "Tanggal", "Unit", "Keterangan"],
+              ["OM-2608-001", "GUL-STD", "Guling Standar", "Bunga Biru", 500, new Date().toISOString().slice(0,10), "CV JHB 1", "Target 1 Hari Kerja"]
+          ];
+          const ws = XLSX.utils.aoa_to_sheet(ws_data);
+          ws['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 30 }, { wch: 15 }, { wch: 12 }, { wch: 15 }, { wch: 15 }, { wch: 25 }];
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "Template_Schedule");
+          XLSX.writeFile(wb, "Template_Schedule_Produksi_Harian.xlsx");
+      }
+
+      function triggerImportScheduleExcel() {
+          // Dialog Pilihan: Download Template Terlebih Dahulu ATAU Langsung Pilih File
+          const dialog = document.getElementById('custom-dialog');
+          const title = document.getElementById('dialog-title');
+          const msg = document.getElementById('dialog-message');
+          const actions = document.getElementById('dialog-actions');
+          const icon = document.getElementById('dialog-icon');
+
+          title.textContent = 'Import Schedule Produksi (Excel)';
+          title.style.color = '#10b981';
+          icon.innerHTML = `<svg style="width:48px;height:48px;color:#10b981;margin:0 auto;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>`;
+          
+          msg.innerHTML = `
+              Silakan pilih tindakan. Anda dapat <b>mengunduh format template Excel</b> terlebih dahulu agar format kolom sesuai, atau langsung memilih file jika data sudah siap.
+          `;
+
+          actions.innerHTML = '';
+
+          const btnBatal = document.createElement('button');
+          btnBatal.className = 'btn-modern';
+          btnBatal.style.background = '#f1f5f9';
+          btnBatal.style.color = '#64748b';
+          btnBatal.textContent = 'Batal';
+          btnBatal.onclick = () => { dialog.style.display = 'none'; };
+
+          const btnDownload = document.createElement('button');
+          btnDownload.className = 'btn-modern';
+          btnDownload.style.background = '#0284c7';
+          btnDownload.textContent = '📥 Unduh Template';
+          btnDownload.onclick = () => {
+              downloadTemplateSchedule();
+          };
+
+          const btnUpload = document.createElement('button');
+          btnUpload.className = 'btn-modern';
+          btnUpload.style.background = '#10b981';
+          btnUpload.textContent = '📂 Pilih File Excel';
+          btnUpload.onclick = () => {
+              dialog.style.display = 'none';
+              executeSelectScheduleFile();
+          };
+
+          actions.appendChild(btnBatal);
+          actions.appendChild(btnDownload);
+          actions.appendChild(btnUpload);
+
+          dialog.style.display = 'flex';
+      }
+
+      function executeSelectScheduleFile() {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = '.xlsx, .xls, .csv';
+          input.onchange = e => {
+              const file = e.target.files[0];
+              if (!file) return;
+
+              const reader = new FileReader();
+              reader.onload = function(evt) {
+                  try {
+                      const data = new Uint8Array(evt.target.result);
+                      const workbook = XLSX.read(data, { type: 'array' });
+                      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                      const json = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                      if (json.length < 2) return showDialog("File Excel kosong atau tidak valid!", "warning");
+
+                      let headerIdx = -1;
+                      for (let i = 0; i < Math.min(json.length, 10); i++) {
+                          if (json[i] && json[i].some(c => String(c || '').toLowerCase().includes('om') || String(c || '').toLowerCase().includes('kode'))) {
+                              headerIdx = i;
+                              break;
+                          }
+                      }
+
+                      if (headerIdx === -1) return showDialog("Kolom 'No OM' dan 'Kode' wajib ada di template Excel!", "warning");
+
+                      const headers = json[headerIdx].map(h => String(h || '').toLowerCase().trim());
+                      const idxOm = headers.findIndex(h => h.includes('om'));
+                      const idxKode = headers.findIndex(h => h.includes('kode'));
+                      const idxNama = headers.findIndex(h => h.includes('nama'));
+                      const idxMotif = headers.findIndex(h => h.includes('motif'));
+                      const idxQty = headers.findIndex(h => h.includes('qty') || h.includes('jumlah') || h.includes('target'));
+                      const idxTgl = headers.findIndex(h => h.includes('tgl') || h.includes('tanggal'));
+                      const idxUnit = headers.findIndex(h => h.includes('unit'));
+
+                      const defaultDate = new Date().toISOString().slice(0, 10);
+                      const rowsParsed = [];
+
+                      for (let i = headerIdx + 1; i < json.length; i++) {
+                          const r = json[i];
+                          if (!r || (!r[idxOm] && !r[idxKode])) continue;
+
+                          let tglVal = idxTgl > -1 ? r[idxTgl] : defaultDate;
+                          if (typeof tglVal === 'number') {
+                              tglVal = new Date((tglVal - 25569) * 86400 * 1000).toISOString().slice(0, 10);
+                          }
+
+                          rowsParsed.push({
+                              noOm: String(r[idxOm] || '').trim(),
+                              kode: String(r[idxKode] || '').trim(),
+                              namaBarang: idxNama > -1 ? String(r[idxNama] || '').trim() : "-",
+                              motif: idxMotif > -1 ? String(r[idxMotif] || '-').trim() : "-",
+                              qty: parseFloat(r[idxQty]) || 0,
+                              tanggal: tglVal || defaultDate,
+                              unit: idxUnit > -1 ? String(r[idxUnit] || 'CV JHB 1').trim() : "CV JHB 1"
+                          });
+                      }
+
+                      if (rowsParsed.length === 0) return showDialog("Tidak ditemukan baris schedule yang valid dari Excel!", "warning");
+
+                      window.importScheduleDraftRows = rowsParsed;
+                      renderImportPreviewTable();
+                      document.getElementById('modal-import-sch-preview').style.display = 'flex';
+
+                  } catch (err) {
+                      showDialog("Gagal membaca Excel: " + err.message, "warning");
+                  }
+              };
+              reader.readAsArrayBuffer(file);
+          };
+          input.click();
+      }
+
+      function renderImportPreviewTable() {
+          const tbody = document.getElementById('tbody-import-sch-preview');
+          const summary = document.getElementById('label-import-summary');
+          if (!tbody) return;
+
+          const rows = window.importScheduleDraftRows || [];
+          if (summary) summary.textContent = `${rows.length} Baris Schedule Siap Diperiksa`;
+
+          tbody.innerHTML = '';
+          if (rows.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:20px; color:#8f9bba;">Tidak ada data preview.</td></tr>';
+              return;
+          }
+
+          rows.forEach((r, idx) => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                  <td style="text-align:center;">${idx + 1}</td>
+                  <td><input type="text" class="form-control" style="height:30px; font-weight:700; color:#4318ff;" value="${r.noOm}" onchange="window.importScheduleDraftRows[${idx}].noOm = this.value"></td>
+                  <td><input type="text" class="form-control" style="height:30px; font-weight:700;" value="${r.kode}" onchange="window.importScheduleDraftRows[${idx}].kode = this.value"></td>
+                  <td><input type="text" class="form-control" style="height:30px;" value="${r.namaBarang}" onchange="window.importScheduleDraftRows[${idx}].namaBarang = this.value"></td>
+                  <td><input type="text" class="form-control" style="height:30px;" value="${r.motif}" onchange="window.importScheduleDraftRows[${idx}].motif = this.value"></td>
+                  <td><input type="number" class="form-control" style="height:30px; text-align:right; font-weight:800; color:#05cd99;" value="${r.qty}" min="1" onchange="window.importScheduleDraftRows[${idx}].qty = parseFloat(this.value)||0"></td>
+                  <td><input type="date" class="form-control" style="height:30px;" value="${r.tanggal}" onchange="window.importScheduleDraftRows[${idx}].tanggal = this.value"></td>
+                  <td>
+                      <select class="form-control" style="height:30px; padding:2px 6px;" onchange="window.importScheduleDraftRows[${idx}].unit = this.value">
+                          <option value="CV JHB 1" ${r.unit==='CV JHB 1'?'selected':''}>CV JHB 1</option>
+                          <option value="CV JHB 2" ${r.unit==='CV JHB 2'?'selected':''}>CV JHB 2</option>
+                          <option value="CV JHB 5" ${r.unit==='CV JHB 5'?'selected':''}>CV JHB 5</option>
+                      </select>
+                  </td>
+                  <td style="text-align:center;">
+                      <button onclick="removeImportPreviewRow(${idx})" style="background:none; border:none; color:#ee5d50; font-size:16px; cursor:pointer;" title="Hapus Baris">&times;</button>
+                  </td>
+              `;
+              tbody.appendChild(tr);
+          });
+      }
+
+      function removeImportPreviewRow(idx) {
+          if (window.importScheduleDraftRows) {
+              window.importScheduleDraftRows.splice(idx, 1);
+              renderImportPreviewTable();
+          }
+      }
+
+      async function executeSaveImportSchedule() {
+          const rows = window.importScheduleDraftRows || [];
+          if (rows.length === 0) return showDialog("Tidak ada data schedule untuk disimpan!", "warning");
+
+          const itemsToSave = rows.map(r => ({
+              noOm: r.noOm,
+              kode: r.kode,
+              namaBarang: r.namaBarang,
+              motif: r.motif,
+              qtyTarget: r.qty,
+              tipeTarget: "Target Baru"
+          }));
+
+          const targetDate = rows[0].tanggal || new Date().toISOString().slice(0, 10);
+          const targetUnit = rows[0].unit || "CV JHB 1";
+
+          showDialog(`Simpan <b>${itemsToSave.length} data schedule</b> ke database produksi?`, "confirm", async () => {
+              showQuickSuccess("Menyimpan Schedule...");
+              document.getElementById('modal-import-sch-preview').style.display = 'none';
+
+              try {
+                  const res = await panggilBackend('saveScheduleBatch', {
+                      tanggal: targetDate,
+                      unit: targetUnit,
+                      catatanGlobal: "Import File Excel",
+                      items: itemsToSave,
+                      userId: window.currentUserId || "",
+                      userName: window.currentUserName || "Staff"
+                  });
+
+                  if (res && res.success) {
+                      showDialog(`Berhasil mengimpor <b>${res.count} schedule harian</b>!`, "warning", () => {
+                          loadScheduleProduksiData();
+                      });
+                  } else {
+                      showDialog("Gagal import: " + (res ? res.message : "Error"), "warning");
+                  }
+              } catch (err) {
+                  showDialog("Koneksi gagal: " + err.message, "warning");
+              }
+          });
+      }
+
+      // --- 3. FITUR EVALUASI OPERAN SORE (HANDOVER SISA KE BESOK) ---
+      function openOperanSoreModal() {
+          const modal = document.getElementById('modal-operan-sore');
+          if (!modal) return;
+
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          document.getElementById('operan-next-date').value = tomorrow.toISOString().slice(0, 10);
+
+          // Hitung berapa item yang masih memiliki sisa
+          const unfinishedItems = (window.rawScheduleData || []).filter(r => r.sisa > 0);
+          let totalSisaPcs = 0;
+          unfinishedItems.forEach(r => totalSisaPcs += r.sisa);
+
+          const summaryBox = document.getElementById('operan-sore-summary-box');
+          if (summaryBox) {
+              summaryBox.innerHTML = `
+                  Ditemukan <b>${unfinishedItems.length} item schedule</b> yang belum tuntas hari ini.<br>
+                  Total Qty Sisa yang akan dioper ke schedule besok: <b style="color:#d97706; font-size:14px;">${totalSisaPcs.toLocaleString('id-ID')} Pcs</b>.
+              `;
+          }
+
+          modal.style.display = 'flex';
+      }
+
+      async function executeOperanSoreSubmit() {
+          const nextDate = document.getElementById('operan-next-date')?.value;
+          if (!nextDate) return showDialog("Pilih tanggal schedule tujuan (besok)!", "warning");
+
+          const unfinishedItems = (window.rawScheduleData || []).filter(r => r.sisa > 0);
+          if (unfinishedItems.length === 0) {
+              return showDialog("Tidak ada sisa schedule yang perlu dioper. Semua target telah tuntas!", "warning");
+          }
+
+          const itemsToRollover = unfinishedItems.map(r => ({
+              noOm: r.noOm,
+              kode: r.kode,
+              namaBarang: r.namaBarang,
+              motif: r.motif,
+              qtyTarget: r.sisa,
+              tipeTarget: "Hutang Target",
+              catatan: `Operan sore dari tanggal ${r.tanggal}`
+          }));
+
+          showDialog(`Oper <b>${itemsToRollover.length} item sisa</b> ke tanggal <b>${nextDate}</b> sebagai Hutang Target?`, "confirm", async () => {
+              showQuickSuccess("Mengalihkan Beban...");
+              document.getElementById('modal-operan-sore').style.display = 'none';
+
+              try {
+                  const res = await panggilBackend('saveScheduleBatch', {
+                      tanggal: nextDate,
+                      unit: unfinishedItems[0].unit || "CV JHB 1",
+                      catatanGlobal: "Operan Sisa Sore",
+                      items: itemsToRollover,
+                      userId: window.currentUserId || "",
+                      userName: window.currentUserName || "Staff"
+                  });
+
+                  if (res && res.success) {
+                      showDialog(`Berhasil mengoper <b>${res.count} item target</b> ke schedule tanggal ${nextDate}!`, "warning", () => {
+                          loadScheduleProduksiData();
+                      });
+                  } else {
+                      showDialog("Gagal operan sore: " + (res ? res.message : "Error"), "warning");
+                  }
+              } catch (err) {
+                  showDialog("Koneksi gagal: " + err.message, "warning");
+              }
+          });
+      }
+
+      // =========================================================================
+      // MESIN REKAP PRODUKSI: MUTASI KARTU STOK 2026 (ESTAFET SO + OM + PENGIRIMAN)
+      // =========================================================================
+      window.rekapMutasi2026RawData = null;
+      // Otomatis deteksi bulan berjalan saat ini (01 s/d 12)
+      window.currentRpMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+      window.currentRpBaselineMode = 'fisik'; // 'fisik' (Col G) atau 'data' (Col H)
+      window.calculatedRekapProduksiCards = [];
+
+      async function loadRekapProduksiMutasiData() {
+          const tbody = document.getElementById('tbody-rekap-produksi');
+          if (tbody) tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding:25px; color:#4318ff; font-weight:700;">Mengambil data SO Des 2025, Buku OM, dan Pengiriman...</td></tr>';
+
+          // Set default ke bulan kalender saat ini jika belum dipilih manual
+          if (!window.currentRpMonth) {
+              window.currentRpMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+          }
+
+          // Buat pilihan tahun otomatis & dinamis (siap otomatis untuk 2027, 2028, dst)
+          populateRekapProduksiYears();
+
+          // Highlight hanya pil bulan berjalan
+          highlightSelectedRpMonthPill(window.currentRpMonth);
+
+          try {
+              const [resMutasi, masterData] = await Promise.all([
+                  panggilBackend('getMutasiBulanan2026Data', {}),
+                  ensureMasterBarangLoaded()
+              ]);
+
+              if (resMutasi && resMutasi.success) {
+                  window.rekapMutasi2026RawData = resMutasi;
+                  
+                  highlightSelectedRpMonthPill(window.currentRpMonth);
+                  computeYearlyEstafetRekapProduksi2026();
+              } else {
+                  if (tbody) tbody.innerHTML = `<tr><td colspan="17" style="text-align:center; color:#ee5d50; padding:25px;">Gagal memuat: ${resMutasi ? resMutasi.message : 'Error server'}</td></tr>`;
+              }
+          } catch (err) {
+              if (tbody) tbody.innerHTML = `<tr><td colspan="17" style="text-align:center; color:#ee5d50; padding:25px;">Koneksi error: ${err.message}</td></tr>`;
+          }
+      }
+
+      function highlightSelectedRpMonthPill(monthStr) {
+          document.querySelectorAll('.btn-rp-month').forEach(btn => {
+              if (btn.dataset.month === monthStr) {
+                  // Tombol yang Terpilih (Biru Solid Aktif)
+                  btn.style.setProperty('background', '#4318ff', 'important');
+                  btn.style.setProperty('color', '#ffffff', 'important');
+                  btn.style.setProperty('border', '1px solid #4318ff', 'important');
+                  btn.style.setProperty('box-shadow', '0 4px 12px rgba(67, 24, 255, 0.28)', 'important');
+              } else {
+                  // Tombol Lainnya (Abu-abu Terang Netral)
+                  btn.style.setProperty('background', '#f8fafc', 'important');
+                  btn.style.setProperty('color', '#64748b', 'important');
+                  btn.style.setProperty('border', '1px solid #cbd5e1', 'important');
+                  btn.style.setProperty('box-shadow', 'none', 'important');
+              }
+          });
+      }
+
+      function selectRekapProduksiMonth(monthStr, btnEl) {
+          window.currentRpMonth = monthStr;
+          highlightSelectedRpMonthPill(monthStr);
+          filterRekapProduksiMutasi();
+      }
+
+      function setRekapProduksiBaselineMode(mode) {
+          window.currentRpBaselineMode = mode;
+          const btnFisik = document.getElementById('btn-rp-mode-fisik');
+          const btnData = document.getElementById('btn-rp-mode-data');
+          if (mode === 'fisik') {
+              if(btnFisik) { btnFisik.style.background = '#4318ff'; btnFisik.style.color = '#fff'; }
+              if(btnData) { btnData.style.background = 'transparent'; btnData.style.color = '#64748b'; }
+          } else {
+              if(btnFisik) { btnFisik.style.background = 'transparent'; btnFisik.style.color = '#64748b'; }
+              if(btnData) { btnData.style.background = '#4318ff'; btnData.style.color = '#fff'; }
+          }
+          computeYearlyEstafetRekapProduksi2026();
+      }
+
+      // MESIN KALKULASI ESTAFET 12 BULAN (0 DETIK / INSTAN)
+      function computeYearlyEstafetRekapProduksi2026() {
+          if (!window.rekapMutasi2026RawData) return;
+
+          const raw = window.rekapMutasi2026RawData;
+          const baseline = raw.baseline || [];
+          const omList = raw.omList || [];
+          const kirimList = raw.kirimList || [];
+
+          // Kamus Harga Satuan HJJ dari Master Barang
+          const priceMap = new Map();
+          (window.allMasterBarang || []).forEach(mb => {
+              if (!Array.isArray(mb)) return;
+              const kd = String(mb[0] || '').trim().toUpperCase();
+              const mtf = String(mb[3] || '-').trim().toUpperCase();
+              const rawHjj = parseNominalFrontend(mb[10]);
+              priceMap.set(`${kd}__${mtf}`, rawHjj);
+              if (!priceMap.has(kd)) priceMap.set(kd, rawHjj);
+          });
+
+          // Himpun seluruh item unik
+          const itemMap = new Map(); // Kunci: Unit + '|' + Kode + '|' + Motif
+
+          // 1. Masukkan Baseline SO Des 2025
+          baseline.forEach(b => {
+              const key = `${b.unit.toUpperCase()}|${b.kode.toUpperCase()}|${b.motif.toUpperCase()}`;
+              if (!itemMap.has(key)) {
+                  itemMap.set(key, {
+                      unit: b.unit,
+                      kode: b.kode,
+                      nama: b.nama,
+                      kategori: b.kategori,
+                      motif: b.motif,
+                      supplier: b.supplier,
+                      soFisik: b.soFisik,
+                      soData: b.soData,
+                      hjj: priceMap.get(`${b.kode}__${b.motif}`) || priceMap.get(b.kode) || 0
+                  });
+              }
+          });
+
+          // 2. Tambahkan kode dari Buku OM 2026 (jika kode baru belum ada di SO, saldo awal = 0)
+          omList.forEach(om => {
+              const key = `${om.unit.toUpperCase()}|${om.kode.toUpperCase()}|${om.motif.toUpperCase()}`;
+              if (!itemMap.has(key)) {
+                  itemMap.set(key, {
+                      unit: om.unit,
+                      kode: om.kode,
+                      nama: om.nama,
+                      kategori: om.kategori,
+                      motif: om.motif,
+                      supplier: om.supplier,
+                      soFisik: 0,
+                      soData: 0,
+                      hjj: priceMap.get(`${om.kode}__${om.motif}`) || priceMap.get(om.kode) || 0
+                  });
+              }
+          });
+
+          // 3. Tambahkan kode dari Buku Pengiriman 2026
+          kirimList.forEach(k => {
+              const key = `${k.unit.toUpperCase()}|${k.kode.toUpperCase()}|${k.motif.toUpperCase()}`;
+              if (!itemMap.has(key)) {
+                  itemMap.set(key, {
+                      unit: k.unit,
+                      kode: k.kode,
+                      nama: k.namaBarang,
+                      kategori: k.kategori || '-',
+                      motif: k.motif || '-',
+                      supplier: k.supplier || '-',
+                      soFisik: 0,
+                      soData: 0,
+                      hjj: priceMap.get(`${k.kode}__${k.motif}`) || priceMap.get(k.kode) || 0
+                  });
+              }
+          });
+
+          // Kelompokkan Transaksi Per Bulan
+          const monthlyTrans = {};
+          for (let m = 1; m <= 12; m++) {
+              const mm = String(m).padStart(2, '0');
+              monthlyTrans[mm] = new Map();
+          }
+
+          omList.forEach(om => {
+              if (om.tanggal && om.tanggal.startsWith('2026-')) {
+                  const mm = om.tanggal.slice(5, 7);
+                  if (monthlyTrans[mm]) {
+                      const key = `${om.unit.toUpperCase()}|${om.kode.toUpperCase()}|${om.motif.toUpperCase()}`;
+                      if (!monthlyTrans[mm].has(key)) monthlyTrans[mm].set(key, { masuk: 0, retur: 0, keluar: 0 });
+                      const t = monthlyTrans[mm].get(key);
+                      t.masuk += om.qtyMasuk;
+                      t.retur += om.qtyRetur;
+                  }
+              }
+          });
+
+          kirimList.forEach(k => {
+              if (k.tglKirim && k.tglKirim.startsWith('2026-')) {
+                  const mm = k.tglKirim.slice(5, 7);
+                  if (monthlyTrans[mm]) {
+                      const key = `${k.unit.toUpperCase()}|${k.kode.toUpperCase()}|${k.motif.toUpperCase()}`;
+                      if (!monthlyTrans[mm].has(key)) monthlyTrans[mm].set(key, { masuk: 0, retur: 0, keluar: 0 });
+                      const t = monthlyTrans[mm].get(key);
+                      t.keluar += (parseFloat(k.qtyKirim) || 0);
+                  }
+              }
+          });
+
+          // HITUNG ESTAFET BULAN KE BULAN
+          const allCalculated = [];
+          const isFisik = (window.currentRpBaselineMode === 'fisik');
+
+          itemMap.forEach((info, key) => {
+              let currentRunningBalance = isFisik ? info.soFisik : info.soData;
+              const monthsData = {};
+
+              let ytdMasuk = 0, ytdRetur = 0, ytdKeluar = 0;
+              const initialAwalYTD = currentRunningBalance;
+
+              for (let m = 1; m <= 12; m++) {
+                  const mm = String(m).padStart(2, '0');
+                  const t = monthlyTrans[mm].get(key) || { masuk: 0, retur: 0, keluar: 0 };
+                  
+                  const awalBulan = currentRunningBalance;
+                  const masukBulan = t.masuk;
+                  const returBulan = t.retur;
+                  const keluarBulan = t.keluar;
+
+                  // FORMULA: Saldo Akhir = Saldo Awal + Masuk - Retur - Keluar
+                  const akhirBulan = awalBulan + masukBulan - returBulan - keluarBulan;
+
+                  monthsData[mm] = {
+                      qAwal: awalBulan,
+                      qMasuk: masukBulan,
+                      qRetur: returBulan,
+                      qKeluar: keluarBulan,
+                      qAkhir: akhirBulan
+                  };
+
+                  ytdMasuk += masukBulan;
+                  ytdRetur += returBulan;
+                  ytdKeluar += keluarBulan;
+
+                  // Estafet: Saldo akhir bulan ini menjadi saldo awal bulan depan
+                  currentRunningBalance = akhirBulan;
+              }
+
+              // Data YTD 1 Tahun
+              monthsData['all'] = {
+                  qAwal: initialAwalYTD,
+                  qMasuk: ytdMasuk,
+                  qRetur: ytdRetur,
+                  qKeluar: ytdKeluar,
+                  qAkhir: currentRunningBalance
+              };
+
+              allCalculated.push({
+                  unit: info.unit,
+                  kode: info.kode,
+                  nama: info.nama,
+                  kategori: info.kategori,
+                  motif: info.motif,
+                  supplier: info.supplier,
+                  hjj: info.hjj,
+                  months: monthsData
+              });
+          });
+
+          window.calculatedRekapProduksiCards = allCalculated;
+
+          // Isi Dropdown Filter Supplier
+          const supSelect = document.getElementById('filter-rp-supplier');
+          if (supSelect) {
+              const cur = supSelect.value;
+              const suppliers = [...new Set(allCalculated.map(r => r.supplier).filter(Boolean))].sort();
+              supSelect.innerHTML = '<option value="">Semua Supplier</option>';
+              suppliers.forEach(s => { supSelect.innerHTML += `<option value="${s}">${s}</option>`; });
+              supSelect.value = cur;
+          }
+
+          filterRekapProduksiMutasi();
+      }
+
+      function filterRekapProduksiMutasi() {
+          if (!window.calculatedRekapProduksiCards) return;
+
+          const selectedMonth = window.currentRpMonth || '01';
+          const unit = (document.getElementById('filter-rp-unit')?.value || '').toLowerCase().replace(/^cv\s*/i, '');
+          const supplier = (document.getElementById('filter-rp-supplier')?.value || '').toLowerCase().trim();
+          const onlyActive = document.getElementById('chk-rp-ada-saldo')?.checked || false;
+          const searchVal = (document.getElementById('filter-rp-search')?.value || '').toLowerCase().trim();
+          const keywords = searchVal.split(/\s+/).filter(Boolean);
+
+          let totAwalRp = 0, totAwalPcs = 0;
+          let totMasukRp = 0, totMasukPcs = 0;
+          let totReturRp = 0, totReturPcs = 0;
+          let totKeluarRp = 0, totKeluarPcs = 0;
+          let totAkhirRp = 0, totAkhirPcs = 0;
+
+          const filtered = window.calculatedRekapProduksiCards.filter(item => {
+              const matchUnit = unit === '' || item.unit.toLowerCase().includes(unit);
+              const matchSup = supplier === '' || item.supplier.toLowerCase() === supplier;
+
+              const mData = item.months[selectedMonth] || { qAwal: 0, qMasuk: 0, qRetur: 0, qKeluar: 0, qAkhir: 0 };
+
+              let matchStock = true;
+              if (onlyActive) {
+                  matchStock = (mData.qAwal !== 0 || mData.qMasuk !== 0 || mData.qRetur !== 0 || mData.qKeluar !== 0 || mData.qAkhir !== 0);
+              }
+
+              const matchSearch = keywords.length === 0 || keywords.every(kw => 
+                  item.kode.toLowerCase().includes(kw) || 
+                  item.nama.toLowerCase().includes(kw) || 
+                  item.motif.toLowerCase().includes(kw) || 
+                  item.supplier.toLowerCase().includes(kw)
+              );
+
+              return matchUnit && matchSup && matchStock && matchSearch;
+          });
+
+          // Akumulasi Box Stat
+          filtered.forEach(it => {
+              const mData = it.months[selectedMonth] || { qAwal: 0, qMasuk: 0, qRetur: 0, qKeluar: 0, qAkhir: 0 };
+              const unitPrice = it.hjj || 0;
+
+              totAwalPcs += mData.qAwal;
+              totAwalRp += (mData.qAwal * unitPrice);
+
+              totMasukPcs += mData.qMasuk;
+              totMasukRp += (mData.qMasuk * unitPrice);
+
+              totReturPcs += mData.qRetur;
+              totReturRp += (mData.qRetur * unitPrice);
+
+              totKeluarPcs += mData.qKeluar;
+              totKeluarRp += (mData.qKeluar * unitPrice);
+
+              totAkhirPcs += mData.qAkhir;
+              totAkhirRp += (mData.qAkhir * unitPrice);
+          });
+
+          // Teks Besar adalah Pcs, Teks Kecil adalah Nilai Rupiah, Tanpa Tanda + dan -
+          document.getElementById('rp-stat-awal-pcs').innerHTML = `${Number(totAwalPcs).toLocaleString('id-ID')} <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span>`;
+          document.getElementById('rp-stat-awal-rp').textContent = `Rp ${Math.round(totAwalRp).toLocaleString('id-ID')}`;
+
+          document.getElementById('rp-stat-masuk-pcs').innerHTML = `${Number(totMasukPcs).toLocaleString('id-ID')} <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span>`;
+          document.getElementById('rp-stat-masuk-rp').textContent = `Rp ${Math.round(totMasukRp).toLocaleString('id-ID')}`;
+
+          document.getElementById('rp-stat-retur-pcs').innerHTML = `${Number(totReturPcs).toLocaleString('id-ID')} <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span>`;
+          document.getElementById('rp-stat-retur-rp').textContent = `Rp ${Math.round(totReturRp).toLocaleString('id-ID')}`;
+
+          document.getElementById('rp-stat-keluar-pcs').innerHTML = `${Number(totKeluarPcs).toLocaleString('id-ID')} <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span>`;
+          document.getElementById('rp-stat-keluar-rp').textContent = `Rp ${Math.round(totKeluarRp).toLocaleString('id-ID')}`;
+
+          document.getElementById('rp-stat-akhir-pcs').innerHTML = `${Number(totAkhirPcs).toLocaleString('id-ID')} <span style="font-size:13px; font-weight:500; color:#8f9bba;">Pcs</span>`;
+          document.getElementById('rp-stat-akhir-rp').textContent = `Rp ${Math.round(totAkhirRp).toLocaleString('id-ID')}`;
+
+          renderRekapProduksiTable(filtered, 1);
+      }
+
+      function renderRekapProduksiTable(dataArray, page = 1) {
+          tableStates.rekapProduksi.data = dataArray || [];
+          tableStates.rekapProduksi.currentPage = page;
+
+          const limitEl = document.getElementById('limit-rekap-produksi');
+          const limitVal = limitEl ? limitEl.value : 15;
+          tableStates.rekapProduksi.limit = limitVal === 'all' ? tableStates.rekapProduksi.data.length : parseInt(limitVal, 10);
+
+          const tbody = document.getElementById('tbody-rekap-produksi');
+          const tfoot = document.getElementById('tfoot-rekap-produksi');
+          if (!tbody) return;
+
+          tbody.innerHTML = '';
+          if (tfoot) tfoot.innerHTML = '';
+
+          const role = (window.currentUserRole || "").toLowerCase().trim();
+          const canViewPrice = ALLOWED_ROLES.includes(role);
+
+          document.querySelectorAll('#table-rekap-produksi .col-rp-price').forEach(el => {
+              el.style.display = canViewPrice ? 'table-cell' : 'none';
+          });
+
+          if (tableStates.rekapProduksi.data.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding:25px; color:#8f9bba;">Tidak ada data mutasi yang cocok.</td></tr>';
+              renderPaginationButtons('rekapProduksi', 'pagination-rekap-produksi', renderRekapProduksiTable);
+              return;
+          }
+
+          let start = (tableStates.rekapProduksi.currentPage - 1) * tableStates.rekapProduksi.limit;
+          let end = start + tableStates.rekapProduksi.limit;
+          let paginatedData = tableStates.rekapProduksi.data.slice(start, end);
+
+          const selectedMonth = window.currentRpMonth || '01';
+
+          paginatedData.forEach(item => {
+              const tr = document.createElement('tr');
+              const mData = item.months[selectedMonth] || { qAwal: 0, qMasuk: 0, qRetur: 0, qKeluar: 0, qAkhir: 0 };
+              const unitPrice = item.hjj || 0;
+
+              const rpAwal = mData.qAwal * unitPrice;
+              const rpMasuk = mData.qMasuk * unitPrice;
+              const rpRetur = mData.qRetur * unitPrice;
+              const rpKeluar = mData.qKeluar * unitPrice;
+              const rpAkhir = mData.qAkhir * unitPrice;
+
+              const cellRpAwal = canViewPrice ? `<td style="text-align:right;" class="col-rp-price">Rp ${Math.round(rpAwal).toLocaleString('id-ID')}</td>` : '';
+              const cellRpMasuk = canViewPrice ? `<td style="text-align:right; font-weight:700; color:#0284c7;" class="col-rp-price">Rp ${Math.round(rpMasuk).toLocaleString('id-ID')}</td>` : '';
+              const cellRpRetur = canViewPrice ? `<td style="text-align:right; font-weight:700; color:#b91c1c;" class="col-rp-price">Rp ${Math.round(rpRetur).toLocaleString('id-ID')}</td>` : '';
+              const cellRpKeluar = canViewPrice ? `<td style="text-align:right; font-weight:700; color:#ea580c;" class="col-rp-price">Rp ${Math.round(rpKeluar).toLocaleString('id-ID')}</td>` : '';
+              const cellRpAkhir = canViewPrice ? `<td style="text-align:right; font-weight:800; color:#05cd99; background:#f0fdfa;" class="col-rp-price">Rp ${Math.round(rpAkhir).toLocaleString('id-ID')}</td>` : '';
+
+              tr.innerHTML = `
+                  <td>${item.unit}</td>
+                  <td style="font-weight:700; color:#4318ff;">${item.kode}</td>
+                  <td>${item.nama}</td>
+                  <td>${item.kategori}</td>
+                  <td>${item.motif}</td>
+                  <td style="font-size:12px; color:#64748b;">${item.supplier}</td>
+                  
+                  <td style="text-align:right; font-weight:700;" class="col-rp-pcs">${mData.qAwal.toLocaleString('id-ID')}</td>
+                  ${cellRpAwal}
+                  
+                  <td style="text-align:right; font-weight:700; color:#0284c7;" class="col-rp-pcs">${mData.qMasuk.toLocaleString('id-ID')}</td>
+                  ${cellRpMasuk}
+
+                  <td style="text-align:right; font-weight:700; color:#b91c1c;" class="col-rp-pcs">${mData.qRetur.toLocaleString('id-ID')}</td>
+                  ${cellRpRetur}
+                  
+                  <td style="text-align:right; font-weight:700; color:#ea580c;" class="col-rp-pcs">${mData.qKeluar.toLocaleString('id-ID')}</td>
+                  ${cellRpKeluar}
+                  
+                  <td style="text-align:right; font-weight:800; color:#05cd99; background:#f8fafc;" class="col-rp-pcs">${mData.qAkhir.toLocaleString('id-ID')}</td>
+                  ${cellRpAkhir}
+                  
+                  <td style="text-align:center;">
+                      <button class="btn-modern" style="padding:4px 8px; font-size:11px; background:#e0e5ff; color:#4318ff;" onclick="openRekapProduksiLedger('${item.kode}', '${item.motif}', '${item.nama}', '${item.supplier}', ${item.hjj})">
+                          📖 Buku Besar
+                      </button>
+                  </td>
+              `;
+              tbody.appendChild(tr);
+          });
+
+          // FOOTER TOTAL VALUASI BULAN TERPILIH
+          if (tfoot && tableStates.rekapProduksi.data.length > 0) {
+              let sumQAwal = 0, sumRpAwal = 0;
+              let sumQMasuk = 0, sumRpMasuk = 0;
+              let sumQRetur = 0, sumRpRetur = 0;
+              let sumQKeluar = 0, sumRpKeluar = 0;
+              let sumQAkhir = 0, sumRpAkhir = 0;
+
+              tableStates.rekapProduksi.data.forEach(it => {
+                  const mData = it.months[selectedMonth] || { qAwal: 0, qMasuk: 0, qRetur: 0, qKeluar: 0, qAkhir: 0 };
+                  const unitPrice = it.hjj || 0;
+
+                  sumQAwal += mData.qAwal;
+                  sumRpAwal += (mData.qAwal * unitPrice);
+
+                  sumQMasuk += mData.qMasuk;
+                  sumRpMasuk += (mData.qMasuk * unitPrice);
+
+                  sumQRetur += mData.qRetur;
+                  sumRpRetur += (mData.qRetur * unitPrice);
+
+                  sumQKeluar += mData.qKeluar;
+                  sumRpKeluar += (mData.qKeluar * unitPrice);
+
+                  sumQAkhir += mData.qAkhir;
+                  sumRpAkhir += (mData.qAkhir * unitPrice);
+              });
+
+              const fRpAwal = canViewPrice ? `<td style="text-align:right; padding:8px 10px;" class="col-rp-price">Rp ${Math.round(sumRpAwal).toLocaleString('id-ID')}</td>` : '';
+              const fRpMasuk = canViewPrice ? `<td style="text-align:right; padding:8px 10px; color:#0284c7;" class="col-rp-price">Rp ${Math.round(sumRpMasuk).toLocaleString('id-ID')}</td>` : '';
+              const fRpRetur = canViewPrice ? `<td style="text-align:right; padding:8px 10px; color:#b91c1c;" class="col-rp-price">Rp ${Math.round(sumRpRetur).toLocaleString('id-ID')}</td>` : '';
+              const fRpKeluar = canViewPrice ? `<td style="text-align:right; padding:8px 10px; color:#ea580c;" class="col-rp-price">Rp ${Math.round(sumRpKeluar).toLocaleString('id-ID')}</td>` : '';
+              const fRpAkhir = canViewPrice ? `<td style="text-align:right; padding:8px 10px; color:#05cd99;" class="col-rp-price">Rp ${Math.round(sumRpAkhir).toLocaleString('id-ID')}</td>` : '';
+
+              tfoot.innerHTML = `
+                  <tr>
+                      <td colspan="6" style="padding:10px 12px; text-align:right; font-weight:800; color:#2b3674; font-size:12.5px;">TOTAL VALUASI :</td>
+                      <td style="text-align:right; padding:8px 10px; font-weight:800;" class="col-rp-pcs">${sumQAwal.toLocaleString('id-ID')}</td>
+                      ${fRpAwal}
+                      <td style="text-align:right; padding:8px 10px; font-weight:800; color:#0284c7;" class="col-rp-pcs">${sumQMasuk.toLocaleString('id-ID')}</td>
+                      ${fRpMasuk}
+                      <td style="text-align:right; padding:8px 10px; font-weight:800; color:#b91c1c;" class="col-rp-pcs">${sumQRetur.toLocaleString('id-ID')}</td>
+                      ${fRpRetur}
+                      <td style="text-align:right; padding:8px 10px; font-weight:800; color:#ea580c;" class="col-rp-pcs">${sumQKeluar.toLocaleString('id-ID')}</td>
+                      ${fRpKeluar}
+                      <td style="text-align:right; padding:8px 10px; font-weight:800; color:#05cd99;" class="col-rp-pcs">${sumQAkhir.toLocaleString('id-ID')}</td>
+                      ${fRpAkhir}
+                      <td></td>
+                  </tr>
+              `;
+          }
+
+          renderPaginationButtons('rekapProduksi', 'pagination-rekap-produksi', renderRekapProduksiTable);
+          
+          // Terapkan pilihan checkbox tampilkan Pcs & Rp
+          toggleRekapProduksiColumns();
+      }
+
+      // FUNGSI CUSTOM USER: TAMPILKAN PCS & RUPIAH SESUAI CHECKBOX
+      function toggleRekapProduksiColumns() {
+          const showPcs = document.getElementById('chk-rp-show-pcs')?.checked ?? true;
+          const showRp = document.getElementById('chk-rp-show-rp')?.checked ?? true;
+
+          const role = (window.currentUserRole || "").toLowerCase().trim();
+          const canViewPrice = ALLOWED_ROLES.includes(role);
+
+          // Sembunyikan atau tampilkan kolom Pcs
+          document.querySelectorAll('#table-rekap-produksi .col-rp-pcs, #table-rekap-produksi th:nth-child(7), #table-rekap-produksi th:nth-child(9), #table-rekap-produksi th:nth-child(11), #table-rekap-produksi th:nth-child(13), #table-rekap-produksi th:nth-child(15)').forEach(el => {
+              el.style.display = showPcs ? 'table-cell' : 'none';
+          });
+
+          // Sembunyikan atau tampilkan kolom Rupiah
+          document.querySelectorAll('#table-rekap-produksi .col-rp-price').forEach(el => {
+              el.style.display = (showRp && canViewPrice) ? 'table-cell' : 'none';
+          });
+
+          // Sesuaikan Colspan Header Group
+          let colSpanVal = 0;
+          if (showPcs) colSpanVal++;
+          if (showRp && canViewPrice) colSpanVal++;
+
+          document.querySelectorAll('#table-rekap-produksi thead tr.header-group th').forEach((th, idx) => {
+              if (idx >= 1 && idx <= 5) {
+                  th.colSpan = colSpanVal;
+                  th.style.display = colSpanVal === 0 ? 'none' : 'table-cell';
+              }
+          });
+
+          // Sesuaikan juga teks di 5 Card Box Atas
+          document.querySelectorAll('#rp-stat-awal-pcs, #rp-stat-masuk-pcs, #rp-stat-retur-pcs, #rp-stat-keluar-pcs, #rp-stat-akhir-pcs').forEach(el => {
+              el.style.display = showPcs ? 'block' : 'none';
+          });
+          document.querySelectorAll('#rp-stat-awal-rp, #rp-stat-masuk-rp, #rp-stat-retur-rp, #rp-stat-keluar-rp, #rp-stat-akhir-rp').forEach(el => {
+              el.style.display = (showRp && canViewPrice) ? 'block' : 'none';
+          });
+      }
+
+      // FUNGSI POPULATE TAHUN OTOMATIS (TIDAK PERLU GANTI KODE DI 2027)
+      function populateRekapProduksiYears() {
+          const yearSelect = document.getElementById('rp-year-select');
+          if (!yearSelect) return;
+
+          const currentYear = new Date().getFullYear();
+          const startYear = 2025; // Titik awal data SO
+          const endYear = Math.max(currentYear + 1, 2027); // Otomatis sediakan hingga tahun depan
+
+          const selectedVal = yearSelect.value || String(currentYear);
+          yearSelect.innerHTML = '';
+
+          for (let y = endYear; y >= startYear; y--) {
+              yearSelect.innerHTML += `<option value="${y}" ${String(y) === selectedVal ? 'selected' : ''}>${y}</option>`;
+          }
+      }
+
+      function changeRekapProduksiYear(selectedYear) {
+          if (selectedYear !== '2026') {
+              showDialog(`Data mutasi tahun ${selectedYear} belum tersedia di database. Saat ini sistem menampilkan data aktif tahun 2026.`, "warning", () => {
+                  document.getElementById('rp-year-select').value = '2026';
+              });
+              return;
+          }
+          filterRekapProduksiMutasi();
+      }
+
+      // --- MODAL BUKU BESAR DETAIL (FIX BEBAS DARI BUG NaN & SALDO AWAL JELAS) ---
+      async function openRekapProduksiLedger(kode, motif, nama, supplier, unitPrice) {
+          const modal = document.getElementById('modal-rp-ledger');
+          if (!modal) return;
+
+          const cKode = String(kode).toUpperCase().trim();
+          const cMotif = String(motif).toUpperCase().trim();
+
+          // 1. Ambil Saldo Awal Baseline (SO Des 2025) secara akurat (kebal NaN)
+          const baseItem = (window.calculatedRekapProduksiCards || []).find(it => it.kode === cKode && it.motif === cMotif);
+          let initialBalance = 0;
+          if (baseItem) {
+              initialBalance = parseFloat(window.currentRpBaselineMode === 'fisik' ? baseItem.soFisik : baseItem.soData) || 0;
+          }
+
+          // Isi Header Box Informasi Lengkap
+          document.getElementById('rp-ledger-nama').textContent = nama;
+          document.getElementById('rp-ledger-kode').textContent = `${kode} - ${motif}`;
+          document.getElementById('rp-ledger-sup').textContent = supplier;
+          document.getElementById('rp-ledger-saldo-awal').textContent = `${initialBalance.toLocaleString('id-ID')} Pcs (${window.currentRpBaselineMode === 'fisik' ? 'Fisik SO' : 'Data'})`;
+
+          const tbody = document.getElementById('tbody-rp-ledger-detail');
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#4318ff; font-weight:700;">Menyusun alur mutasi...</td></tr>';
+          modal.style.display = 'flex';
+
+          const ledgerEvents = [];
+
+          // Transaksi Masuk & Retur dari Buku OM
+          const rawOM = (window.rekapMutasi2026RawData?.omList || []).filter(om => om.kode === cKode && (cMotif === '-' || om.motif === cMotif));
+          rawOM.forEach(om => {
+              if (om.qtyMasuk > 0) {
+                  ledgerEvents.push({
+                      tgl: om.tanggal || '2026-01-01',
+                      docId: om.noOm || '-',
+                      tipe: 'Masuk (Buku OM Col AI)',
+                      masuk: om.qtyMasuk,
+                      retur: 0,
+                      keluar: 0,
+                      badgeBg: '#f0fdf4',
+                      badgeCol: '#0284c7'
+                  });
+              }
+              if (om.qtyRetur > 0) {
+                  ledgerEvents.push({
+                      tgl: om.tanggal || '2026-01-01',
+                      docId: om.noOm || '-',
+                      tipe: 'Retur (Buku OM Col AK)',
+                      masuk: 0,
+                      retur: om.qtyRetur,
+                      keluar: 0,
+                      badgeBg: '#fef2f2',
+                      badgeCol: '#b91c1c'
+                  });
+              }
+          });
+
+          // Transaksi Keluar dari Buku Pengiriman
+          const rawKirim = (window.rekapMutasi2026RawData?.kirimList || []).filter(k => String(k.kode).toUpperCase().trim() === cKode && (cMotif === '-' || String(k.motif).toUpperCase().trim() === cMotif));
+          rawKirim.forEach(k => {
+              const qKirim = parseFloat(k.qtyKirim) || 0;
+              if (qKirim > 0) {
+                  ledgerEvents.push({
+                      tgl: k.tglKirim || '2026-01-01',
+                      docId: k.noSj || '-',
+                      tipe: 'Keluar (Buku Kirim Col AD)',
+                      masuk: 0,
+                      retur: 0,
+                      keluar: qKirim,
+                      badgeBg: '#fff7ed',
+                      badgeCol: '#ea580c'
+                  });
+              }
+          });
+
+          // Urutkan transaksi secara kronologis tanggal (dari yang paling lama ke paling baru)
+          ledgerEvents.sort((a, b) => (String(a.tgl).localeCompare(String(b.tgl))));
+
+          tbody.innerHTML = '';
+          let runningBalance = initialBalance;
+
+          // BARIS PERTAMA MUTLAK: SALDO AWAL BASELINE (SO DESEMBER 2025)
+          const trAwal = document.createElement('tr');
+          trAwal.style.background = '#f8fafc';
+          trAwal.style.borderBottom = '2px solid #cbd5e1';
+          trAwal.innerHTML = `
+              <td style="text-align:center; font-weight:700; color:#64748b;">2025-12-31</td>
+              <td><span style="background:#e0e5ff; color:#4318ff; padding:2px 8px; border-radius:2px; font-size:11px; font-weight:800;">Saldo Awal Baseline (${window.currentRpBaselineMode === 'fisik' ? 'Fisik' : 'Data'})</span></td>
+              <td style="font-weight:700; color:#64748b;">SO-DES-2025</td>
+              <td style="text-align:right; color:#8f9bba;">-</td>
+              <td style="text-align:right; color:#8f9bba;">-</td>
+              <td style="text-align:right; color:#8f9bba;">-</td>
+              <td style="text-align:right; font-weight:800; color:#05cd99; font-size:13px;">${runningBalance.toLocaleString('id-ID')}</td>
+          `;
+          tbody.appendChild(trAwal);
+
+          // BARIS TRANSAKSI BERJALAN
+          ledgerEvents.forEach(ev => {
+              runningBalance = runningBalance + (ev.masuk || 0) - (ev.retur || 0) - (ev.keluar || 0);
+
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                  <td style="text-align:center; font-size:11.5px;">${ev.tgl}</td>
+                  <td><span style="background:${ev.badgeBg}; color:${ev.badgeCol}; padding:2px 8px; border-radius:2px; font-size:11px; font-weight:700;">${ev.tipe}</span></td>
+                  <td style="font-weight:700; color:#4318ff;">${ev.docId}</td>
+                  <td style="text-align:right; font-weight:700; color:#0284c7;">${ev.masuk > 0 ? ev.masuk.toLocaleString('id-ID') : '-'}</td>
+                  <td style="text-align:right; font-weight:700; color:#b91c1c;">${ev.retur > 0 ? ev.retur.toLocaleString('id-ID') : '-'}</td>
+                  <td style="text-align:right; font-weight:700; color:#ea580c;">${ev.keluar > 0 ? ev.keluar.toLocaleString('id-ID') : '-'}</td>
+                  <td style="text-align:right; font-weight:800; color:${runningBalance < 0 ? '#ee5d50' : '#1e1b4b'}; font-size:12.5px;">${runningBalance.toLocaleString('id-ID')}</td>
+              `;
+              tbody.appendChild(tr);
+          });
+      }
+
+      // EXPORT EXCEL MUTASI REKAP PRODUKSI
+      function exportRekapProduksiToExcel() {
+          const data = (tableStates.rekapProduksi && tableStates.rekapProduksi.data) ? tableStates.rekapProduksi.data : [];
+          if (data.length === 0) {
+              return showDialog("Tidak ada data rekap produksi untuk diekspor!", "warning");
+          }
+
+          const selectedMonth = window.currentRpMonth || '01';
+          const monthLabel = selectedMonth === 'all' ? 'Rekap 1 Tahun 2026' : `Bulan ${selectedMonth} 2026`;
+
+          const role = (window.currentUserRole || "").toLowerCase().trim();
+          const canViewPrice = ALLOWED_ROLES.includes(role);
+
+          const headers = [
+              "Unit", "Kode Barang", "Nama Barang", "Kategori", "Motif", "Supplier",
+              "Saldo Awal (Pcs)", canViewPrice ? "Saldo Awal (Rp)" : null,
+              "Masuk Col AI (Pcs)", canViewPrice ? "Masuk (Rp)" : null,
+              "Retur Col AK (Pcs)", canViewPrice ? "Retur (Rp)" : null,
+              "Keluar Col AD (Pcs)", canViewPrice ? "Keluar (Rp)" : null,
+              "Saldo Akhir (Pcs)", canViewPrice ? "Saldo Akhir (Rp)" : null
+          ].filter(Boolean);
+
+          const dataRows = data.map(it => {
+              const mData = it.months[selectedMonth] || { qAwal: 0, qMasuk: 0, qRetur: 0, qKeluar: 0, qAkhir: 0 };
+              const unitPrice = it.hjj || 0;
+
+              const row = [
+                  it.unit, it.kode, it.nama, it.kategori, it.motif, it.supplier,
+                  mData.qAwal, canViewPrice ? Math.round(mData.qAwal * unitPrice) : null,
+                  mData.qMasuk, canViewPrice ? Math.round(mData.qMasuk * unitPrice) : null,
+                  mData.qRetur, canViewPrice ? Math.round(mData.qRetur * unitPrice) : null,
+                  mData.qKeluar, canViewPrice ? Math.round(mData.qKeluar * unitPrice) : null,
+                  mData.qAkhir, canViewPrice ? Math.round(mData.qAkhir * unitPrice) : null
+              ];
+              return row.filter(val => val !== null);
+          });
+
+          const wsData = [
+              ["Laporan Rekapitulasi Mutasi Produksi 2026"],
+              [`Periode         : ${monthLabel}`],
+              [`Acuan Baseline  : ${window.currentRpBaselineMode === 'fisik' ? 'Saldo Fisik (SO Des 2025)' : 'Saldo Data (Buku Des 2025)'}`],
+              [`Tanggal Export  : ${new Date().toISOString().slice(0, 10)}`],
+              [],
+              headers,
+              ...dataRows
+          ];
+
+          const ws = XLSX.utils.aoa_to_sheet(wsData);
+          ws['!cols'] = [
+              { wch: 14 }, { wch: 15 }, { wch: 35 }, { wch: 16 }, { wch: 15 }, { wch: 25 },
+              { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 20 }
+          ];
+
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "Rekap_Mutasi_2026");
+          XLSX.writeFile(wb, `Rekap_Produksi_Mutasi_2026_${selectedMonth}.xlsx`);
+      }
+
     </script>
 </body>
 </html>
