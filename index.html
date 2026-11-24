@@ -290,17 +290,32 @@
             transform: scale(1.3);
         }
 
-        /* --- STABILISASI KARTU: BEBAS GUNCANGAN (ANTI JITTER / ANTI LARI-LARI) --- */
-        .card, .stat-card, .card-living-glossy, .input-wrapper {
+        /* --- LIVING GLOSSY, BOUNCE & SHADOW BIRU PASTEL DI SEMUA HALAMAN --- */
+        .card-living-glossy, .stat-card, .inv-box, .om-pivot-card, #view-dashboard .card, #view-sisa-om .card, #view-tracking-sj .card {
             position: relative;
-            transition: box-shadow 0.25s ease, border-color 0.25s ease;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease !important;
+            overflow: hidden;
         }
-        
-        /* Efek Bounce HANYA untuk Kartu Statistik Mandiri (Bukan untuk Baris Daftar Panjang) */
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px -4px rgba(56, 189, 248, 0.32), 0 0 0 1.5px rgba(56, 189, 248, 0.3) !important;
+
+        /* Efek Bounce & Pendaran Biru Pastel Saat Disorot Kursor */
+        .card-living-glossy:hover, .stat-card:hover, #view-dashboard .card:hover, #view-sisa-om .card:hover, #view-tracking-sj .card:hover {
+            transform: translateY(-4px) scale(1.006);
+            box-shadow: 0 14px 28px -4px rgba(56, 189, 248, 0.35), 0 0 0 1.5px rgba(56, 189, 248, 0.28) !important;
             border-color: #7dd3fc !important;
+        }
+
+        /* Garis Cahaya Hidup (Living Light Line) Mengalir di Atas Box */
+        .card-living-glossy::before, .stat-card::before, #view-dashboard .card::before, #view-sisa-om .card::before, #view-tracking-sj .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, #34d399, transparent);
+            transition: all 0.7s ease;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .card-living-glossy:hover::before, .stat-card:hover::before, #view-dashboard .card:hover::before, #view-sisa-om .card:hover::before, #view-tracking-sj .card:hover::before {
+            left: 100%;
         }
 
         /* Kartu Baris Daftar OM: Stabil, Halus, Glow Biru Pastel Tanpa Menggeser Baris */
@@ -315,23 +330,6 @@
             border-color: #38bdf8 !important;
             box-shadow: 0 4px 16px rgba(56, 189, 248, 0.28), 0 0 0 1px rgba(56, 189, 248, 0.25) !important;
             background-color: #fcfdfe;
-        }
-
-        /* Garis Cahaya Hidup Khusus Box Tunggal */
-        .stat-card {
-            overflow: hidden;
-        }
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, #34d399, transparent);
-            transition: all 0.7s ease;
-            z-index: 2;
-            pointer-events: none;
-        }
-        .stat-card:hover::before {
-            left: 100%;
         }
 
         /* Ambient Glow di Belakang Tabel (Glossy Backdrop Tanpa Mengganggu Isi Tabel) */
@@ -1213,43 +1211,64 @@
             <div class="header-title" onclick="toggleSidebar()" style="cursor: pointer; display: flex; align-items: center; gap: 12px;" title="Klik untuk buka/tutup menu">
                 <svg class="menu-trigger-icon" style="width:28px; height:28px; color:#4318ff; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 <div>
-                    <h2 class="font-extrabold text-secondary">Selamat datang di AiO Tools 👋</h2>
-                    <h1 class="font-extrabold text-primary" style="font-size: 18px;">CV. JASA HARAPAN BANGSA</h1>
+                    <h2 class="font-extrabold text-secondary" style="margin:0; line-height:1.2;">Selamat datang di AiO Tools 👋</h2>
                 </div>
             </div>
             
             <div class="header-actions">
-                <div class="select-wrapper">
-                    <select class="header-select" id="headerUnitSelect" onchange="filterLaporanData()">
-                        <option value="Semua Unit">Semua Unit</option>
-                        <option value="CV JHB 1">CV JHB 1</option>
-                        <option value="CV JHB 2">CV JHB 2</option>            
-                        <option value="CV JHB 5">CV JHB 5</option>
-                    </select>
-                </div>
-                
-                <div class="select-wrapper">
-                    <select class="header-select" id="roleSelect" onchange="applyRoleAccess(this.value)">
-                        <option value="Author">Author</option>
-                        <option value="Supervisor">Supervisor</option>
-                        <option value="Staff Finance">Staff Finance</option>
-                        <option value="Admin Finance">Admin Finance</option>
-                        <option value="Staff Produksi">Staff Produksi</option>
-                        <option value="Admin Produksi">Admin Produksi</option>
-                        <option value="Karu">Karu</option>
-                        <option value="Operator Produksi">Operator Produksi</option>
-                        <option value="Helper">Helper</option>
-                    </select>
+                <!-- DROPDOWN PERUSAHAAN BERLABEL (MULTI-COMPANY READY) -->
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 9.5px; font-weight: 800; color: #8f9bba; text-transform: uppercase; letter-spacing: 0.5px;">Perusahaan</span>
+                    <div class="select-wrapper">
+                        <select class="header-select" id="headerCompanySelect" style="min-width: 220px; height: 38px; font-weight: 800; color: #1e1b4b;" onchange="handleCompanyChange(this.value)">
+                            <option value="CV. JASA HARAPAN BANGSA" selected>CV. JASA HARAPAN BANGSA</option>
+                            <!-- Jika suatu saat bertambah perusahaan, tinggal tambahkan opsi di bawah ini -->
+                        </select>
+                    </div>
                 </div>
 
-                <div class="profile-container">
-                    <div class="profile-wrapper" onclick="toggleProfileMenu()">
-                        <img src="" alt="Profile" class="profile-img" id="profileImage">
-                        <div class="profile-info">
-                            <span class="profile-name">User Name</span>
-                            <span class="profile-role"> - | - </span>
-                        </div>
+                <!-- DROPDOWN PILIHAN UNIT BERLABEL -->
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 9.5px; font-weight: 800; color: #8f9bba; text-transform: uppercase; letter-spacing: 0.5px;">Pilihan Unit</span>
+                    <div class="select-wrapper">
+                        <select class="header-select" id="headerUnitSelect" style="height: 38px; font-weight: 700;" onchange="filterLaporanData()">
+                            <option value="Semua Unit">Semua Unit</option>
+                            <option value="CV JHB 1">CV JHB 1</option>
+                            <option value="CV JHB 2">CV JHB 2</option>            
+                            <option value="CV JHB 5">CV JHB 5</option>
+                        </select>
                     </div>
+                </div>
+                
+                <!-- DROPDOWN HAK AKSES BERLABEL -->
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 9.5px; font-weight: 800; color: #8f9bba; text-transform: uppercase; letter-spacing: 0.5px;">Hak Akses</span>
+                    <div class="select-wrapper">
+                        <select class="header-select" id="roleSelect" style="height: 38px; font-weight: 700;" onchange="applyRoleAccess(this.value)">
+                            <option value="Author">Author</option>
+                            <option value="Supervisor">Supervisor</option>
+                            <option value="Staff Finance">Staff Finance</option>
+                            <option value="Admin Finance">Admin Finance</option>
+                            <option value="Staff Produksi">Staff Produksi</option>
+                            <option value="Admin Produksi">Admin Produksi</option>
+                            <option value="Karu">Karu</option>
+                            <option value="Operator Produksi">Operator Produksi</option>
+                            <option value="Helper">Helper</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- AKUN LOGIN BERLABEL -->
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 9.5px; font-weight: 800; color: #8f9bba; text-transform: uppercase; letter-spacing: 0.5px;">Akun</span>
+                    <div class="profile-container">
+                        <div class="profile-wrapper" style="height: 38px;" onclick="toggleProfileMenu()">
+                            <img src="" alt="Profile" class="profile-img" id="profileImage">
+                            <div class="profile-info">
+                                <span class="profile-name">User Name</span>
+                                <span class="profile-role"> - | - </span>
+                            </div>
+                        </div>
                     
                     <div class="profile-dropdown" id="profileDropdown">
                         <a href="#" onclick="changePassword()">
@@ -1595,19 +1614,19 @@
                                     <th colspan="2">Status & Evaluasi Sore</th>
                                 </tr>
                                 <tr>
-                                    <th>Unit</th>
-                                    <th style="text-align: center;">Tipe Target</th>
-                                    <th>No OM</th>
-                                    <th>Kode Barang</th>
+                                    <th style="width:75px;">Unit</th>
+                                    <th style="width:115px; text-align: center;">Tipe Target</th>
+                                    <th style="width:145px;">No OM</th>
+                                    <th style="width:105px;">Kode Barang</th>
                                     <th>Nama Barang</th>
-                                    <th>Motif</th>
-                                    <th style="text-align: right;">Target Awal</th>
-                                    <th style="text-align: right; color:#d97706;">Operan</th>
-                                    <th style="text-align: right; font-weight:800; background:#f8fafc;">Target Akhir</th>
-                                    <th style="text-align: right; color:#05cd99;">Realisasi</th>
-                                    <th style="text-align: right; color:#ee5d50;">Sisa</th>
-                                    <th style="text-align: center;">Status</th>
-                                    <th style="text-align: center;">Aksi</th>
+                                    <th style="width:90px;">Motif</th>
+                                    <th style="width:85px; text-align: right;">Target Awal</th>
+                                    <th style="width:70px; text-align: right; color:#d97706;">Operan</th>
+                                    <th style="width:95px; text-align: right; font-weight:800; background:#f8fafc;">Target Akhir</th>
+                                    <th style="width:85px; text-align: right; color:#05cd99;">Realisasi</th>
+                                    <th style="width:80px; text-align: right; color:#ee5d50;">Sisa</th>
+                                    <th style="width:95px; text-align: center;">Status</th>
+                                    <th style="width:100px; text-align: center;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-schedule-today">
@@ -3367,7 +3386,7 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxTFFSIR1aogZlcqsi32IqQKrX3Lqw85GvFi1gSUvvzcCe66gOLv6DOw08hXnlhvNgCYA/exec";         
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzFywwJIab6rXxMLpVm1msr3W7cYn33afA1Xxs93UpaZ1u_EUblrIgGNBjGEdxXLLuJTw/exec";         
 
         // 2. HELPER: Parser Nominal Desimal Aman (Presisi Angka Murni)
         function parseNominalFrontend(val) {
@@ -3445,6 +3464,14 @@
                     overlay.classList.toggle('show');
                 }
             }
+        }
+
+        // --- HANDLER MULTI-PERUSAHAAN (READY FOR SCALE) ---
+        window.currentCompany = "CV. JASA HARAPAN BANGSA";
+        function handleCompanyChange(companyName) {
+            window.currentCompany = companyName;
+            console.log("🏢 Perusahaan aktif dialihkan ke:", companyName);
+            if (typeof filterLaporanData === 'function') filterLaporanData();
         }
 
         window.currentUserRole = "";
@@ -6526,7 +6553,33 @@
             });
 
             let hasAutoDoOnDate = false;
+            // SINKRONISASI REAL-TIME: Ambil data realisasi aktual dari Buku Laporan OM & Pengiriman
+            const actualOmRows = (window.rawSisaOmData || []).slice(1);
+
             filtered.forEach(it => {
+                const cleanNoOm = String(it.noOm || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+                const cleanKode = String(it.kode || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+                // Cari kecocokan di Buku Laporan OM untuk mendapatkan Qty Realisasi terkini
+                const matchOM = actualOmRows.find(r => {
+                    const rOm = String(r[1] || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+                    const rKode = String(r[4] || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+                    return rOm === cleanNoOm && rKode === cleanKode;
+                });
+
+                if (matchOM) {
+                    const realActual = parseFloat(String(matchOM[10] || 0).replace(/[^0-9.-]/g, '')) || 0;
+                    if (realActual > 0) {
+                        it.realisasiPrd = Math.max(it.realisasiPrd, realActual);
+                        it.sisa = Math.max(0, it.targetAkhir - it.realisasiPrd);
+                        if (it.sisa === 0) {
+                            it.status = "Selesai";
+                        } else {
+                            it.status = "In Progress";
+                        }
+                    }
+                }
+
                 const isDebt = it.tipeTarget.toLowerCase().includes('hutang') || (dateStr !== '' && it.tanggal < dateStr && it.sisa > 0);
                 if (isDebt) {
                     hutangPcs += it.sisa;
@@ -6561,6 +6614,7 @@
             renderScheduleTodayTable(filtered);
         }
 
+        // RENDER PERSIS 13 KOLOM SESUAI THEAD (BEBAS DARI GESER KOLOM)
         function renderScheduleTodayTable(data) {
             const tbody = document.getElementById('tbody-schedule-today');
             const dateStr = document.getElementById('filter-sch-date')?.value || '';
@@ -6571,7 +6625,7 @@
             const isStaffOrHigher = ['author', 'supervisor', 'staff produksi', 'admin produksi'].includes(roleLower);
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="15" style="text-align:center; padding:25px; color:#8f9bba;">Tidak ada data schedule yang cocok.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:25px; color:#8f9bba;">Tidak ada data schedule yang cocok.</td></tr>';
                 return;
             }
 
@@ -6596,33 +6650,36 @@
                 let badgeTipeTarget = `<span style="font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:2px; background:#e0e5ff; color:#4318ff; border:1px solid #c7d2fe;">✨ New Target</span>`;
                 if (isDebt) {
                     badgeTipeTarget = `<span style="font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:2px; background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5;" title="Schedule tgl ${row.tanggal}">⏳ Hutang (${row.tanggal.slice(5)})</span>`;
-                } else if (row.tipeTarget.toLowerCase().includes('operan')) {
+                } else if (row.tipeTarget.toLowerCase().includes('operan') || row.tipeTarget.toLowerCase().includes('limpahan')) {
                     badgeTipeTarget = `<span style="font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:2px; background:#fef3c7; color:#b45309; border:1px solid #fde68a;">⇄ Limpahan</span>`;
+                } else if (row.tipeTarget.toLowerCase().includes('auto do')) {
+                    badgeTipeTarget = `<span style="font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:2px; background:#dcfce7; color:#15803d; border:1px solid #86efac;">⚡ Auto DO</span>`;
                 }
 
                 let statusBadgeBg = '#f1f5f9', statusColor = '#64748b';
                 if (row.status.includes('Selesai')) { statusBadgeBg = '#ebfcf6'; statusColor = '#05cd99'; }
                 else if (row.status.includes('Dioper') || row.status.includes('Operan')) { statusBadgeBg = '#fef3c7'; statusColor = '#b45309'; }
+                else if (row.status.includes('In Progress')) { statusBadgeBg = '#fef3c7'; statusColor = '#d97706'; }
                 else if (row.status === 'Open') { statusBadgeBg = '#e0e5ff'; statusColor = '#4318ff'; }
 
                 let btnActionHtml = '<span style="color:#cbd5e1;">-</span>';
                 if (isStaffOrHigher && row.sisa > 0) {
                     btnActionHtml = `
-                        <button class="btn-modern" style="padding: 4px 8px; font-size: 11px; background: #fff; color: #d97706; border: 1px solid #fde68a;" onclick="openHandoverModal(${row.rowIdx}, '${row.karu}', '${row.shift}', '${row.kode} - ${row.namaBarang}', ${row.sisa})">
+                        <button class="btn-modern" style="padding: 4px 8px; font-size: 11px; background: #fff; color: #d97706; border: 1px solid #fde68a;" onclick="openHandoverModal(${row.rowIdx}, '${row.karu || 'All Karu'}', '${row.shift || 'Semua Shift'}', '${row.kode} - ${row.namaBarang}', ${row.sisa})">
                             ⇄ Oper Beban
                         </button>
                     `;
                 }
 
+                // TEPAT 13 KOLOM SESUAI THEAD:
+                // 1.Unit, 2.Tipe Target, 3.No OM, 4.Kode, 5.Nama Barang, 6.Motif, 7.Target Awal, 8.Operan, 9.Target Akhir, 10.Realisasi, 11.Sisa, 12.Status, 13.Aksi
                 tr.innerHTML = `
                     <td>${row.unit}</td>
-                    <td><span style="font-size:11px; font-weight:700; padding:2px 6px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:2px; color:#2b3674;">${row.shift}</span></td>
                     <td style="text-align:center;">${badgeTipeTarget}</td>
                     <td style="font-weight:700; color:#4318ff;">${row.noOm}</td>
                     <td style="font-weight:700;">${row.kode}</td>
                     <td>${row.namaBarang}</td>
                     <td>${row.motif || '-'}</td>
-                    <td style="font-weight:800; color:#1e1b4b; background:#fafbfc;">${row.karu}</td>
                     <td style="text-align:right;">${row.targetAwal.toLocaleString('id-ID')}</td>
                     <td style="text-align:right;">${badgeOperan}</td>
                     <td style="text-align:right; font-weight:800; background:#f8fafc; color:#2b3674;">${row.targetAkhir.toLocaleString('id-ID')}</td>
