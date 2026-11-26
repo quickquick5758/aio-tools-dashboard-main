@@ -2448,22 +2448,22 @@
                                   <th rowspan="2" style="vertical-align:middle; text-align:center;">Buku Besar</th>
                               </tr>
                               <tr>
-                                  <th>Unit</th>
-                                  <th>Kode</th>
-                                  <th>Nama Barang</th>
-                                  <th>Kategori</th>
-                                  <th>Motif</th>
-                                  <th>Supplier</th>
-                                  <th style="text-align:right;">Pcs</th>
-                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
-                                  <th style="text-align:right;">Pcs</th>
-                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
-                                  <th style="text-align:right;">Pcs</th>
-                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
-                                  <th style="text-align:right;">Pcs</th>
-                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
-                                  <th style="text-align:right;">Pcs</th>
-                                  <th style="text-align:right;" class="col-rp-price">Nilai (Rp)</th>
+                                  <th onclick="sortRekapProduksiBy('unit')" style="cursor:pointer;">Unit <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('kode')" style="cursor:pointer;">Kode <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('nama')" style="cursor:pointer;">Nama Barang <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('kategori')" style="cursor:pointer;">Kategori <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('motif')" style="cursor:pointer;">Motif <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('supplier')" style="cursor:pointer;">Supplier <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('qAwal')" style="text-align:right; cursor:pointer;" class="col-rp-pcs">Pcs <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('rpAwal')" style="text-align:right; cursor:pointer;" class="col-rp-price">Nilai (Rp) <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('qMasuk')" style="text-align:right; cursor:pointer;" class="col-rp-pcs">Pcs <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('rpMasuk')" style="text-align:right; cursor:pointer;" class="col-rp-price">Nilai (Rp) <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('qRetur')" style="text-align:right; cursor:pointer;" class="col-rp-pcs">Pcs <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('rpRetur')" style="text-align:right; cursor:pointer;" class="col-rp-price">Nilai (Rp) <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('qKeluar')" style="text-align:right; cursor:pointer;" class="col-rp-pcs">Pcs <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('rpKeluar')" style="text-align:right; cursor:pointer;" class="col-rp-price">Nilai (Rp) <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('qAkhir')" style="text-align:right; cursor:pointer;" class="col-rp-pcs">Pcs <span class="sort-icon">▲▼</span></th>
+                                  <th onclick="sortRekapProduksiBy('rpAkhir')" style="text-align:right; cursor:pointer;" class="col-rp-price">Nilai (Rp) <span class="sort-icon">▲▼</span></th>
                               </tr>
                           </thead>
                           <tbody id="tbody-rekap-produksi">
@@ -2504,7 +2504,7 @@
                       <div><span style="font-size:11px; color:#8f9bba; text-transform:uppercase; font-weight:700;">Saldo Awal (Baseline):</span> <div id="rp-ledger-saldo-awal" style="color:#05cd99; font-size:14px; font-weight:800;">0 Pcs</div></div>
                   </div>
 
-                  <!-- TABEL BUKU BESAR MURNI FISIK (PCS) TANPA KOLOM RUPIAH -->
+                  <!-- TABEL BUKU BESAR DILENGKAPI KOLOM SALDO AWAL (ARUS PERPUTARAN TRANSPARAN) -->
                   <div class="table-container" style="flex:1; max-height:50vh; overflow-y:auto;">
                       <table class="table-thin" id="table-rp-ledger-detail">
                           <thead>
@@ -2512,14 +2512,15 @@
                                   <th style="width:95px; text-align:center;">Tanggal</th>
                                   <th>Tipe Transaksi</th>
                                   <th>Referensi Dokumen</th>
+                                  <th style="text-align:right; color:#4318ff; background:#f8fafc;">Saldo Awal</th>
                                   <th style="text-align:right; color:#0284c7;">Masuk (+)</th>
                                   <th style="text-align:right; color:#b91c1c;">Retur (-)</th>
                                   <th style="text-align:right; color:#ea580c;">Keluar (-)</th>
-                                  <th style="text-align:right; font-weight:800; color:#1e1b4b;">Sisa Saldo</th>
+                                  <th style="text-align:right; font-weight:800; color:#05cd99; background:#f0fdfa;">Saldo Akhir</th>
                               </tr>
                           </thead>
                           <tbody id="tbody-rp-ledger-detail">
-                              <tr><td colspan="7" style="text-align:center; padding:20px; color:#8f9bba;">Memuat mutasi...</td></tr>
+                              <tr><td colspan="8" style="text-align:center; padding:20px; color:#8f9bba;">Memuat mutasi...</td></tr>
                           </tbody>
                       </table>
                   </div>
@@ -2751,27 +2752,27 @@
                         </label>
                     </div>
 
-                    <!-- TABEL DETAIL GROUP D (16 KOLOM TERMASUK TGL TERIMA OM, TGL REALISASI & UMUR STOK) -->
+                    <!-- TABEL DETAIL GROUP D (DILENGKAPI FITUR SORTIR KLIK HEADER ▲▼) -->
                     <div class="table-container">
                         <table class="table-thin" id="table-rincian-om">
                             <thead>
                                 <tr>
-                                    <th>Unit</th>
-                                    <th>No OM</th>
-                                    <th>Tgl OM</th>
-                                    <th>Tgl Terima OM</th>
-                                    <th>Kode</th>
-                                    <th>Nama Barang</th>
-                                    <th>Kategori</th>
-                                    <th>Motif</th>
-                                    <th>Supplier</th>
-                                    <th style="text-align: right;">QTY Pesanan</th>
-                                    <th style="text-align: right;">QTY Realisasi</th>
-                                    <th style="text-align: right;">QTY Retur</th>
-                                    <th style="text-align: right;">QTY Sisa</th>
-                                    <th style="text-align: center;">Status</th>
-                                    <th>Tgl Realisasi</th>
-                                    <th style="text-align: center;">Umur Stok</th>
+                                    <th onclick="sortTable('table-rincian-om', 0, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Unit <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 1, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">No OM <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 2, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Tgl OM <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 3, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Tgl Terima OM <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 4, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Kode <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 5, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Nama Barang <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 6, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Kategori <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 7, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Motif <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 8, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Supplier <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 9, 'rincianOm', renderRincianOmTable)" style="text-align: right; cursor:pointer;">QTY Pesanan <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 10, 'rincianOm', renderRincianOmTable)" style="text-align: right; cursor:pointer;">QTY Realisasi <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 11, 'rincianOm', renderRincianOmTable)" style="text-align: right; cursor:pointer;">QTY Retur <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 12, 'rincianOm', renderRincianOmTable)" style="text-align: right; cursor:pointer;">QTY Sisa <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 13, 'rincianOm', renderRincianOmTable)" style="text-align: center; cursor:pointer;">Status <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 14, 'rincianOm', renderRincianOmTable)" style="cursor:pointer;">Tgl Realisasi <span class="sort-icon">▲▼</span></th>
+                                    <th onclick="sortTable('table-rincian-om', 15, 'rincianOm', renderRincianOmTable)" style="text-align: center; cursor:pointer;">Umur Stok <span class="sort-icon">▲▼</span></th>
                                     <th style="text-align: left; min-width: 190px;">Detail</th>
                                 </tr>
                             </thead>
@@ -3386,7 +3387,7 @@
 
     <script>
         // 1. MASUKKAN URL TERBARU HASIL DEPLOY LANGKAH 1 KE DALAM TANDA KUTIP DI BAWAH INI:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzFywwJIab6rXxMLpVm1msr3W7cYn33afA1Xxs93UpaZ1u_EUblrIgGNBjGEdxXLLuJTw/exec";         
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxDwq1fazQfMTlkpOLs9syXga-je4-ya-yzZC8bB3NYAjuw09F1ZHx10XsxtzycfHaitg/exec";         
 
         // 2. HELPER: Parser Nominal Desimal Aman (Presisi Angka Murni)
         function parseNominalFrontend(val) {
@@ -13396,41 +13397,81 @@
           filterRekapProduksiMutasi();
       }
 
-      // --- MODAL BUKU BESAR DETAIL (FIX BEBAS DARI BUG NaN & SALDO AWAL JELAS) ---
+      // FUNGSI SORTIR TABEL REKAP PRODUKSI
+      window.rekapSortDirection = {};
+      function sortRekapProduksiBy(fieldKey) {
+          if (!tableStates.rekapProduksi.data || tableStates.rekapProduksi.data.length === 0) return;
+          const currentDir = window.rekapSortDirection[fieldKey] || 'asc';
+          const isAsc = (currentDir === 'asc');
+          const selectedMonth = window.currentRpMonth || '01';
+
+          tableStates.rekapProduksi.data.sort((a, b) => {
+              const mA = a.months[selectedMonth] || { qAwal: 0, qMasuk: 0, qRetur: 0, qKeluar: 0, qAkhir: 0 };
+              const mB = b.months[selectedMonth] || { qAwal: 0, qMasuk: 0, qRetur: 0, qKeluar: 0, qAkhir: 0 };
+
+              let valA = a[fieldKey] !== undefined ? a[fieldKey] : (mA[fieldKey] !== undefined ? mA[fieldKey] : 0);
+              let valB = b[fieldKey] !== undefined ? b[fieldKey] : (mB[fieldKey] !== undefined ? mB[fieldKey] : 0);
+
+              // Valuasi Rupiah sorting
+              if (fieldKey === 'rpAwal') { valA = mA.qAwal * (a.hjj || 0); valB = mB.qAwal * (b.hjj || 0); }
+              if (fieldKey === 'rpMasuk') { valA = mA.qMasuk * (a.hjj || 0); valB = mB.qMasuk * (b.hjj || 0); }
+              if (fieldKey === 'rpRetur') { valA = mA.qRetur * (a.hjj || 0); valB = mB.qRetur * (b.hjj || 0); }
+              if (fieldKey === 'rpKeluar') { valA = mA.qKeluar * (a.hjj || 0); valB = mB.qKeluar * (b.hjj || 0); }
+              if (fieldKey === 'rpAkhir') { valA = mA.qAkhir * (a.hjj || 0); valB = mB.qAkhir * (b.hjj || 0); }
+
+              if (typeof valA === 'number' && typeof valB === 'number') {
+                  return isAsc ? valA - valB : valB - valA;
+              }
+              return isAsc ? String(valA).localeCompare(String(valB)) : String(valB).localeCompare(String(valA));
+          });
+
+          window.rekapSortDirection[fieldKey] = isAsc ? 'desc' : 'asc';
+          renderRekapProduksiTable(tableStates.rekapProduksi.data, 1);
+      }
+
+      // --- MODAL BUKU BESAR DETAIL (KOLOM SALDO AWAL TRANSPARAN & BEBAS MINUS) ---
       async function openRekapProduksiLedger(kode, motif, nama, supplier, unitPrice) {
           const modal = document.getElementById('modal-rp-ledger');
           if (!modal) return;
 
           const cKode = String(kode).toUpperCase().trim();
           const cMotif = String(motif).toUpperCase().trim();
+          const selectedMonth = window.currentRpMonth || '01';
 
-          // 1. Ambil Saldo Awal Baseline (SO Des 2025) secara akurat (kebal NaN)
+          // 1. Ambil Saldo Awal Sesuai Pilihan Bulan
           const baseItem = (window.calculatedRekapProduksiCards || []).find(it => it.kode === cKode && it.motif === cMotif);
           let initialBalance = 0;
-          if (baseItem) {
-              initialBalance = parseFloat(window.currentRpBaselineMode === 'fisik' ? baseItem.soFisik : baseItem.soData) || 0;
+          if (baseItem && baseItem.months && baseItem.months[selectedMonth]) {
+              initialBalance = parseFloat(baseItem.months[selectedMonth].qAwal) || 0;
           }
 
-          // Isi Header Box Informasi Lengkap
+          // Header Box Informasi
           document.getElementById('rp-ledger-nama').textContent = nama;
           document.getElementById('rp-ledger-kode').textContent = `${kode} - ${motif}`;
           document.getElementById('rp-ledger-sup').textContent = supplier;
-          document.getElementById('rp-ledger-saldo-awal').textContent = `${initialBalance.toLocaleString('id-ID')} Pcs (${window.currentRpBaselineMode === 'fisik' ? 'Fisik SO' : 'Data'})`;
+          document.getElementById('rp-ledger-saldo-awal').textContent = `${initialBalance.toLocaleString('id-ID')} Pcs`;
 
           const tbody = document.getElementById('tbody-rp-ledger-detail');
-          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#4318ff; font-weight:700;">Menyusun alur mutasi...</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:#4318ff; font-weight:700;">Menyusun alur mutasi...</td></tr>';
           modal.style.display = 'flex';
 
           const ledgerEvents = [];
 
-          // Transaksi Masuk & Retur dari Buku OM
-          const rawOM = (window.rekapMutasi2026RawData?.omList || []).filter(om => om.kode === cKode && (cMotif === '-' || om.motif === cMotif));
+          // Transaksi Masuk & Retur dari Buku OM (Hanya Ambil Transaksi yang Sesuai Periode Tahun 2026)
+          const rawOM = (window.rekapMutasi2026RawData?.omList || []).filter(om => {
+              if (om.kode !== cKode) return false;
+              if (cMotif !== '-' && om.motif !== cMotif) return false;
+              if (!om.tanggal || om.tanggal < '2026-01-01') return false; // Buang data 2025 agar tidak minus!
+              if (selectedMonth !== 'all' && !om.tanggal.startsWith(`2026-${selectedMonth}`)) return false;
+              return true;
+          });
+
           rawOM.forEach(om => {
               if (om.qtyMasuk > 0) {
                   ledgerEvents.push({
-                      tgl: om.tanggal || '2026-01-01',
+                      tgl: om.tanggal,
                       docId: om.noOm || '-',
-                      tipe: 'Masuk (Buku OM Col AI)',
+                      tipe: 'Masuk',
                       masuk: om.qtyMasuk,
                       retur: 0,
                       keluar: 0,
@@ -13440,9 +13481,9 @@
               }
               if (om.qtyRetur > 0) {
                   ledgerEvents.push({
-                      tgl: om.tanggal || '2026-01-01',
+                      tgl: om.tanggal,
                       docId: om.noOm || '-',
-                      tipe: 'Retur (Buku OM Col AK)',
+                      tipe: 'Retur',
                       masuk: 0,
                       retur: om.qtyRetur,
                       keluar: 0,
@@ -13452,15 +13493,22 @@
               }
           });
 
-          // Transaksi Keluar dari Buku Pengiriman
-          const rawKirim = (window.rekapMutasi2026RawData?.kirimList || []).filter(k => String(k.kode).toUpperCase().trim() === cKode && (cMotif === '-' || String(k.motif).toUpperCase().trim() === cMotif));
+          // Transaksi Keluar dari Buku Pengiriman (Hanya Ambil Transaksi yang Sesuai Periode Tahun 2026)
+          const rawKirim = (window.rekapMutasi2026RawData?.kirimList || []).filter(k => {
+              if (String(k.kode).toUpperCase().trim() !== cKode) return false;
+              if (cMotif !== '-' && String(k.motif).toUpperCase().trim() !== cMotif) return false;
+              if (!k.tglKirim || k.tglKirim < '2026-01-01') return false; // Buang data 2025 agar tidak minus!
+              if (selectedMonth !== 'all' && !k.tglKirim.startsWith(`2026-${selectedMonth}`)) return false;
+              return true;
+          });
+
           rawKirim.forEach(k => {
               const qKirim = parseFloat(k.qtyKirim) || 0;
               if (qKirim > 0) {
                   ledgerEvents.push({
-                      tgl: k.tglKirim || '2026-01-01',
+                      tgl: k.tglKirim,
                       docId: k.noSj || '-',
-                      tipe: 'Keluar (Buku Kirim Col AD)',
+                      tipe: 'Keluar',
                       masuk: 0,
                       retur: 0,
                       keluar: qKirim,
@@ -13470,40 +13518,44 @@
               }
           });
 
-          // Urutkan transaksi secara kronologis tanggal (dari yang paling lama ke paling baru)
-          ledgerEvents.sort((a, b) => (String(a.tgl).localeCompare(String(b.tgl))));
+          // Urutkan transaksi secara kronologis tanggal
+          ledgerEvents.sort((a, b) => String(a.tgl).localeCompare(String(b.tgl)));
 
           tbody.innerHTML = '';
-          let runningBalance = initialBalance;
+          let runningSaldo = initialBalance;
 
-          // BARIS PERTAMA MUTLAK: SALDO AWAL BASELINE (SO DESEMBER 2025)
+          // BARIS 1: SALDO AWAL PERIODE
+          const tglAwalLabel = selectedMonth === 'all' ? '2025-12-31' : `2026-${selectedMonth}-01`;
           const trAwal = document.createElement('tr');
           trAwal.style.background = '#f8fafc';
           trAwal.style.borderBottom = '2px solid #cbd5e1';
           trAwal.innerHTML = `
-              <td style="text-align:center; font-weight:700; color:#64748b;">2025-12-31</td>
-              <td><span style="background:#e0e5ff; color:#4318ff; padding:2px 8px; border-radius:2px; font-size:11px; font-weight:800;">Saldo Awal Baseline (${window.currentRpBaselineMode === 'fisik' ? 'Fisik' : 'Data'})</span></td>
-              <td style="font-weight:700; color:#64748b;">SO-DES-2025</td>
+              <td style="text-align:center; font-weight:700; color:#64748b;">${tglAwalLabel}</td>
+              <td><span style="background:#e0e5ff; color:#4318ff; padding:2px 8px; border-radius:2px; font-size:11px; font-weight:800;">Saldo Awal</span></td>
+              <td style="font-weight:700; color:#64748b;">SALDO-AWAL</td>
+              <td style="text-align:right; font-weight:800; color:#4318ff; background:#f1f5f9;">${runningSaldo.toLocaleString('id-ID')}</td>
               <td style="text-align:right; color:#8f9bba;">-</td>
               <td style="text-align:right; color:#8f9bba;">-</td>
               <td style="text-align:right; color:#8f9bba;">-</td>
-              <td style="text-align:right; font-weight:800; color:#05cd99; font-size:13px;">${runningBalance.toLocaleString('id-ID')}</td>
+              <td style="text-align:right; font-weight:800; color:#05cd99; background:#f0fdfa;">${runningSaldo.toLocaleString('id-ID')}</td>
           `;
           tbody.appendChild(trAwal);
 
-          // BARIS TRANSAKSI BERJALAN
+          // BARIS PERGERAKAN MUTASI
           ledgerEvents.forEach(ev => {
-              runningBalance = runningBalance + (ev.masuk || 0) - (ev.retur || 0) - (ev.keluar || 0);
+              const saldoSebelumnya = runningSaldo;
+              runningSaldo = saldoSebelumnya + (ev.masuk || 0) - (ev.retur || 0) - (ev.keluar || 0);
 
               const tr = document.createElement('tr');
               tr.innerHTML = `
                   <td style="text-align:center; font-size:11.5px;">${ev.tgl}</td>
                   <td><span style="background:${ev.badgeBg}; color:${ev.badgeCol}; padding:2px 8px; border-radius:2px; font-size:11px; font-weight:700;">${ev.tipe}</span></td>
                   <td style="font-weight:700; color:#4318ff;">${ev.docId}</td>
+                  <td style="text-align:right; font-weight:700; color:#4318ff; background:#f8fafc;">${saldoSebelumnya.toLocaleString('id-ID')}</td>
                   <td style="text-align:right; font-weight:700; color:#0284c7;">${ev.masuk > 0 ? ev.masuk.toLocaleString('id-ID') : '-'}</td>
                   <td style="text-align:right; font-weight:700; color:#b91c1c;">${ev.retur > 0 ? ev.retur.toLocaleString('id-ID') : '-'}</td>
                   <td style="text-align:right; font-weight:700; color:#ea580c;">${ev.keluar > 0 ? ev.keluar.toLocaleString('id-ID') : '-'}</td>
-                  <td style="text-align:right; font-weight:800; color:${runningBalance < 0 ? '#ee5d50' : '#1e1b4b'}; font-size:12.5px;">${runningBalance.toLocaleString('id-ID')}</td>
+                  <td style="text-align:right; font-weight:800; color:${runningSaldo < 0 ? '#ee5d50' : '#05cd99'}; background:#f0fdfa;">${runningSaldo.toLocaleString('id-ID')}</td>
               `;
               tbody.appendChild(tr);
           });
